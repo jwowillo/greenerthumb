@@ -2,8 +2,8 @@
 
 1. Each hardware component must be optional.
 2. Sense:
-    * Air temperature and humidity.
-    * Soil moisture.
+    a. Air temperature and humidity.
+    b. Soil moisture.
 3. Publish sensed data on a connected network.
 4. Log sensed data from the network.
 5. Plot sensed data from log files.
