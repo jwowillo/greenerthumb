@@ -4,4 +4,5 @@
 
 ## Documentation
 
-* Running `make` in the 'doc' folder generates PDF documentation.
+* Running `make` in the the 'doc' folders generates PDF documentation.
+* Running `make` in the root folder runs 'make' in all the 'doc' folders'.

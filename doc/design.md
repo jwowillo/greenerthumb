@@ -1,14 +1,8 @@
 # `greenerthumb` Design
 
-## `io`
+## `fan`
 
-### `in`
-
-Fans multiple programs' STDOUTs into one STDOUT.
-
-### `out`
-
-Fans one program's STDOUT into STDOUTs to multiple programs.
+Fans connects multiple programs' STDOUTs and STDINs.
 
 ## `bullhorn`
 
