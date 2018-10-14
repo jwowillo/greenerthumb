@@ -1,18 +1,17 @@
 # `fan` Design
 
-`fan` connects STDIN from each of the listed in-programs to STDOUT of all the
-listed out-programs without mangling lines.
+`fan` connects STDOUTs from listed out-programs to STDINs of listed in-programs.
 
 ## Program
 
 ```
-./fan [--in '<in>'...] [--out '<out>'...]
+./fan [--out '<out>'...] [--in '<in>'...]
 ```
 
 ## Example
 
 ```
-./fan --in 'echo a' --in 'echo b' --out 'cat' --out 'cat'
+./fan --out 'echo a' --out 'echo b' --in 'cat' --in 'cat'
 
 a
 a

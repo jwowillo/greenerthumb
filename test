@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#
+# test is a convenience script to run all the sub-components tests.
+
+cd build/fan && ./test

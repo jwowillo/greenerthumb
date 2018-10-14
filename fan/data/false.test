@@ -1,0 +1,3 @@
+./fan --out 'false' --out 'echo a' --in 'cat'
+16
+a
