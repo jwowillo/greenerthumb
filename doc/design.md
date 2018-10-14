@@ -2,7 +2,7 @@
 
 ## `fan`
 
-Fans connects multiple programs' STDOUTs and STDINs.
+`fan` connects STDOUTs from listed out-programs to STDINs of listed in-programs.
 
 ## `bullhorn`
 

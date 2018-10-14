@@ -4,5 +4,19 @@
 
 ## Documentation
 
-* Running `make` in the the 'doc' folders generates PDF documentation.
-* Running `make` in the root folder runs 'make' in all the 'doc' folders'.
+* `make` in the 'doc' directory generates PDF documentation.
+
+## Building
+
+* `make` builds all targets.
+* `make greenerthumb` builds the sub-components.
+* `make test` builds `builds the sub-components' tests.
+* `make doc` runs `make` in the 'doc' directory.
+
+## Testing
+
+All the sub-components' tests can be run with:
+
+```
+./test
+```
