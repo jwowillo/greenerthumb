@@ -1,0 +1,24 @@
+@startuml
+
+Server -> Server: Listen for TCP connections
+
+Client -> Client: Listen for UDP packets at a port
+
+Client -> Server: Open a TCP connection
+
+Client -> Server: Send the UDP port terminated by a newline on the TCP \
+connection
+
+Server -> Server: Make a UDP address with the TCP connection's host and the \
+received port
+
+Server -> Server: Ignore the TCP connection
+
+Server -> Client: Forward input messages to every client with their UDP \
+addresses
+
+Client -> Server: Close the TCP connection
+
+Server -> Client: Forget the UDP address
+
+@enduml
