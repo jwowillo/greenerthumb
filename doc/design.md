@@ -6,7 +6,8 @@
 
 ## `bullhorn`
 
-Allows data to be sent on a network from publishers to subscribers (3).
+`bullhorn` allows data to be sent on a network from publishers to subscribers
+(3).
 
 ### `publish`
 
