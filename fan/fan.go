@@ -135,5 +135,8 @@ func init() {
 	flag.Var(&outs, "out", "out-programs")
 	flag.Var(&ins, "in", "in-programs")
 	flag.Parse()
-	// TODO: Make sure no args are passed.
+	if len(flag.Args()) != 0 {
+		flag.Usage()
+		os.Exit(2)
+	}
 }
