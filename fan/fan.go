@@ -114,7 +114,7 @@ func init() {
 		p("    b")
 		p("    b")
 		p("")
-		p("Error codes are used for the following:")
+		p("Error-codes are used for the following:")
 		p("")
 		p(fmt.Sprintf(
 			"    %d = Failed to open a program's STDIN.",
@@ -135,4 +135,8 @@ func init() {
 	flag.Var(&outs, "out", "out-programs")
 	flag.Var(&ins, "in", "in-programs")
 	flag.Parse()
+	if len(flag.Args()) != 0 {
+		flag.Usage()
+		os.Exit(2)
+	}
 }

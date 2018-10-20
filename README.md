@@ -11,7 +11,6 @@
 * `make` builds all targets.
 * `make greenerthumb` builds the sub-components.
 * `make test` builds `builds the sub-components' tests.
-* `make doc` runs `make` in the 'doc' directory.
 
 ## Testing
 

@@ -1,6 +1,7 @@
 # `greenerthumb` ICD
 
 * Checksums are cyclic sums of all of a message's bytes excluding the checksum.
+* Multi-byte fields are big-endian.
 
 ## Air Status Message
 

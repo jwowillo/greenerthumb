@@ -1,16 +1,14 @@
-.PHONY: fan test doc build
+.PHONY: test build
 
-all: fan test doc
+all: fan test
 
 fan: build
 	go build -o build/fan
 
 test: fan build
+	rm -rf build/data
 	cp -rf data build
 	cp test build/test
-
-doc:
-	$(MAKE) -C doc
 
 build:
 	mkdir -p build
