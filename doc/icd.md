@@ -25,3 +25,18 @@
 
 * Moisture is the ratio of water to soil.
 
+## JSON
+
+JSON is used for internal messaging. Every message has a corresponding JSON
+format with the structure:
+
+```
+{
+  "name": <message_name>,
+  <name>: <value>,...
+}
+```
+
+IDs are swapped with names for friendlier use in applications. Checksums are
+excluded since the messages don't need to be sent over a network. Names and
+values correspond to the non-ID and non-checksum fields in the messages.

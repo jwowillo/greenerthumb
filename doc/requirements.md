@@ -6,7 +6,7 @@
     b. Soil moisture.
 3. Publish sensed data on a connected network.
 4. Log sensed data from the network.
-5. Plot sensed data from log files.
+5. Plot sensed data from the network.
 
 ## Future Requirements
 
