@@ -1,17 +1,24 @@
-.PHONY: build doc
+.PHONY: build
 
-all: greenerthumb test doc
+all: greenerthumb test
 
 greenerthumb: build
-	$(MAKE) -C fan fan
-	cp -rf fan/build build/fan
+	$(call subcomponent,fan)
+	$(call subcomponent,bullhorn)
 
 test: build
-	$(MAKE) -C fan test
-	cp -rf fan/build build/fan
+	$(call subcomponent_test,fan)
+	$(call subcomponent_test,bullhorn)
 
 build:
 	mkdir -p build
 
-doc:
-	$(MAKE) -C doc
+define subcomponent
+	$(MAKE) -C $(1) $(1)
+	cp -rf $(1)/build/. build/$(1)
+endef
+
+define subcomponent_test
+	$(MAKE) -C $(1) test
+	cp -rf $(1)/build/. build/$(1)
+endef

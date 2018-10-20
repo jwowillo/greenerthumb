@@ -1,24 +1,24 @@
 @startuml
 
-Server -> Server: Listen for TCP connections
+Publisher -> Publisher: Listen for TCP connections
 
-Client -> Client: Listen for UDP packets at a port
+Subscriber -> Subscriber: Listen for UDP packets at a port
 
-Client -> Server: Open a TCP connection
+Subscriber -> Publisher: Open a TCP connection
 
-Client -> Server: Send the UDP port terminated by a newline on the TCP \
+Subscriber -> Publisher: Send the UDP port terminated by a newline on the TCP \
 connection
 
-Server -> Server: Make a UDP address with the TCP connection's host and the \
-received port
+Publisher -> Publisher: Make a UDP address with the TCP connection's host and \
+the received port
 
-Server -> Server: Ignore the TCP connection
+Publisher -> Publisher: Ignore the TCP connection
 
-Server -> Client: Forward input messages to every client with their UDP \
+Publisher -> Subscriber: Forward input messages to every client with their UDP \
 addresses
 
-Client -> Server: Close the TCP connection
+Subscriber -> Publisher: Close the TCP connection
 
-Server -> Client: Forget the UDP address
+Publisher -> Subscriber: Forget the UDP address
 
 @enduml

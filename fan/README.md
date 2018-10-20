@@ -11,7 +11,6 @@
 * `make` builds all targets.
 * `make fan` builds `fan`.
 * `make test` builds `fan`'s tests.
-* `make doc` runs `make` in the 'doc' directory.
 
 ## Running
 
@@ -32,8 +31,8 @@ b
 
 ## Testing
 
-All test-cases from the 'data' directory can be run with:
-
 ```
 cd build && ./test
 ```
+
+Test-cases are stored in the 'data' directory.

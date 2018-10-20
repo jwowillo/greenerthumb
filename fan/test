@@ -6,10 +6,8 @@ them.
 Tests are expected to have the format:
 
     <command>
-    <error-code>
+    <error_code>
     <output>...
-
-where output can be multiple lines.
 
 test runs the command and first checks that the commands error-code matches the
 expected error-code. Then, test makes sure that each line of command output
@@ -52,17 +50,17 @@ def test(base):
             except AssertionError as error:
                 print('Error in', path)
                 print()
-                print('Expected output:')
-                print(rest)
-                print()
                 print('Actual output:')
                 print(output)
                 print()
-                print('Expected error-code:')
-                print(ec)
+                print('Expected output:')
+                print(rest)
                 print()
                 print('Actual error-code:')
                 print(result.returncode)
+                print()
+                print('Expected error-code:')
+                print(ec)
                 print()
                 raise error
 

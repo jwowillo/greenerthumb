@@ -1,0 +1,131 @@
+#!/usr/bin/env python3
+"""
+test finds all files with extension 'test' in the directory 'data' and runs
+them.
+
+Tests are expected to have the format:
+
+    <publisher_command>
+    <subscribe_count>
+    <subscriber_command>...
+    <input_count>
+    <input>...
+    <publisher_error_code>
+    <subscriber_error_code>...
+
+test runs the publisher command and all the subscriber_commands. All the input
+is then written to publishers STDIN. The publisher is closed. Finally, all the
+error-codes are checked.
+
+An example passing test is:
+
+    ./publish 5050
+    1
+    ./subscribe 8080 127.0.0.1 5050
+    1
+    message
+    0
+    0
+"""
+
+import glob
+import subprocess
+import time
+
+
+def run(cmd):
+    return subprocess.Popen(
+        cmd.split(),
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE)
+
+
+def parse(handle):
+    lines = [line[:-1] for line in handle]
+    publish = lines[0]
+    subscribe_count = int(lines[1])
+    input_start = 2 + subscribe_count
+    subscribes = lines[2:input_start]
+    input_count = int(lines[input_start])
+    input_lines = lines[input_start + 1:input_start + 1 + input_count]
+    error_code_start = input_start + 1 + input_count
+    error_codes = [int(error_code) for error_code in lines[error_code_start:]]
+    return publish, subscribes, input_lines, error_codes
+
+
+TERMINATED_ERROR_CODE = -15
+
+
+def assert_result(path, actual, expected):
+    try:
+        assert actual[0] == expected[0]
+        assert actual[1] == expected[1]
+    except AssertionError as error:
+        print('Error in', path)
+        print()
+        print('Actual output:')
+        print(actual[0])
+        print()
+        print('Expected output:')
+        print(expected[0])
+        print()
+        print('Actual error-code:')
+        print(actual[1])
+        print()
+        print('Expected error-code:')
+        print(expected[1])
+        print()
+        raise error
+
+
+def assert_error(actual, expected):
+    if actual == TERMINATED_ERROR_CODE:
+        actual = 0
+    try:
+        assert actual == expected
+    except AssertionError as error:
+        print('Error in', path)
+        print()
+        print('Actual error-code:')
+        print(actual)
+        print()
+        print('Expected error-code:')
+        print(expected)
+        print()
+
+
+def wait():
+    time.sleep(0.1)
+
+
+def test(base):
+    for path in glob.glob('{}/*.test'.format(base)):
+        with open(path) as handle:
+            publish, subscribes, input_lines, error_codes = parse(handle)
+
+            publish_result = run(publish)
+            wait()  # Give command time to start.
+
+            subscribe_results = [run(subscribe) for subscribe in subscribes]
+            wait()  # Give commands time to start.
+
+            for line in input_lines:
+                publish_result.stdin.write((line + '\n').encode())
+                publish_result.stdin.flush()
+            wait()  # Give message time to go across network.
+
+            publish_result.terminate()
+            while publish_result.poll() is None:
+                wait()  # Wait until command terminates.
+
+            assert_error(publish_result.returncode, error_codes[0])
+            for i, result in enumerate(subscribe_results):
+                raw_out, _ = result.communicate()
+                out = raw_out.decode('utf-8').split('\n')[:-1]
+                assert_result(path, (out, result.returncode),
+                              (input_lines, error_codes[i + 1]))
+
+
+if __name__ == '__main__':
+    test('data')

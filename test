@@ -2,4 +2,10 @@
 #
 # test is a convenience script to run all the sub-components tests.
 
-cd build/fan && ./test
+test_subcomponent() {
+	echo "testing $1"
+	cd build/$1 && ./test && cd ../..
+}
+
+test_subcomponent fan
+test_subcomponent bullhorn
