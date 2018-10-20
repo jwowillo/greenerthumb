@@ -4,6 +4,19 @@
 
 `fan` connects STDOUTs from listed out-programs to STDINs of listed in-programs.
 
+## `message`
+
+`message` is where `greenerthumb` messages from the ICD are defined and the
+bytes-JSON conversion is implemented.
+
+### `bytes`
+
+`bytes` converts JSON messages from STDIN to bytes written to STDOUT.
+
+### `json`
+
+`json` converts bytes messages from STDIN to JSON written to STDOUT.
+
 ## `bullhorn`
 
 `bullhorn` allows data to be sent on a network from publishers to subscribers
@@ -11,46 +24,32 @@
 
 ### `publish`
 
-Publishes data from STDIN to all subscribers.
+`publish` data from STDIN to all subscribers.
 
 ### `subscribe`
 
-Receives data from a publisher to STDOUT.
+`subscribe` to a publisher and write data to STDOUT.
 
 ## `sense`
 
-Sensors write messages from the `greenerthumb` ICD to STDOUT. These are fanned
-into a `bullhorn/publisher` with `fan/in`. This allows sensors to be seamlessly
-excluded (1). Testing is also simplified since emulators that print to STDOUT
-can replace sensors or `bullhorn/subscriber`.
+Sensors write `greenerthumb` JSON messages to STDOUT. These can be `fan`ned into
+`message/bytes` piped into `bullhorn/publish`. This allows sensors to be
+excluded (1).
 
 ### `air`
 
-Senses the 'Air Status Message' (2a).
+`air` senses the 'Air Status Message' (2a).
 
 ### `soil`
 
-Senses the 'Soil Moisture Status Message' (2b).
-
-## `emulate`
-
-Emulators allow simple testing the by excluding the network and sensors.
-
-### `air`
-
-Emulates the 'Air Status Message'.
-
-### `soil`
-
-Emulates the 'Soil Moisture Status Message'.
+`soil` senses the 'Soil Moisture Status Message' (2b).
 
 ## `log`
 
-Logs data from STDIN to a file. This can be used with `bullhorn/subscriber` and
-`fan/out` to log sensed data (4).
+`log` logs JSON messages from STDIN to a file. This can be used with
+`bullhorn/subscribe` piped into `message/json` to log sensed data (4).
 
 ## `plot`
 
-### `replay`
-
-Plots ICD messages stored in a log file (5).
+`plot` plots `greenerthumb` JSON messages from STDIN. This can be used with
+`bullhorn/subscribe` piped into `message/json` to plot sensed data (5).

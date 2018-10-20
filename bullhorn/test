@@ -5,17 +5,17 @@ them.
 
 Tests are expected to have the format:
 
-    <publisher_command>
+    <publish_command>
     <subscribe_count>
-    <subscriber_command>...
+    <subscribe_command>...
     <input_count>
     <input>...
-    <publisher_error_code>
-    <subscriber_error_code>...
+    <publish_error_code>
+    <subscribe_error_code>...
 
-test runs the publisher command and all the subscriber_commands. All the input
-is then written to publishers STDIN. The publisher is closed. Finally, all the
-error-codes are checked.
+test runs the publish-command and all the subscribe-commands. All the input
+is then written to the publisher's STDIN. The publisher is closed. Finally, all
+the error-codes are checked.
 
 An example passing test is:
 
