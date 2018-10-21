@@ -1,5 +1,6 @@
 # `greenerthumb` ICD
 
+* Timestamps are 8-byte unix timestamps.
 * Checksums are cyclic sums of all of a message's bytes excluding the checksum.
 * Multi-byte fields are big-endian.
 
@@ -8,20 +9,22 @@
 | Byte | Name        | Type  |
 | ---- | ----------- | ----- |
 | 1    | ID (0x00)   | Byte  |
-| 2    | Temperature | Float |
-| 6    | Humidity    | Float |
-| 10   | Checksum    | Byte  |
+| 2    | Timestamp   | Long  |
+| 10   | Temperature | Float |
+| 14   | Humidity    | Float |
+| 18   | Checksum    | Byte  |
 
 * Temperature is in degrees fahrenheit.
 * Humidity is the ratio of water to air.
 
-## Soil Moisture Status Message
+## Soil Status Message
 
 | Byte | Name      | Type   |
 | ---- | --------- | ------ |
 | 1    | ID (0x01) | Byte   |
-| 2    | Moisture  | Float  |
-| 6    | Checksum  | Byte   |
+| 2    | Timestamp | Long   |
+| 10   | Moisture  | Float  |
+| 14   | Checksum  | Byte   |
 
 * Moisture is the ratio of water to soil.
 
@@ -33,10 +36,12 @@ format with the structure:
 ```
 {
   "name": <message_name>,
+  "timestamp": <timestamp>,
   <name>: <value>,...
 }
 ```
 
 IDs are swapped with names for friendlier use in applications. Checksums are
 excluded since the messages don't need to be sent over a network. Names and
-values correspond to the non-ID and non-checksum fields in the messages.
+values correspond to the non-ID, non-time, and non-checksum fields in the
+messages.

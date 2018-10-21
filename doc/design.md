@@ -24,11 +24,11 @@ bytes-JSON conversion is implemented.
 
 ### `publish`
 
-`publish` data from STDIN to all subscribers.
+`publish`es data from STDIN to all subscribers.
 
 ### `subscribe`
 
-`subscribe` to a publisher and write data to STDOUT.
+`subscribe`s to a publisher and write data to STDOUT.
 
 ## `sense`
 
@@ -51,5 +51,5 @@ excluded (1).
 
 ## `plot`
 
-`plot` plots `greenerthumb` JSON messages from STDIN. This can be used with
+`plot`s `greenerthumb` JSON messages from STDIN. This can be used with
 `bullhorn/subscribe` piped into `message/json` to plot sensed data (5).
