@@ -5,10 +5,12 @@ all: greenerthumb test
 greenerthumb: build
 	$(call subcomponent,fan)
 	$(call subcomponent,bullhorn)
+	$(call subcomponent,plot)
 
 test: build
 	$(call subcomponent_test,fan)
 	$(call subcomponent_test,bullhorn)
+	$(call subcomponent_test,plot)
 
 build:
 	mkdir -p build

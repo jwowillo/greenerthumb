@@ -42,12 +42,12 @@ the older messages.
 ./plot
 
 < {"name": "Soil", "timestamp": 0, "Moisture": 0.37}
-< {"name": "Air", "timestamp": 3600, "Temperature": 84, "Humidity": 0.54}
+< {"name": "Air", "timestamp": 3600, "Temperature": 84.5, "Humidity": 0.54}
 < {"name": "Soil", "timestamp": 3600, "Moisture": 0.35}
-< {"name": "Air": "timestamp": 7200, "Temperature": 82, "Humidity": 0.51}
+< {"name": "Air": "timestamp": 7200, "Temperature": 82.1, "Humidity": 0.51}
 ```
 
-This will plot 3 lines labelled "Soil Moisture", "Air Temperature", and "Air
-Humidity". Each will have 2 points. The "Soil"-line will start at hour 0 and
-finish at hour 1. The "Air"-lines will start at hour 1 and finish at hour 2. The
+This will plot 3 lines labelled 'Soil Moisture', 'Air Temperature', and 'Air
+Humidity'. Each will have 2 points. The 'Soil'-line will start at hour 0 and
+finish at hour 1. The 'Air'-lines will start at hour 1 and finish at hour 2. The
 entire plot will occupy 2 hours.
