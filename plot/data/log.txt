@@ -1,0 +1,7 @@
+{"name": "Soil", "timestamp": 0, "Moisture": 0.37}
+{"name": "Soil", "timestamp": 1000, "Moisture": 0.40}
+{"name": "Soil", "timestamp": 2000, "Moisture": 0.32}
+{"name": "Soil", "timestamp": 3000, "Moisture": 0.43}
+{"name": "Soil", "timestamp": 4000, "Moisture": 0.35}
+{"name": "Air", "timestamp": 3600, "Temperature": 84.5, "Humidity": 0.51}
+{"name": "Air", "timestamp": 7200, "Temperature": 82.1, "Humidity": 0.54}
