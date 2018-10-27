@@ -22,7 +22,7 @@ subscribers received on `<port>`.
 Runs `subscribe` which prints messages to `STDOUT` published from `publish`
 running at the `<publish_host>` and `<publish_port>`.
 
-### Example
+## Example
 
 Machine 1 (192.168.1.50):
 
