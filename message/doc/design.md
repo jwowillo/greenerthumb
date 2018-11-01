@@ -1,7 +1,7 @@
 # `message` Design
 
 `message` is where `greenerthumb` messages from the ICD are defined and the
-bytes-JSON conversion is impmlemented.
+bytes-JSON conversion is implemented.
 
 ## Program
 
@@ -24,8 +24,8 @@ Message errors will be written to STDERR.
 ```
 ./bytes
 
-< {"name": "Soil", "timestamp": 0, "Moisture": 0.37}
-010000000000000000a470bd3e10
+< {"Name": "Soil", "Timestamp": 0, "Moisture": 0.37}
+0100000000000000003ebd70a410
 ```
 
 ### `json`
@@ -33,6 +33,6 @@ Message errors will be written to STDERR.
 ```
 ./json
 
-< 010000000000000000a470bd3e10
-{"name": "Soil", "timestamp": 0, "Moisture": 0.37}
+< 0100000000000000003ebd70a410
+{"Name": "Soil", "Timestamp": 0, "Moisture": 0.37}
 ```

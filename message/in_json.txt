@@ -1,0 +1,1 @@
+{"Name": "Soil", "Timestamp": 1540773582, "Moisture": 0.0}

@@ -9,3 +9,4 @@ test_subcomponent() {
 
 test_subcomponent fan
 test_subcomponent bullhorn
+test_subcomponent message
