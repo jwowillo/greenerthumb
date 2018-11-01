@@ -9,8 +9,8 @@ message format is:
 
 ```
 {
-  "name": <message_name>,
-  "timestamp": <timestamp>,
+  "Name": <message_name>,
+  "Timestamp": <timestamp>,
   <name>: <value>,...
 }
 ```
@@ -41,10 +41,10 @@ the older messages.
 ```
 ./plot
 
-< {"name": "Soil", "timestamp": 0, "Moisture": 0.37}
-< {"name": "Air", "timestamp": 3600, "Temperature": 84.5, "Humidity": 0.54}
-< {"name": "Soil", "timestamp": 3600, "Moisture": 0.35}
-< {"name": "Air": "timestamp": 7200, "Temperature": 82.1, "Humidity": 0.51}
+< {"Name": "Soil", "Timestamp": 0, "Moisture": 0.37}
+< {"Name": "Air", "Timestamp": 3600, "Temperature": 84.5, "Humidity": 0.54}
+< {"Name": "Soil", "Timestamp": 3600, "Moisture": 0.35}
+< {"Name": "Air": "Timestamp": 7200, "Temperature": 82.1, "Humidity": 0.51}
 ```
 
 This will plot 3 lines labelled 'Soil Moisture', 'Air Temperature', and 'Air

@@ -18,11 +18,11 @@ void Usage() {
   p("");
   p("    ./plot");
   p("");
-  p("    < {\"name\": \"Soil\", \"timestamp\": 0, \"Moisture\": 0.37}");
-  p("    < {\"name\": \"Air\", \"timestamp\": 3600, \"Temperature\": 84.5, "
+  p("    < {\"Name\": \"Soil\", \"Timestamp\": 0, \"Moisture\": 0.37}");
+  p("    < {\"Name\": \"Air\", \"Timestamp\": 3600, \"Temperature\": 84.5, "
     "\"Humidity\": 0.54}");
-  p("    < {\"name\": \"Soil\", \"timestamp\": 3600, \"Moisture\": 0.35}");
-  p("    < {\"name\": \"Air\", \"timestamp\": 7200, \"Temperature\": 82.1, "
+  p("    < {\"Name\": \"Soil\", \"Timestamp\": 3600, \"Moisture\": 0.35}");
+  p("    < {\"Name\": \"Air\", \"Timestamp\": 7200, \"Temperature\": 82.1, "
     "\"Humidity\": 0.51}");
   p("");
   p("This will plot 3 lines labelled 'Soil Moisture', 'Air Temperature', and");
@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
         for (const auto& field : message.fields) {
           plot.AddData(field.key, plot::Data{message.timestamp, field.value});
         }
-      } catch (std::exception exception) {
+      } catch (std::exception& exception) {
         std::cerr << exception.what() << std::endl;
       }
     }
@@ -69,7 +69,7 @@ int main(int argc, char** argv) {
       }
       std::this_thread::sleep_for(std::chrono::milliseconds(100));  // 10 Hz.
     }
-  } catch (std::exception exception) {
+  } catch (std::exception& exception) {
     std::cerr << exception.what() << std::endl;
   }
 

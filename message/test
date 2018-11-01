@@ -1,0 +1,87 @@
+#!/usr/bin/env python3
+"""
+"""
+
+import glob
+import subprocess
+
+
+def run(cmd):
+    return subprocess.Popen(
+        cmd.split(),
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE)
+
+
+def parse(handle):
+    lines = [line[:-1] for line in handle]
+    command = lines[0]
+    count = int(lines[1])
+    in_start = 2
+    out_start = 2 + count
+    err_start = out_start + count
+    in_lines = lines[in_start:out_start]
+    out_lines = lines[out_start:err_start]
+    out_lines = [line for line in out_lines if line != '']
+    err_lines = lines[err_start:err_start + count]
+    err_lines = [line for line in err_lines if line != '']
+    err_code = int(lines[err_start + count])
+    return command, in_lines, out_lines, err_lines, err_code
+
+
+def assert_result(path, actual_out, expected_out, actual_err, expected_err,
+                  actual_err_code, expected_err_code):
+    try:
+        assert actual_out == expected_out
+        assert actual_err == expected_err
+        assert actual_err_code == expected_err_code
+    except AssertionError as error:
+        print('Error in', path)
+        print()
+        print('Actual STDOUT:')
+        print(actual_out)
+        print()
+        print('Expected STDOUT:')
+        print(expected_out)
+        print()
+        print('Actual STDERR:')
+        print(actual_err)
+        print()
+        print('Expected STDERR:')
+        print(expected_err)
+        print()
+        print('Actual error-code:')
+        print(actual_err_code)
+        print()
+        print('Expected error-code:')
+        print(expected_err_code)
+        print()
+        raise error
+
+
+def test(base):
+    for path in glob.glob('{}/*.test'.format(base)):
+        with open(path) as handle:
+            command, in_lines, out_lines, err_lines, err_code = parse(handle)
+            result = run(command)
+            for line in in_lines:
+                result.stdin.write((line + '\n').encode())
+            result.stdin.flush()
+
+            result.stdin.close()
+            result.wait()
+
+            actual_out_lines = [
+                line.decode('utf-8')[:-1] for line in result.stdout
+            ]
+            actual_err_lines = [
+                line.decode('utf-8')[:-1] for line in result.stderr
+            ]
+
+            assert_result(path, actual_out_lines, out_lines, actual_err_lines,
+                          err_lines, result.returncode, err_code)
+
+
+if __name__ == '__main__':
+    test('data')

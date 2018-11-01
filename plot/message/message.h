@@ -59,12 +59,12 @@ Message::Message(const std::string& raw) {
     throw std::invalid_argument{"bad JSON string"};
   }
 
-  const auto name_object = object["name"];
+  const auto name_object = object["Name"];
   if (name_object.IsNull()) {
     throw std::invalid_argument{"must pass name"};
   }
   const auto name = name_object.ToString();
-  const auto timestamp_object = object["timestamp"];
+  const auto timestamp_object = object["Timestamp"];
   if (timestamp_object.IsNull()) {
     throw std::invalid_argument{"must pass timestamp"};
   }
@@ -73,12 +73,14 @@ Message::Message(const std::string& raw) {
   for (const auto& value : object.ObjectRange()) {
     const auto key = value.first;
     // Ignore mandatory keys.
-    if (key == "name" || key == "timestamp") {
+    if (key == "Name" || key == "Timestamp") {
       continue;
     }
 
     const auto value_object = value.second;
-    if (value_object.JSONType() != json::JSON::Class::Floating) {
+    const auto type = value_object.JSONType();
+    if (type != json::JSON::Class::Floating &&
+        type != json::JSON::Class::Integral) {
       throw std::invalid_argument{"bad numeric value"};
     }
     fields.insert(Field{name + " " + value.first, value.second.ToFloat()});

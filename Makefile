@@ -6,11 +6,13 @@ greenerthumb: build
 	$(call subcomponent,fan)
 	$(call subcomponent,bullhorn)
 	$(call subcomponent,plot)
+	$(call subcomponent,message)
 
 test: build
 	$(call subcomponent_test,fan)
 	$(call subcomponent_test,bullhorn)
 	$(call subcomponent_test,plot)
+	$(call subcomponent_test,message)
 
 build:
 	mkdir -p build

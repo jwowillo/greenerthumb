@@ -6,3 +6,31 @@ bytes-JSON conversion is implemented.
 ## Documentation
 
 * `make` in the 'doc' directory generates PDF documentation.
+
+## Building
+
+* `make` builds all targets.
+* `make message` builds `bytes` and `json`.
+* `make test` builds `message`'s tests.
+
+## Running
+
+```
+./bytes
+
+< {"Name": "Soil", "Timestamp": 0, "Moisture": 0.37}
+0100000000000000003ebd70a410
+```
+
+```
+./json
+
+< 0100000000000000003ebd70a410
+{"Name": "Soil", "Timestamp": 0, "Moisture": 0.37}
+```
+
+## Testing
+
+```
+cd build && ./test
+```
