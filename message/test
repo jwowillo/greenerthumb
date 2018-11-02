@@ -1,5 +1,29 @@
 #!/usr/bin/env python3
 """
+test finds all files with extension 'test' in the directory 'data' and runs
+them.
+
+Tests are expected to have the format:
+
+    <command>
+    <in_line_count>
+    <in_line>...
+    <out_line>...
+    <err_line>...
+    <error_code>...
+
+test runs the command with all the input, and makes sure all the STDOUT, STDERR,
+and error-codes match.
+
+test exits with a non-zero exit-code and the failed assertion if any file fails.
+
+An example passing test is:
+
+    echo test
+    1
+    test
+
+    0
 """
 
 import glob

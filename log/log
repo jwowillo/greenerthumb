@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+function usage {
+  echo "logs JSON messages from STDIN to a file." >&2
+  echo "" >&2
+  echo "An example is:" >&2
+  echo "" >&2
+  echo "    echo 'line' | ./log log.txt" >&2
+  echo "" >&2
+  echo "    cat log.txt" >&2
+  echo "" >&2
+  echo "    line" >&2
+  echo "" >&2
+  exit 2
+}
+
+if (($# != 1)); then
+  usage
+fi
+
+while read line; do
+  echo ${line} >> ${1}
+done < /dev/stdin
