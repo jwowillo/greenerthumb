@@ -14,8 +14,8 @@ import (
 func main() {
 	r := bufio.NewReader(os.Stdin)
 	m := &message.Wrapper{}
-	x := make(map[string]interface{})
 	for {
+		x := make(map[string]interface{})
 		bs, err := r.ReadSlice('\n')
 		if err == io.EOF {
 			break

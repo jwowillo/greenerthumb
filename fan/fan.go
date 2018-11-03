@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"io"
@@ -31,15 +32,36 @@ func main() {
 	}
 
 	// Programs that write output write to those that receive input.
-	ws := make([]io.Writer, 0, len(inPrograms))
+	inWriters := make([]io.Writer, 0, len(inPrograms))
 	for _, in := range inPrograms {
-		ws = append(ws, in)
+		inWriters = append(inWriters, in)
 	}
-	w := io.MultiWriter(ws...)
-	outPrograms := MakePrograms(outs, w)
+	inWriter := io.MultiWriter(inWriters...)
+	outPrograms := MakePrograms(outs, inWriter)
 	if len(outPrograms) != len(outs) {
 		ec |= 1 << OpenStdin
 	}
+
+	outWriters := make([]io.Writer, 0, len(outPrograms))
+	for _, out := range outPrograms {
+		outWriters = append(outWriters, out)
+	}
+	outWriter := io.MultiWriter(outWriters...)
+
+	// Write STDIN to out programs.
+	go func() {
+		r := bufio.NewReader(os.Stdin)
+		for {
+			in, err := r.ReadSlice('\n')
+			if err == io.EOF {
+				break
+			} else if err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				continue
+			}
+			outWriter.Write(in)
+		}
+	}()
 
 	// Start all the input programs first so they can receive all output.
 	startedIns := MapOverPrograms(inPrograms, Start)
@@ -74,6 +96,8 @@ func main() {
 	if len(waitedIns) != len(closedIns) {
 		ec |= WaitProgram
 	}
+
+	os.Stdin.Close()
 
 	os.Exit(ec)
 }
