@@ -11,9 +11,20 @@
 ## Future Requirements
 
 * Sense soil pH.
-* Plot sensed data from the network in real time.
 * Push a notification to a connected phone when the soil moisture from the
   network is below a user set threshold.
 * Water plants when the soil moisture from the network is below the user set
   threshold.
 * Make sensors wireless.
+* Provided IC packages for sensors.
+* Monitor networks.
+* Allow plots to be saved.
+* Remove bad sensed data.
+* Provide a web interface.
+* Discover addresses and ports automatically.
+* Provide installation tools.
+* Implement a log processor.
+* Clean error handling.
+* Improve documentation.
+* Improve tests.
+* Automate reconnecting in `bullhorn`.

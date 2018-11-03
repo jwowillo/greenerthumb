@@ -6,13 +6,13 @@
 
 ### `air`
 
-`air` senses the 'Air Status Message' at 1 hert.
+`air` senses the 'Air Status Message' at 0.1 hertz.
 
 ![Air Schematic](air.png)
 
 ### `soil`
 
-`soil` senses the 'Soil Status Message' at 1 hert.
+`soil` senses the 'Soil Status Message' at 0.1 hertz.
 
 ![Soil Schematic](soil.png)
 

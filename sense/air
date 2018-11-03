@@ -32,11 +32,12 @@ def sense(sensor, pin, rate):
 
 
 if __name__ == '__main__':
-    RATE = 1
+    RATE = 0.1
     PIN = 14  # BCM
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--rate', default=RATE, type=int, help='rate to sense')
+    parser.add_argument(
+        '--rate', default=RATE, type=float, help='rate to sense')
     parser.add_argument('--pin', default=PIN, type=int, help='pin number')
     args = parser.parse_args()
 

@@ -33,7 +33,7 @@ def sense(sensor, channel, rate):
 
 
 if __name__ == '__main__':
-    RATE = 1
+    RATE = 0.1
 
     # CHANNEL on the ADC.
     CHANNEL = 0
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--rate', default=RATE, type=int, help='rate to sense')
     parser.add_argument(
-        '--channel', default=CHANNEL, type=int, help='channel on ADC')
+        '--channel', default=CHANNEL, type=float, help='channel on ADC')
     parser.add_argument('--clk', default=CLK, help='clk pin number')
     parser.add_argument('--miso', default=MISO, help='miso pin number')
     parser.add_argument('--mosi', default=MOSI, help='mosi pin number')
