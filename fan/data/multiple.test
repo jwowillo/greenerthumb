@@ -1,0 +1,3 @@
+./fan --out 'not-a-program' --out 'false' --out 'echo a' --in 'cat'
+24
+a
