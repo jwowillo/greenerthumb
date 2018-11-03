@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import sys
 import time
 
 import Adafruit_MCP3008
@@ -27,6 +28,7 @@ def sense(sensor, channel, rate):
             'Timestamp': int(time.time()),
             'Moisture': to_ratio(signal)
         }))
+        sys.stdout.flush()
         time.sleep(1 / rate)
 
 

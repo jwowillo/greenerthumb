@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
 import argparse
-import time
 import json
+import sys
+import time
 
 import Adafruit_DHT
 
@@ -26,6 +27,7 @@ def sense(sensor, pin, rate):
             'Temperature': temperature,
             'Humidity': humidity
         }))
+        sys.stdout.flush()
         time.sleep(1 / rate)
 
 
