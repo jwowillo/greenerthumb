@@ -10,6 +10,8 @@
 
 * `make` builds all targets.
 * `make greenerthumb` builds the sub-components.
+* `make pi` builds programs that run on PIs.
+* `make host` builds programs for hosts.
 * `make test` builds `builds the sub-components' tests.
 
 ## Testing
