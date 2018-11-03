@@ -2,13 +2,13 @@
 
 all: greenerthumb test
 
-pi:
+pi: build
 	$(call subcomponent,fan)
 	$(call subcomponent,bullhorn)
 	$(call subcomponent,message)
 	$(call subcomponent,sense)
 
-host:
+host: build
 	$(call subcomponent,fan)
 	$(call subcomponent,bullhorn)
 	$(call subcomponent,plot)
