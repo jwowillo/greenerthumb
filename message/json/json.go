@@ -13,8 +13,8 @@ import (
 
 func main() {
 	r := bufio.NewReader(os.Stdin)
-	m := &message.Wrapper{}
 	for {
+		m := &message.Wrapper{}
 		in, err := r.ReadSlice('\n')
 		if err == io.EOF {
 			break

@@ -14,20 +14,24 @@ import (
 func main() {
 	r := bufio.NewReader(os.Stdin)
 	m := &message.Wrapper{}
-	x := make(map[string]interface{})
 	for {
+		x := make(map[string]interface{})
 		bs, err := r.ReadSlice('\n')
 		if err == io.EOF {
+			fmt.Println("A")
 			break
 		} else if err != nil {
+			fmt.Println("B")
 			fmt.Fprintln(os.Stderr, err)
 			continue
 		}
 		if err = json.Unmarshal(bs, &x); err != nil {
+			fmt.Println("C")
 			fmt.Fprintln(os.Stderr, err)
 			continue
 		}
 		if err = m.DeserializeJSON(x); err != nil {
+			fmt.Println(x)
 			fmt.Fprintln(os.Stderr, err)
 			continue
 		}

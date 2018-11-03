@@ -13,6 +13,6 @@ if (($# != e)); then
 fi
 
 cd build/plot && ./build/bullhorn/subscribe ${1} ${2} | ../fan/fan \
-  --in '../message/json' \
-  --out "../log/log ${3}" \
-  --out "./plot"
+  --out '../message/json' \
+  --in "../log/log ${3}" \
+  --in "./plot"

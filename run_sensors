@@ -13,6 +13,6 @@ if (($# != 1)); then
 fi
 
 ./build/fan/fan  \
-  --in './build/sense/air' \
-  --in './build/sense/soil' \
-  --out './build/message/bytes' | ./build/bullhorn/publish ${1}
+  --out './build/sense/air' \
+  --out './build/sense/soil' \
+  --in './build/message/bytes' | ./build/bullhorn/publish ${1}
