@@ -32,9 +32,9 @@ bytes-JSON conversion is implemented.
 
 ## `sense`
 
-Sensors write `greenerthumb` JSON messages to STDOUT. These can be `fan`ned into
-`message/bytes` piped into `bullhorn/publish`. This allows sensors to be
-excluded (1).
+`sense` writes `greenerthumb` JSON messages from sensors to STDOUT. These can be
+`fan`ned into `message/bytes` piped into `bullhorn/publish`. This allows sensors
+to be excluded (1).
 
 ### `air`
 
