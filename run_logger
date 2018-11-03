@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+function usage {
+  echo "run_logger from bullhorn/subscribe." >$2
+  echo "" >$2
+  echo "Accepts the publisher IP address and port and the log file."
+  echo "" >$2
+  exit 2
+}
+
+if (($# != 3)); then
+  usage
+fi
+
+./build/bullhorn/subscribe ${1} ${2} | ./build/message/json |
+  ./build/log/log ${3}
