@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 function usage {
-  echo "run_sensors into bullhorn/publish." >$2
-  echo "" >$2
-  echo "Accepts the port to publish on." >$2
-  echo "" >$2
+  echo "run_sensors into bullhorn/publish." >&2
+  echo "" >&2
+  echo "Accepts the port to publish on." >&2
+  echo "" >&2
   exit 2
 }
 

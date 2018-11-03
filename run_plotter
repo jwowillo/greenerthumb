@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 function usage {
-  echo "run_plotter and logger from bullhorn/subscribe." >$2
-  echo "" >$2
-  echo "Accepts the publisher IP address and port and the log file." >$2
-  echo "" >$2
+  echo "run_plotter and logger from bullhorn/subscribe." >&2
+  echo "" >&2
+  echo "Accepts the publisher IP address and port and the log file." >&2
+  echo "" >&2
   exit 2
 }
 

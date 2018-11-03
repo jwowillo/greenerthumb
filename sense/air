@@ -22,6 +22,7 @@ def sense(sensor, pin, rate):
         temperature = to_fahrenheit(temperature)
         print(json.dumps({
             'Name': 'Air',
+            'Timestamp': int(time.time()),
             'Temperature': temperature,
             'Humidity': humidity
         }))
