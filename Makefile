@@ -8,6 +8,7 @@ greenerthumb: build
 	$(call subcomponent,plot)
 	$(call subcomponent,message)
 	$(call subcomponent,log)
+	$(call subcomponent,sense)
 
 test: build
 	$(call subcomponent_test,fan)
