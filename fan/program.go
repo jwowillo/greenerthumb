@@ -19,14 +19,14 @@ type Program struct {
 func NewProgram(raw string, out io.Writer) (*Program, error) {
 	parts := strings.Split(raw, " ")
 	program := parts[0]
-	rest := strings.Join(parts[1:], " ")
+	rest := parts[1:]
 
 	var cmd *exec.Cmd
 
 	if len(rest) == 0 {
 		cmd = exec.Command(program)
 	} else {
-		cmd = exec.Command(program, rest)
+		cmd = exec.Command(program, rest...)
 	}
 	writer, err := cmd.StdinPipe()
 	if err != nil {

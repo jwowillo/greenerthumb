@@ -2,7 +2,8 @@
 
 ## `fan`
 
-`fan` connects STDOUTs from listed out-programs to STDINs of listed in-programs.
+`fan` connects its STDIN to the STDINs of listed out-programs and STDOUTs from
+listed out-programs to STDINs of listed in-programs.
 
 ## `message`
 
