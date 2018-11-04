@@ -22,6 +22,9 @@ subscribers received on `<port>`.
 Runs `subscribe` which prints messages to `STDOUT` published from `publish`
 running at the `<publish_host>` and `<publish_port>`.
 
+An option is also provided to attempt to automatically reconnect to
+`bullhorn/publish` after a disconnect.
+
 ## Example
 
 Machine 1 (192.168.1.50):
