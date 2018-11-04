@@ -7,6 +7,15 @@
 3. Publish sensed data on a connected network.
 4. Log sensed data from the network.
 5. Plot sensed data from the network.
+6. Allow plots to be saved.
+7. Remove anomalous data from sensors.
+8. Include an option to `bullhorn/subscribe` to automatically reconnect.
+9. Embed the icon in the `plot` binary.
+10. Don't hide errors in the utility scripts.
+11. Add the build directory to the `PATH` in the utility scripts.
+12. Emulate sensors if real sensors aren't detected.
+13. Provide a log processor.
+14. Provide install tools.
 
 ## Future Requirements
 
@@ -18,13 +27,5 @@
 * Make sensors wireless.
 * Provided IC packages for sensors.
 * Monitor networks.
-* Allow plots to be saved.
-* Remove bad sensed data.
 * Provide a web interface.
 * Discover addresses and ports automatically.
-* Provide installation tools.
-* Implement a log processor.
-* Clean error handling.
-* Improve documentation.
-* Improve tests.
-* Automate reconnecting in `bullhorn`.
