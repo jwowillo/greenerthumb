@@ -30,6 +30,8 @@ scaled to the period of all the received messages.
 If received messages have the same timestamp, the newest message will overwrite
 the older messages.
 
+A save button makes screenshots.
+
 ## Program
 
 ```

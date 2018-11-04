@@ -2,6 +2,10 @@
 
 `sense` writes `greenerthumb` JSON messages from sensors to STDOUT.
 
+Anomalous readings shouldn't be printed.
+
+Emulated data is printed if sensors aren't detected.
+
 ## Program
 
 ### `air`

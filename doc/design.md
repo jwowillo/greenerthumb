@@ -54,3 +54,7 @@ to be excluded (1).
 
 `plot`s `greenerthumb` JSON messages from STDIN. This can be used with
 `bullhorn/subscribe` piped into `message/json` to plot sensed data (5).
+
+## `process`
+
+`process`es logs to find statistical values.
