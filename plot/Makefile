@@ -15,7 +15,6 @@ plot: build
 		-lXrandr \
 		-lpthread \
 		-lXi
-	cp icon.png build
 
 test: plot build
 	rm -rf build/data

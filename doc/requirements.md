@@ -9,7 +9,7 @@
 5. Plot sensed data from the network.
 6. Allow plots to be saved.
 7. Remove anomalous data from sensors.
-8. Include an option to `bullhorn/subscribe` to automatically reconnect.
+8. Include an option in `bullhorn/subscribe` to automatically reconnect.
 9. Embed the icon in the `plot` binary.
 10. Don't hide errors in the utility scripts.
 11. Add the build directory to the `PATH` in the utility scripts.
@@ -25,7 +25,7 @@
 * Water plants when the soil moisture from the network is below the user set
   threshold.
 * Make sensors wireless.
-* Provided IC packages for sensors.
+* Provide IC packages for sensors.
 * Monitor networks.
 * Provide a web interface.
 * Discover addresses and ports automatically.

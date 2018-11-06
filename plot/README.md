@@ -32,3 +32,8 @@ entire plot will occupy 2 hours.
 
 * OpenGL, GLEW, GLUT, and SOIL are required.
 * The JSON parser is SimpleJSON taken from https://github.com/nbsdx/SimpleJSON.
+
+## `gen_icon.py`
+
+`gen_icon.py` is a utility script that generates the icon into the correct c++
+file. It should be run whenever the icon is updated.

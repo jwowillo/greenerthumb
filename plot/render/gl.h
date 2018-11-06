@@ -10,6 +10,8 @@
 
 #include "SOIL.h"
 
+#include "icon.h"
+
 namespace render {
 
 namespace {
@@ -54,8 +56,9 @@ GLFWwindow* MakeWindow(std::string name, int width, int height) {
   }
 
   GLFWimage icons[1];
-  icons[0].pixels = SOIL_load_image("icon.png", &icons[0].width,
-                                    &icons[0].height, 0, SOIL_LOAD_RGBA);
+  icons[0].pixels =
+      SOIL_load_image_from_memory(&ICON[0], ICON.size(), &icons[0].width,
+                                  &icons[0].height, 0, SOIL_LOAD_RGBA);
   glfwSetWindowIcon(window, 1, icons);
   SOIL_free_image_data(icons[0].pixels);
 
