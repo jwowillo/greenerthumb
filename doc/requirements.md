@@ -12,10 +12,9 @@
 8. Include an option in `bullhorn/subscribe` to automatically reconnect.
 9. Embed the icon in the `plot` binary.
 10. Don't hide errors in the utility scripts.
-11. Add the build directory to the `PATH` in the utility scripts.
-12. Emulate sensors if real sensors aren't detected.
-13. Provide a log processor.
-14. Provide install tools.
+11. Emulate sensors if real sensors aren't detected.
+12. Provide a log processor.
+13. Provide install tools.
 
 ## Future Requirements
 
