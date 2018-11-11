@@ -2,7 +2,7 @@
 
 1. Each hardware component must be optional.
 2. Sense:
-    a. Air temperature and humidity.
+    a. Air temperature.
     b. Soil moisture.
 3. Publish sensed data on a connected network.
 4. Log sensed data from the network.
@@ -15,6 +15,7 @@
 11. Emulate sensors if real sensors aren't detected.
 12. Provide a log processor.
 13. Provide install tools.
+14. Include data ranges in the plot legend.
 
 ## Future Requirements
 

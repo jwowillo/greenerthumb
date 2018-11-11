@@ -11,11 +11,9 @@
 | 1    | ID (0x00)   | Byte  |
 | 2    | Timestamp   | Long  |
 | 10   | Temperature | Float |
-| 14   | Humidity    | Float |
-| 18   | Checksum    | Byte  |
+| 14   | Checksum    | Byte  |
 
 * Temperature is in degrees fahrenheit.
-* Humidity is the ratio of water to air.
 
 ## Soil Status Message
 

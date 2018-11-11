@@ -48,7 +48,8 @@ to be excluded (1).
 ## `log`
 
 `log`s JSON messages from STDIN to a file. This can be used with
-`bullhorn/subscribe` piped into `message/json` to log sensed data (4).
+`bullhorn/subscribe` piped into `message/json` to log sensed data. Logs have the
+day appended and are rotated each day. (4).
 
 ## `plot`
 
