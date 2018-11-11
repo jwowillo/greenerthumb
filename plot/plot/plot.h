@@ -13,11 +13,11 @@ namespace plot {
 
 namespace {
 
-constexpr auto kDoubleMin = std::numeric_limits<double>::min();
+constexpr auto kDoubleMin = std::numeric_limits<double>::lowest();
 constexpr auto kDoubleMax = std::numeric_limits<double>::max();
 constexpr auto kDoubleEpsilon = std::numeric_limits<double>::epsilon();
 
-constexpr auto kLongMin = std::numeric_limits<uint64_t>::min();
+constexpr auto kLongMin = std::numeric_limits<uint64_t>::lowest();
 constexpr auto kLongMax = std::numeric_limits<uint64_t>::max();
 constexpr auto kLongEpsilon = std::numeric_limits<uint64_t>::epsilon();
 
@@ -82,6 +82,9 @@ class Plot {
 };
 
 double Plot::Hours() const noexcept {
+  if (data_.size() == 0) {
+    return 0;
+  }
   return (high_timestamp_ - low_timestamp_) / 3600.0;
 }
 
@@ -102,17 +105,17 @@ void Plot::AddData(const std::string& name, const Data& data) noexcept {
     // Don't re-add the point to data.
     return;
   }
-  if (data.timestamp < low_timestamp_) {
-    low_timestamp_ = data.timestamp;
-  }
-  if (data.timestamp > high_timestamp_) {
-    high_timestamp_ = data.timestamp;
-  }
   if (data.value < ranges_[name].first) {
     ranges_[name].first = data.value;
   }
   if (data.value > ranges_[name].second) {
     ranges_[name].second = data.value;
+  }
+  if (data.timestamp < low_timestamp_) {
+    low_timestamp_ = data.timestamp;
+  }
+  if (data.timestamp > high_timestamp_) {
+    high_timestamp_ = data.timestamp;
   }
   data_[name].insert(data);
 }

@@ -15,8 +15,8 @@ def to_fahrenheit(celsius):
 
 def sense(sensor, pin, rate):
     """
-    sense temperature and humidity at the provided rate using the sensor, pin on
-    the PI.
+    sense temperature and humidity at the provided rate using the sensor and
+    pin on the PI.
     """
     while True:
         humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
