@@ -59,6 +59,7 @@ int main(int argc, char** argv) {
       }
     }
   });
+  thread.detach();
 
   try {
     render::Renderer renderer{name, width, height};
@@ -72,8 +73,4 @@ int main(int argc, char** argv) {
   } catch (std::exception& exception) {
     std::cerr << exception.what() << std::endl;
   }
-
-  std::fclose(stdin);
-
-  thread.join();
 }

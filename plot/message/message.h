@@ -79,11 +79,14 @@ Message::Message(const std::string& raw) {
 
     const auto value_object = value.second;
     const auto type = value_object.JSONType();
-    if (type != json::JSON::Class::Floating &&
-        type != json::JSON::Class::Integral) {
+    if (type == json::JSON::Class::Floating) {
+      fields.insert(Field{name + " " + value.first, value.second.ToFloat()});
+    } else if (type == json::JSON::Class::Integral) {
+      fields.insert(Field{name + " " + value.first,
+                          static_cast<double>(value.second.ToInt())});
+    } else {
       throw std::invalid_argument{"bad numeric value"};
     }
-    fields.insert(Field{name + " " + value.first, value.second.ToFloat()});
   }
 }
 

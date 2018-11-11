@@ -20,13 +20,15 @@ def to_ratio(signal):
 
 def sense(sensor, channel, rate):
     """
+    sense soil moisture at the provided rate using the sensor and the channel
+    on the ADC.
     """
     while True:
-        signal = sensor.read_adc(channel)
+        moisture = to_ratio(sensor.read_adc(channel))
         print(json.dumps({
             'Name': 'Soil',
             'Timestamp': int(time.time()),
-            'Moisture': to_ratio(signal)
+            'Moisture': moisture
         }))
         sys.stdout.flush()
         time.sleep(1 / rate)
