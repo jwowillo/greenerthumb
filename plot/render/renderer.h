@@ -29,14 +29,14 @@ std::string DoubleToString(double x) {
 }
 
 void RenderUnit(const Area& area) {
-  Region region{0.05, 0.1, 0.75, 0};
+  Region region{0.05, 0.1, 0.675, 0};
   plot::Point point{0.5, 0.5};
   std::string unit{"Hours"};
   RenderString(area, region, point, unit);
 }
 
 void RenderHours(const Area& area, double hours) {
-  Region region{0.05, 0.2, 0.75, 0.1};
+  Region region{0.05, 0.2, 0.675, 0.1};
 
   RenderString(area, region, plot::Point{0, 0}, DoubleToString(0));
   RenderString(area, region, plot::Point{0.1, 0}, DoubleToString(hours / 10));
@@ -61,15 +61,18 @@ void RenderHours(const Area& area, double hours) {
 
 void RenderLabels(
     const Area& area,
-    std::map<std::string, std::tuple<double, double, double>> pairs) {
-  Region region{0.8, 0.95, 0.95, 0.05};
+    std::map<std::string, std::tuple<double, double, double>> colors_for_names,
+    std::map<std::string, std::pair<double, double>> ranges_for_names) {
+  Region region{0.7, 0.95, 0.95, 0.05};
 
   plot::Point point{0.1, 1};
   std::set<std::string> labels;
   std::vector<std::tuple<double, double, double>> colors;
 
-  for (const auto& pair : pairs) {
-    labels.insert(pair.first);
+  for (const auto& pair : colors_for_names) {
+    const auto range = ranges_for_names[pair.first];
+    labels.insert(pair.first + " [" + DoubleToString(range.first) + ", " +
+                  DoubleToString(range.second) + "]");
     colors.push_back(pair.second);
   }
 
@@ -78,7 +81,7 @@ void RenderLabels(
 }
 
 void RenderBorder(const Area& area) {
-  Region region{0.05, 0.97, 0.75, 0.2};
+  Region region{0.05, 0.97, 0.675, 0.2};
 
   std::vector<plot::Point> inner_lines;
   inner_lines.push_back(plot::Point{0.1, 1});
@@ -112,7 +115,7 @@ void RenderBorder(const Area& area) {
 
 void RenderData(const Area& area, const std::vector<plot::Point>& line,
                 std::tuple<double, double, double> color) {
-  Region region{0.05, 0.97, 0.75, 0.2};
+  Region region{0.05, 0.97, 0.675, 0.2};
   RenderLines(area, region, line, color, 2);
 }
 
@@ -166,7 +169,9 @@ bool Renderer::IsRunning() const {
 }
 
 void Renderer::Render(const plot::Plot& plot) {
+  std::map<std::string, std::pair<double, double>> ranges_for_names;
   for (const auto& name : plot.LineNames()) {
+    ranges_for_names[name] = plot.RangeForName(name);
     if (colors_for_names_.find(name) == colors_for_names_.end()) {
       colors_for_names_[name] = RandomColor(distribution_, engine_);
     }
@@ -176,7 +181,9 @@ void Renderer::Render(const plot::Plot& plot) {
 
   RenderUnit(area_);
   RenderHours(area_, plot.Hours());
-  RenderLabels(area_, colors_for_names_);
+
+  RenderLabels(area_, colors_for_names_, ranges_for_names);
+
   for (const auto& pair : colors_for_names_) {
     RenderData(area_, plot.LineForName(pair.first), pair.second);
   }
