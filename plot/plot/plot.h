@@ -73,6 +73,9 @@ class Plot {
   // LineForName returns the line for the name in the Plot.
   std::vector<Point> LineForName(const std::string&) const noexcept;
 
+  // RangeForName returns the range for the line with the name in the Plot.
+  std::pair<double, double> RangeForName(const std::string&) const noexcept;
+
  private:
   std::map<std::string, std::set<Data>> data_;
   std::map<std::string, std::pair<double, double>> ranges_;
@@ -94,6 +97,11 @@ std::set<std::string> Plot::LineNames() const noexcept {
     line_names.insert(line.first);
   }
   return line_names;
+}
+
+std::pair<double, double> Plot::RangeForName(const std::string& name) const
+    noexcept {
+  return ranges_.at(name);
 }
 
 void Plot::AddData(const std::string& name, const Data& data) noexcept {

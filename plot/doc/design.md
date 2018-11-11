@@ -23,9 +23,10 @@ the line will be determined by concatenating the `<message_name>` and the
 field's `<name>`. The line's will be assigned unique random colors which will be
 displayed in a legend with the message name's on the right side of the plot.
 
-Each line will be overlayed to allow trend comparison. To do this ,each line
+Each line will be overlayed to allow trend comparison. To do this, each line
 will have units normalized to eachother. The x-axis will have units of hours
-scaled to the period of all the received messages.
+scaled to the period of all the received messages. Ranges of units are presented
+in the legend to account for the normalization.
 
 If received messages have the same timestamp, the newest message will overwrite
 the older messages.
