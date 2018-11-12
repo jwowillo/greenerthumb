@@ -16,7 +16,7 @@
 ```
 ./air
 
-{"Name": "Air", "Timestamp": 0, "Temperature": 67.4, "Humidity": 0.58}
+{"Name": "Air", "Timestamp": 0, "Temperature": 67.4}
 ```
 
 ```

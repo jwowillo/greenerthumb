@@ -1,6 +1,6 @@
 ./json
 1
-0000000000000000013f0000003f800000ff
-{"Humidity":1,"Name":"Air","Temperature":0.5,"Timestamp":1}
+0000000000000000013f00000040
+{"Name":"Air","Temperature":0.5,"Timestamp":1}
 
 0

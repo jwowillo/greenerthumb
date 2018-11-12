@@ -19,16 +19,16 @@ void Usage() {
   p("    ./plot");
   p("");
   p("    < {\"Name\": \"Soil\", \"Timestamp\": 0, \"Moisture\": 0.37}");
-  p("    < {\"Name\": \"Air\", \"Timestamp\": 3600, \"Temperature\": 84.5, "
-    "\"Humidity\": 0.54}");
+  p("    < {\"Name\": \"Air\", \"Timestamp\": 3600, \"Temperature\": 84.5}");
   p("    < {\"Name\": \"Soil\", \"Timestamp\": 3600, \"Moisture\": 0.35}");
-  p("    < {\"Name\": \"Air\", \"Timestamp\": 7200, \"Temperature\": 82.1, "
-    "\"Humidity\": 0.51}");
+  p("    < {\"Name\": \"Air\", \"Timestamp\": 7200, \"Temperature\": 82.1}");
   p("");
-  p("This will plot 3 lines labelled 'Soil Moisture', 'Air Temperature', and");
-  p("'Air Humidity'. Each will have 2 points. The 'Soil'-line will start at");
-  p("hour 0 and finish at hour 1. The 'Air'-lines will start at hour 1 and");
-  p("finish at hour 2. The entire plot will occupy 2 hours.");
+  p("This will plot 2 lines labelled 'Soil Moisture' and 'Air Temperature'.");
+  p("Each will have 2 points. The 'Soil'-line will start at hour 0 and finish");
+  p("at hour 1. The 'Air'-line will start at hour 1 and finish at hour 2.");
+  p("The entire plot will occupy 2 hours. The range for 'Soil Moisture' will");
+  p("be [0.35, 0.37] and the range for 'Air Temperature' will be");
+  p("[82.1, 84.5]");
   p("");
 }
 

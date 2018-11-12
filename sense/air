@@ -15,17 +15,15 @@ def to_fahrenheit(celsius):
 
 def sense(sensor, pin, rate):
     """
-    sense temperature and humidity at the provided rate using the sensor and
-    pin on the PI.
+    sense air temperature at the provided rate using the sensor and pin on the
+    PI.
     """
     while True:
-        humidity, temperature = Adafruit_DHT.read_retry(sensor, pin)
-        temperature = to_fahrenheit(temperature)
+        temperature = to_fahrenheit(Adafruit_DHT.read_retry(sensor, pin)[1])
         print(json.dumps({
             'Name': 'Air',
             'Timestamp': int(time.time()),
             'Temperature': temperature,
-            'Humidity': humidity
         }))
         sys.stdout.flush()
         time.sleep(1 / rate)
