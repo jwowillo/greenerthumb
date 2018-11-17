@@ -29,9 +29,11 @@ have 2 points. The 'Soil'-line will start at hour 0 and finish at hour 1. The
 occupy 2 hours. The range for 'Soil Moisture' will be [0.35, 0.37] and the range
 for 'Air Temperature' will be [82.1, 84.5].
 
+Pressing 's' will also save a screenshot of the plot with a unique name.
+
 ## Dependencies
 
-* OpenGL, GLEW, GLUT, and SOIL are required.
+* OpenGL, GLEW, and GLUT are required.
 * The JSON parser is SimpleJSON taken from https://github.com/nbsdx/SimpleJSON.
 
 ## `gen_icon.py`

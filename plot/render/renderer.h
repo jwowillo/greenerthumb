@@ -1,16 +1,21 @@
 #pragma once
 
 #include <cstddef>
+#include <cstdlib>
+#include <ctime>
 #include <iomanip>
 #include <map>
 #include <random>
 #include <sstream>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include <GL/glew.h>  // Need to import first.
 
 #include <GLFW/glfw3.h>
+
+#include "lodepng.h"
 
 #include "../plot/plot.h"
 
@@ -135,6 +140,7 @@ class Renderer {
   void Render(const plot::Plot& plot);
 
  private:
+  std::mutex mutex_;
   GLFWwindow* window_;
   int width_;
   int height_;
@@ -154,11 +160,36 @@ Renderer::Renderer(std::string name, int width, int height)
       window_{MakeWindow(name, width, height)} {
   glfwSetWindowUserPointer(window_, this);
   auto reshape = [](GLFWwindow* window, int width, int height) {
-    static_cast<Renderer*>(glfwGetWindowUserPointer(window))->area_ =
-        Area{width, height};
+    auto renderer = static_cast<Renderer*>(glfwGetWindowUserPointer(window));
+    std::lock_guard<std::mutex> lock{renderer->mutex_};
+    renderer->area_ = Area{width, height};
     glViewport(0, 0, width, height);
   };
   glfwSetWindowSizeCallback(window_, reshape);
+  auto save_window = [](GLFWwindow* window, int key, int scancode, int action,
+                        int mods) {
+    if (key != GLFW_KEY_S || action != GLFW_PRESS) {
+      return;
+    }
+    auto area = static_cast<Renderer*>(glfwGetWindowUserPointer(window))->area_;
+    const auto name = "plot-" + std::to_string(std::time(nullptr)) + "-" +
+                      std::to_string(std::rand()) + ".png";
+    std::vector<uint8_t> pixels(4 * area.width * area.height);
+    std::vector<uint8_t> adjusted(4 * area.width * area.height);
+    glReadPixels(0, 0, area.width, area.height, GL_RGBA, GL_UNSIGNED_BYTE,
+                 &pixels[0]);
+    // Need to flip the rows of the array since OpenGL and images have rows in
+    // opposite orders.
+    for (int i = 0; i < area.height; i++) {
+      int start = i * area.width * 4;
+      int adjusted_start = (area.height - i - 1) * area.width * 4;
+      for (int j = 0; j < area.width * 4; j++) {
+        adjusted[start + j] = pixels[adjusted_start + j];
+      }
+    }
+    lodepng::encode(name.c_str(), &adjusted[0], area.width, area.height);
+  };
+  glfwSetKeyCallback(window_, save_window);
 }
 
 Renderer::~Renderer() { glfwTerminate(); }

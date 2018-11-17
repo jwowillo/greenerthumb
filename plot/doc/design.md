@@ -55,3 +55,5 @@ have 2 points. The 'Soil'-line will start at hour 0 and finish at hour 1. The
 'Air'-line will start at hour 1 and finish at hour 2. The entire plot will
 occupy 2 hours. The range for 'Soil Moisture' will be [0.35, 0.37] and the range
 for 'Air Temperature' will be [82.1, 84.5].
+
+Pressing 's' will also save a screenshot of the plot with a unique name.

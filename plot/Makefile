@@ -3,13 +3,12 @@
 all: plot test
 
 plot: build
-	g++ -O2 -std=c++1z main.cc -o build/plot \
+	g++ -O2 -std=c++1z main.cc render/lodepng.cpp -o build/plot \
 		-lGL \
 		-lglut \
 		-lGLU \
 		-lglfw \
 		-lGLEW \
-		-lSOIL \
 		-lX11 \
 		-lXxf86vm \
 		-lXrandr \
