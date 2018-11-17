@@ -2,10 +2,6 @@
 
 `sense` writes `greenerthumb` JSON messages from sensors to STDOUT.
 
-Anomalous readings shouldn't be printed.
-
-Emulated data is printed if sensors aren't detected.
-
 ## Program
 
 ### `air`
@@ -19,6 +15,10 @@ Emulated data is printed if sensors aren't detected.
 `soil` senses the 'Soil Status Message' at 0.1 hertz.
 
 ![Soil Schematic](soil.png)
+
+## Emulators
+
+Emulators are provided for all programs and each accepts an optional rate flag.
 
 ## Example
 

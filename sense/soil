@@ -7,14 +7,11 @@ import time
 
 import Adafruit_MCP3008
 
-# LOW analog value indicating least dry.
-LOW = 400
-# HIGH analog value indicating most dry.
-HIGH = 850
-
 
 def to_ratio(signal):
     """to_ratio converts the signal to a ratio."""
+    LOW = 400  # LOW analog value indicating least dry.
+    HIGH = 850  # HIGH analog value indicating most dry.
     return 1 - ((signal - LOW) / (HIGH - LOW))
 
 

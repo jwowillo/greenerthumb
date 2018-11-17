@@ -9,7 +9,7 @@
 ## Building
 
 * `make` builds all targets.
-* `make sense` builds `air` and `soil`.
+* `make sense` builds all sense programs.
 
 ## Running
 
@@ -27,3 +27,7 @@
 
 Each accepts all necessary GPIO pin numbers, ADC channels, and rates as optional
 flags with defaults chosen from the schematics.
+
+## Emulators
+
+Emulators are provided for all programs and each accepts an optional rate flag.
