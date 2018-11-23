@@ -2,7 +2,7 @@
 
 `sense` writes `greenerthumb` JSON messages from sensors to STDOUT.
 
-## Program
+## Programs
 
 ### `air`
 
@@ -20,7 +20,7 @@
 
 Emulators are provided for all programs and each accepts an optional rate flag.
 
-## Example
+## Examples
 
 ### `air`
 

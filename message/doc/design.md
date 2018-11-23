@@ -3,7 +3,7 @@
 `message` is where `greenerthumb` messages from the ICD are defined and the
 bytes-JSON conversion is implemented.
 
-## Program
+## Programs
 
 ### `bytes`
 
@@ -17,7 +17,7 @@ CRC and message errors will be written to STDERR.
 
 Message errors will be written to STDERR.
 
-## Example
+## Examples
 
 ### `bytes`
 

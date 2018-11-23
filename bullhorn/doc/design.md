@@ -1,10 +1,10 @@
-# `bullhorn` ICD
+# `bullhorn` Design
 
 ## Network
 
 ![Sequence Diagram](sequence.png)
 
-## Program
+## Programs
 
 ### Publisher
 
@@ -25,7 +25,7 @@ running at the `<publish_host>` and `<publish_port>`.
 An option is also provided to attempt to automatically reconnect to
 `bullhorn/publish` after a disconnect.
 
-## Example
+## Examples
 
 Machine 1 (192.168.1.50):
 
