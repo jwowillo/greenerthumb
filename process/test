@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#
+# test is a convenience script to run all process program tests.
+
+test_subcomponent() {
+	echo "testing $1"
+	cd $1 && ./test && cd ../../
+}
+
+test_subcomponent flatten
