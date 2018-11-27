@@ -72,13 +72,13 @@ more than a passed number of standard deviations away from the mean.
 {"Name": "B", "Timestamp": 0, "3": 4}
 {"Name": "A", "Timestamp": 1, "1": 1.83333}
 {"Name": "A", "Timestamp": 1, "2": 4}
-{"Name": "A", "Timestamp": 2, "3": 4.66667}
+{"Name": "A", "Timestamp": 2, "2": 4.66667}
 ```
 
 ### `filter`
 
 ```
-./filter --lt "A,1,3" --gt "A,1,3"
+./filter A 1 --lt 4 --gt 2
 
 < {"Name": "A", "Timestamp": 0, "1": 1}
 < {"Name": "A", "Timestamp": 1, "1": 2}
@@ -91,7 +91,7 @@ more than a passed number of standard deviations away from the mean.
 ```
 
 ```
-./filter -e "A,1,3" --epsilon 0.01
+./filter A 1 --e 3 --epsilon 0.01
 
 
 < {"Name": "A", "Timestamp": 2, "1": 2.991}

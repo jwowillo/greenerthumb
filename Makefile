@@ -14,6 +14,7 @@ host: build
 	$(call subcomponent,plot)
 	$(call subcomponent,message)
 	$(call subcomponent,log)
+	$(call subcomponent,process)
 
 greenerthumb: build
 	$(call subcomponent,fan)
@@ -22,12 +23,16 @@ greenerthumb: build
 	$(call subcomponent,message)
 	$(call subcomponent,log)
 	$(call subcomponent,sense)
+	$(call subcomponent,process)
+
 
 test: build
 	$(call subcomponent_test,fan)
 	$(call subcomponent_test,bullhorn)
 	$(call subcomponent_test,plot)
 	$(call subcomponent_test,message)
+	$(call subcomponent_test,process)
+
 
 build:
 	mkdir -p build
