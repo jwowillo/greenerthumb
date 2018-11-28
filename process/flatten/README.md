@@ -1,6 +1,6 @@
 # `flatten`
 
-`flatten` smooths data by keeping a sliding window of 3 instance of a data-type
+`flatten` smooths data by keeping a sliding window of 3 instances of a data-type
 and replacing it with a weighted average of the 3 instances biased towards the
 middle instance.
 

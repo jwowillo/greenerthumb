@@ -11,8 +11,8 @@ import (
 const (
 	_ = iota
 	_
-	// ParseFields is the error-code for failing to parse input fields.
-	ParseFields = 1 << iota
+	// ReadInput is the error-code for failing to parse input fields.
+	ReadInput = 1 << iota
 )
 
 func main() {
@@ -24,7 +24,7 @@ func main() {
 	err := process.Fields(os.Stdin, makeFieldHandler(windows), errorHandler)
 	if err != nil {
 		errorHandler(err)
-		ec |= ParseFields
+		ec |= ReadInput
 	}
 
 	// Write out the final values at the right side of the windows.
@@ -94,8 +94,8 @@ func init() {
 		p("Error-codes are used for the following:")
 		p("")
 		p(fmt.Sprintf(
-			"    %d = Failed to parse input fields.",
-			ParseFields))
+			"    %d = Failed to read input.",
+			ReadInput))
 		p("")
 	}
 	flag.Parse()

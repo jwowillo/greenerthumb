@@ -52,7 +52,7 @@ more than a passed number of standard deviations away from the mean.
 < {"Name": "A", "Timestamp": 3, "1": 4}
 < {"Name": "A", "Timestamp": 4, "1": 5}
 
-{"A": {"1": {"N": 5, "Minimum": 1, "Q1": 2, "Median": 3, "Q2": 4, "Maximum": 5}}}
+{"A": {"1": {"N": 5, "Minimum": 1, "Q1": 1.5, "Median": 3, "Q2": 4.5, "Maximum": 5}}}
 ```
 
 ### `flatten`
