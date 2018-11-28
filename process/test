@@ -4,7 +4,8 @@
 
 test_subcomponent() {
 	echo "testing $1"
-	cd $1 && ./test && cd ../../
+	cd $1 && ./test && cd ../
 }
 
 test_subcomponent flatten
+test_subcomponent summarize

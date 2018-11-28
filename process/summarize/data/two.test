@@ -1,0 +1,6 @@
+2
+{"Name": "A", "Timestamp": 0, "1": 1}
+{"Name": "A", "Timestamp": 1, "1": 2}
+{"A": {"1": {"N": 2, "Minimum": 1, "Q1": 1, "Median": 1.5, "Q3": 2, "Maximum": 2}}}
+0
+0
