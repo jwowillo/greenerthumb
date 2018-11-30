@@ -5,7 +5,7 @@
     a. Air temperature.
     b. Soil moisture.
 3. Publish sensed data on a connected network.
-4. Log sensed data from the network.
+4. Log sensed data from the network into rotating logs.
 5. Plot sensed data from the network.
 6. Allow plots to be saved.
 7. Remove anomalous data from sensors.
