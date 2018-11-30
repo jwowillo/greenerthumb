@@ -3,15 +3,14 @@
 function usage {
   echo "run_logger from bullhorn/subscribe." >&2
   echo "" >&2
-  echo "Accepts the subscriber port, the publisher IP address and port, and" >&2
-  echo "the log file." >&2
+  echo "Accepts the subscriber port and the publisher IP address and port." >&2
   echo "" >&2
   exit 2
 }
 
-if (($# != 4)); then
+if (($# != 3)); then
   usage
 fi
 
 ./build/bullhorn/subscribe ${1} ${2} ${3} | ./build/message/json |
-  ./build/log/log ${4}
+  ./build/log/log
