@@ -3,8 +3,7 @@
 function usage {
   echo "run_logger from bullhorn/subscribe." >&2
   echo "" >&2
-  echo "Accepts the subscriber port, the publisher IP address and port, and" >&2
-  echo "the log file." >&2
+  echo "Accepts the subscriber port and the publisher IP address and port." >&2
   echo "" >&2
   exit 2
 }
