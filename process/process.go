@@ -7,6 +7,13 @@ import (
 	"io"
 )
 
+// Serialize the name, timestamp, field, and value into a JSON string.
+func Serialize(name string, timestamp int64, field string, value float64) string {
+	return fmt.Sprintf(
+		"{\"Name\":\"%s\",\"Timestamp\":%d,\"%s\":%f}",
+		name, timestamp, field, value)
+}
+
 // FieldHandler is called with the message name and timestamp for the field and
 // the field name and value.
 //

@@ -26,13 +26,12 @@ weighted 2/3.
 
 ### `filter`
 
-`fitler` instances of data-types by specifying a list of ANDing conditions in
+`filter` instances of data-types by specifying a list of ANDing conditions in
 the set of less than or equal to, less than, equal, greater than, and greater
-than or equal to as a comma-separated list of `<NAME,KEY,VALUE>` and filtering
-STDIN according to the conditions.
+than or equal to and filtering STDIN according to the conditions.
 
 An epsilon value for comparisons can also optionally be passed. The system
-epsilon should be used otherwise.
+epsilon is used otherwise.
 
 ### `clean`
 
@@ -94,9 +93,9 @@ more than a passed number of standard deviations away from the mean.
 ./filter A 1 --e 3 --epsilon 0.01
 
 
-< {"Name": "A", "Timestamp": 2, "1": 2.991}
-{"Name": "A", "Timestamp": 2, "1": 2.991}
-< {"Name": "A", "Timestamp": 2, "1": 2.99}
+< {"Name": "A", "Timestamp": 0, "1": 2.99}
+{"Name": "A", "Timestamp": 0, "1": 2.99}
+< {"Name": "A", "Timestamp": 1, "1": 2.98999}
 ```
 
 ### `clean`

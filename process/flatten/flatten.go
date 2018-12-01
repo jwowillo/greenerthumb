@@ -32,7 +32,7 @@ func main() {
 		for field, w := range fields {
 			avg := average(slide(w, w.C))
 
-			fmt.Println(serialize(name, w.Timestamp, field, avg))
+			fmt.Println(process.Serialize(name, w.Timestamp, field, avg))
 		}
 	}
 
@@ -59,7 +59,7 @@ func makeFieldHandler(ws map[string]map[string]window) process.FieldHandler {
 			w.Timestamp = timestamp
 			ws[name][field] = w
 
-			fmt.Println(serialize(name, oldTimestamp, field, avg))
+			fmt.Println(process.Serialize(name, oldTimestamp, field, avg))
 		}
 	}
 }
