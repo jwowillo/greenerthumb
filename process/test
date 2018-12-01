@@ -9,3 +9,4 @@ test_subcomponent() {
 
 test_subcomponent flatten
 test_subcomponent summarize
+test_subcomponent filter
