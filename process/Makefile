@@ -1,8 +1,15 @@
 .PHONY: build test
 
-all: process summarize filter test_process test_summarize test_filter
+all: clean test_clean \
+	summarize test_summarize \
+	filter test_filter \
+	flatten test_flatten
 
-process: build
+clean: build
+	cd clean && make
+	cp -rf clean/build/. build/clean
+
+flatten: build
 	cd flatten && make
 	cp -rf flatten/build/. build/flatten
 
@@ -14,9 +21,14 @@ filter: build
 	cd filter && make
 	cp -rf filter/build/. build/filter
 
-test: test_process test_summarize
+test: test_clean test_filter test_summarize test_flatten
 
-test_process: build
+test_clean: build
+	cd clean && make test
+	cp -rf clean/build/. build/clean
+	cp test build/test
+
+test_flatten: build
 	cd flatten && make test
 	cp -rf flatten/build/. build/flatten
 	cp test build/test

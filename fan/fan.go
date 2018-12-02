@@ -154,13 +154,12 @@ func init() {
 			CloseStdout))
 		p("")
 
-		flag.PrintDefaults()
+		os.Exit(2)
 	}
 	flag.Var(&outs, "out", "out-programs")
 	flag.Var(&ins, "in", "in-programs")
 	flag.Parse()
 	if len(flag.Args()) != 0 {
 		flag.Usage()
-		os.Exit(2)
 	}
 }

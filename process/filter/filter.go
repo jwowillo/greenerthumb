@@ -131,6 +131,8 @@ func init() {
 			"    %d = Failed to read input.",
 			ReadInput))
 		p("")
+
+		os.Exit(2)
 	}
 
 	flag.Float64Var(
@@ -166,14 +168,12 @@ func init() {
 
 	if len(os.Args) < 3 {
 		flag.Usage()
-		os.Exit(2)
 	}
 
 	flag.CommandLine.Parse(os.Args[3:])
 
 	if len(flag.Args()) != 0 {
 		flag.Usage()
-		os.Exit(2)
 	}
 
 	name = os.Args[1]
