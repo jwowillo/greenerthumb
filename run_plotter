@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+set -e
+set -u
+set -o pipefail
+
 function usage {
   echo "run_plotter and logger from bullhorn/subscribe." >&2
   echo "" >&2
