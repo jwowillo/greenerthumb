@@ -2,6 +2,10 @@
 #
 # test is a convenience script to run all the sub-components tests.
 
+set -e
+set -u
+set -o pipefail
+
 test_subcomponent() {
 	echo "testing $1"
 	cd build/$1 && ./test && cd ../..
