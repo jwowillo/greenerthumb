@@ -79,10 +79,11 @@ func init() {
 			"    %d = Failed to marshal JSON.",
 			MarshalJSON))
 		p("")
+
+		os.Exit(2)
 	}
 	flag.Parse()
 	if len(flag.Args()) != 0 {
 		flag.Usage()
-		os.Exit(2)
 	}
 }

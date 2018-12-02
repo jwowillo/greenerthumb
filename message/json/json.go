@@ -97,10 +97,11 @@ func init() {
 		p("    < 0100000000000000003ebd70a410")
 		p("    {\"Name\": \"Soil\", \"Timestamp\": 0, \"Moisture\": 0.37}")
 		p("")
+
+		os.Exit(2)
 	}
 	flag.Parse()
 	if len(flag.Args()) != 0 {
 		flag.Usage()
-		os.Exit(2)
 	}
 }

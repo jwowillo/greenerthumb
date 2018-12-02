@@ -97,10 +97,11 @@ func init() {
 			"    %d = Failed to read input.",
 			ReadInput))
 		p("")
+
+		os.Exit(2)
 	}
 	flag.Parse()
 	if len(flag.Args()) != 0 {
 		flag.Usage()
-		os.Exit(2)
 	}
 }
