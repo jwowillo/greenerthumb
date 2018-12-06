@@ -1,0 +1,56 @@
+#!/usr/bin/env python3
+"""
+copy-keys checks if any ssh-keys exist, generates them if they don't, and copys
+them to a passed remote user and host.
+"""
+
+import sys
+import subprocess
+
+
+def run(cmd):
+    return subprocess.check_output(
+        cmd, shell=True, stderr=subprocess.STDOUT).decode('utf-8').split()
+
+
+def run_step(log, cmd=''):
+    print(log)
+    result = None
+    if cmd != '':
+        result = run(cmd)
+    print()
+    return result
+
+
+def copy_keys(user, host):
+    result = run_step('Checking for existing keys.', 'ls ~/.ssh')
+
+    if 'id_rsa' in result and 'id_rsa.pub' in result:
+        run_step('Keys exist.')
+    else:
+        run_step('No keys. Generating.', 'ssh-keygen -t rsa')
+
+    run_step('Copying keys to {}@{}.'.format(user, host),
+             'ssh-copy-id {}@{}'.format(user, host))
+
+
+def usage():
+    p = lambda *args, **kwargs: print(*args, file=sys.stderr, **kwargs)
+    p('')
+    p("copy-keys checks if any ssh-keys exist, generates them if they don't")
+    p('and copys them to a passed remote user and host.')
+    p('')
+    p('An example is:')
+    p('')
+    p('    ./copy-keys pi 192.168.1.100')
+    p('')
+    sys.exit(2)
+
+
+if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        usage()
+    user = sys.argv[1]
+    host = sys.argv[2]
+
+    copy_keys(user, host)

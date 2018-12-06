@@ -1,5 +1,3 @@
-.PHONY: build
-
 all: log
 
 log: build

@@ -1,44 +1,37 @@
-.PHONY: build
+greenerthumb: clean build
+	$(call subcomponent,fan,fan)
+	$(call subcomponent,bullhorn,bullhorn)
+	$(call subcomponent,plot,plot)
+	$(call subcomponent,message,message)
+	$(call subcomponent,log,log)
+	$(call subcomponent,sense,sense)
+	$(call subcomponent,process,process)
 
-all: greenerthumb test
+air: clean build
+	env GOOS=linux GOARCH=arm $(call subcomponent,sense,air)
+	env GOOS=linux GOARCH=arm $(call subcomponent,message,bytes)
+	env GOOS=linux GOARCH=arm $(call subcomponent,bullhorn,publish)
 
-pi: build
-	$(call subcomponent,fan)
-	$(call subcomponent,bullhorn)
-	$(call subcomponent,message)
-	$(call subcomponent,sense)
+soil: clean build
+	env GOOS=linux GOARCH=arm $(call subcomponent,sense,soil)
+	env GOOS=linux GOARCH=arm $(call subcomponent,message,bytes)
+	env GOOS=linux GOARCH=arm $(call subcomponent,bullhorn,publish)
 
-host: build
-	$(call subcomponent,fan)
-	$(call subcomponent,bullhorn)
-	$(call subcomponent,plot)
-	$(call subcomponent,message)
-	$(call subcomponent,log)
-	$(call subcomponent,process)
-
-greenerthumb: build
-	$(call subcomponent,fan)
-	$(call subcomponent,bullhorn)
-	$(call subcomponent,plot)
-	$(call subcomponent,message)
-	$(call subcomponent,log)
-	$(call subcomponent,sense)
-	$(call subcomponent,process)
-
-
-test: build
+test: clean build
 	$(call subcomponent_test,fan)
 	$(call subcomponent_test,bullhorn)
 	$(call subcomponent_test,plot)
 	$(call subcomponent_test,message)
 	$(call subcomponent_test,process)
 
-
 build:
 	mkdir -p build
 
+clean:
+	rm -rf build
+
 define subcomponent
-	$(MAKE) -C $(1) $(1)
+	$(MAKE) -C $(1) $(2)
 	cp -rf $(1)/build/. build/$(1)
 endef
 

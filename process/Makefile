@@ -1,9 +1,8 @@
 .PHONY: build test
 
-all: clean test_clean \
-	summarize test_summarize \
-	filter test_filter \
-	flatten test_flatten
+all: process test
+
+process: clean summarize filter flatten
 
 clean: build
 	cd clean && make

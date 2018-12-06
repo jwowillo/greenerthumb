@@ -1,12 +1,16 @@
-.PHONY: build
+.PHONY: bytes json test
 
 all: message test
 
-message: build
+message: bytes json
+
+bytes: build
 	cd bytes && go build -o ../build/bytes
+
+json: build
 	cd json && go build -o ../build/json
 
-test: message build
+test: bytes json build
 	rm -rf build/data
 	cp -rf data build
 	cp test build/test

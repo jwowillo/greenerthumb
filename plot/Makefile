@@ -1,5 +1,3 @@
-.PHONY: build
-
 all: plot test
 
 plot: build
