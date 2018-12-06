@@ -5,7 +5,7 @@ set -u
 set -o pipefail
 
 function usage {
-  echo "run_air sensor into bullhorn/publish." >&2
+  echo "run-soil sensor into bullhorn/publish." >&2
   echo "" >&2
   echo "Accepts the port to publish on." >&2
   echo "" >&2
@@ -16,4 +16,5 @@ if (($# != 1)); then
   usage
 fi
 
-./build/sense/air | ./build/message/bytes | ./build/bullhorn/publish ${1}
+greenerthumb-sense-soil | greenerthumb-message-bytes |
+	greenerthumb-bullhorn-publish ${1}

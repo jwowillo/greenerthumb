@@ -10,6 +10,8 @@
 
 * `make` builds all targets.
 * `make bullhorn` builds `publish` and `subscribe`.
+* `make publish` builds `publish`.
+* `make subscribe` builds `subscribe`.
 * `make test` builds `bullhorn`'s tests.
 
 ## Running
