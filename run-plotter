@@ -7,17 +7,16 @@ set -o pipefail
 function usage {
   echo "run-plotter and logger from bullhorn/subscribe." >&2
   echo "" >&2
-  echo "Accepts the subscriber port and the publisher IP address and port." >&2
+  echo "Accepts the publisher host and port." >&2
   echo "" >&2
   exit 2
 }
 
-if (($# != 3)); then
+if (($# != 2)); then
   usage
 fi
 
-greenerthumb-bullhorn-subscribe ${1} ${2} ${3} |
-	greenerthumb-fan \
-		--out 'bash -c greenerthumb-message-json' \
-		--in 'bash -c greenerthumb-plot' \
-		--in 'bash -c greenerthumb-log'
+greenerthumb-bullhorn-subscribe ${1} ${2} | greenerthumb-fan \
+	--out 'bash -c greenerthumb-message-json' \
+	--in 'bash -c greenerthumb-plot' \
+	--in 'bash -c greenerthumb-log'
