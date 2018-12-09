@@ -86,6 +86,22 @@ func ReadIntoConns(r io.Reader, handler func(error)) {
 	}
 }
 
+// AcceptConnections accepts connections from the net.Listener until closed.
+func AcceptConnections(ln net.Listener, handler func(err error)) {
+	for {
+		conn, err := ln.Accept()
+		if err != nil {
+			handler(err)
+			return
+		}
+		go func() {
+			if err := StoreUntilClosed(conn); err != nil {
+				handler(err)
+			}
+		}()
+	}
+}
+
 const (
 	_ = iota
 	_
@@ -97,24 +113,13 @@ const (
 
 func main() {
 	handler := func(err error) { fmt.Fprintln(os.Stderr, err) }
-	go ReadIntoConns(os.Stdin, handler)
 	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
 	if err != nil {
 		handler(err)
 		os.Exit(Listen)
 	}
-	for {
-		conn, err := ln.Accept()
-		if err != nil {
-			handler(err)
-			os.Exit(Accept)
-		}
-		go func() {
-			if err := StoreUntilClosed(conn); err != nil {
-				handler(err)
-			}
-		}()
-	}
+	go AcceptConnections(ln, handler)
+	ReadIntoConns(os.Stdin, handler)
 }
 
 // port to listen for TCP-connections on.

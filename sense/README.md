@@ -1,6 +1,6 @@
 # `sense`
 
-`sense` writes `greenerthumb` JSON messages from sensors to STDOUT.
+`sense` programs write `greenerthumb` JSON messages from sensors to STDOUT.
 
 # Documentation
 

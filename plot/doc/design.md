@@ -2,6 +2,8 @@
 
 `plot`s `greenerthumb` JSON messages from STDIN.
 
+`plot` only closes once commanded to close instead of once STDIN is closed.
+
 ## UI
 
 `plot` will convert input messages to points on a line-graph. The expected
