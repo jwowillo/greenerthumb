@@ -10,8 +10,10 @@
 
 `./publish <port>`
 
-Runs `publish` which publishes newline-delimited messages from `STDIN` to
+Runs `publish` which publishes newline-delimited messages from STDIN to
 subscribers received on `<port>`.
+
+`publish` exits when STDIN is closed.
 
 ### Subscriber
 
@@ -19,7 +21,7 @@ subscribers received on `<port>`.
 ./subscribe <publish_host> <publish_port> ?--reconnect-delay <delay>
 ```
 
-Runs `subscribe` which prints messages to `STDOUT` published from `publish`
+Runs `subscribe` which prints messages to STDOUT published from `publish`
 running at the `<publish_host>` and `<publish_port>`.
 
 An optional reconnect delay will cause suscribers to attempt to reconnect to the
