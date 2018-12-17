@@ -10,6 +10,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/jwowillo/greenerthumb"
 )
 
 const (
@@ -26,6 +28,14 @@ const (
 	ParsePort = 1 << iota
 )
 
+func logInfo(l string, args ...interface{}) {
+	greenerthumb.Info("subscribe", l, args...)
+}
+
+func logError(err error) {
+	greenerthumb.Error("subscribe", err)
+}
+
 func makeConn(writePort int, host string, port int) net.Conn {
 	conn, err := net.Dial(
 		"tcp",
@@ -33,8 +43,15 @@ func makeConn(writePort int, host string, port int) net.Conn {
 	if err != nil {
 		return nil
 	}
-	fmt.Fprintln(os.Stderr, "connection successful")
+
+	realHost, realPort, err := parseHostAndPort(conn.RemoteAddr())
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+	}
+
+	logInfo("connection to %s:%d started", realHost, realPort)
 	fmt.Fprintf(conn, fmt.Sprintf("%d\n", writePort))
+
 	return conn
 }
 
@@ -44,17 +61,22 @@ func keepOpen(
 	port int, publishHost string, publishPort int) error {
 	for {
 		for monitorConn == nil {
+			logInfo(
+				"connection to %s:%d unsuccessful",
+				publishHost, publishPort)
 			if shouldReconnect {
 				time.Sleep(time.Duration(delay) * time.Second)
 
-				fmt.Fprintln(os.Stderr, "attempting reconnect")
+				logInfo(
+					"attemping reconnect to %s:%d",
+					publishHost, publishPort)
 
 				monitorConn = makeConn(
 					port,
 					publishHost, publishPort)
 			} else {
 				return fmt.Errorf(
-					"connect to %s:%d failed",
+					"connection to %s:%d failed",
 					publishHost, publishPort)
 			}
 		}
@@ -68,13 +90,13 @@ func keepOpen(
 	return nil
 }
 
-func parsePort(conn net.Conn) (int, error) {
-	parts := strings.Split(conn.LocalAddr().String(), ":")
+func parseHostAndPort(addr net.Addr) (string, int, error) {
+	parts := strings.Split(addr.String(), ":")
 	port, err := strconv.Atoi(parts[len(parts)-1])
 	if err != nil {
-		return -1, err
+		return "", -1, err
 	}
-	return port, nil
+	return parts[0], port, nil
 }
 
 func main() {
@@ -82,21 +104,20 @@ func main() {
 	publishHost := host
 	publishPort := port
 
-	handler := func(err error) { fmt.Fprintln(os.Stderr, err) }
 	addr, err := net.ResolveUDPAddr("udp", fmt.Sprintf(":0"))
 	if err != nil {
-		handler(err)
+		logError(err)
 		os.Exit(Resolve)
 	}
 	conn, err := net.ListenUDP("udp", addr)
 	if err != nil {
-		handler(err)
+		logError(err)
 		os.Exit(Listen)
 	}
 
-	port, err := parsePort(conn)
+	_, port, err := parseHostAndPort(conn.LocalAddr())
 	if err != nil {
-		handler(err)
+		logError(err)
 		os.Exit(ParsePort)
 	}
 
@@ -106,7 +127,8 @@ func main() {
 			tcpConn, conn,
 			shouldReconnect, reconnectDelay,
 			port, publishHost, publishPort); err != nil {
-			handler(err)
+
+			logError(err)
 			os.Exit(Connect)
 		}
 	}()
@@ -128,8 +150,11 @@ func init() {
 	p := func(l string) { fmt.Fprintln(os.Stderr, l) }
 	flag.Usage = func() {
 		p("")
+		p("./subscribe <publish_host> <publish_port> \\")
+		p("    ?--reconnect-delay <delay>")
+		p("")
 		p("subscribe to a publisher on a network and write its data to")
-		p("STDOUT as a subscriber.")
+		p("STDOUT.")
 		p("")
 		p("The publisher's host and port must be passed. A reconnect")
 		p("delay that will cause the subscriber to attempt to")

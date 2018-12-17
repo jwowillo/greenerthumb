@@ -5,6 +5,9 @@ set -u
 set -o pipefail
 
 function usage {
+  echo "" >&2
+  echo "./run-air <port>" >&2
+  echo "" >&2
   echo "run-air sensor into bullhorn/publish." >&2
   echo "" >&2
   echo "Accepts the port to publish on." >&2

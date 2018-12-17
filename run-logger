@@ -5,6 +5,9 @@ set -u
 set -o pipefail
 
 function usage {
+  echo "" >&2
+  echo "./run-logger <host> <port>" >&2
+  echo "" >&2
   echo "run-logger from bullhorn/subscribe." >&2
   echo "" >&2
   echo "Accepts the publisher host and port." >&2

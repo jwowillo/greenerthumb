@@ -102,7 +102,7 @@ def assert_result(path, name, field, filters, actual_out_lines, out_lines,
 def test(base):
     for path in glob.glob('{}/*.test'.format(base)):
         with open(path) as handle:
-            lines = [line[:-1] for line in handle]
+            lines = [line[:-1] for line in handle if not line.startswith('#')]
             name = lines[0]
             field = lines[1]
             filters = lines[2]
@@ -140,6 +140,9 @@ def test(base):
             ]
             actual_err_lines = [
                 line.decode('utf-8')[:-1] for line in result.stderr
+            ]
+            actual_err_lines = [
+                line.split(' - ')[1] for line in actual_err_lines
             ]
 
             assert_result(path, name, field, filters, actual_out_lines,

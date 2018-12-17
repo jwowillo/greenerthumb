@@ -13,10 +13,11 @@ type Program struct {
 	writer io.WriteCloser
 }
 
-// NewProgram made from the raw shell command that writes to the io.Writer.
+// NewProgram made from the raw shell command that writes STDOUT to the first
+// io.Writer and STDERR to the second.
 //
 // Returns an error if the program couldn't be configured correctly.
-func NewProgram(raw string, out io.Writer) (*Program, error) {
+func NewProgram(raw string, stdOut, stdErr io.Writer) (*Program, error) {
 	parts := strings.Split(raw, " ")
 	program := parts[0]
 	rest := parts[1:]
@@ -32,7 +33,8 @@ func NewProgram(raw string, out io.Writer) (*Program, error) {
 	if err != nil {
 		return nil, err
 	}
-	cmd.Stdout = out
+	cmd.Stdout = stdOut
+	cmd.Stderr = stdErr
 	return &Program{cmd: cmd, writer: writer}, nil
 }
 

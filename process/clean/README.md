@@ -12,6 +12,12 @@ more than a passed number of standard deviations away from the mean.
 ## Running
 
 ```
+./clean <standard_deviation_limit>
+```
+
+An example is:
+
+```
 ./clean 1
 
 < {"Name": "A", "Timestamp": 0, "1": 1}

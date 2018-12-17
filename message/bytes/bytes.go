@@ -5,42 +5,56 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io"
 	"os"
 
+	"github.com/jwowillo/greenerthumb"
 	"github.com/jwowillo/greenerthumb/message"
 )
 
+const (
+	_ = iota
+	_
+	// ReadInput is the error-code for failing to read input.
+	ReadInput = 1 << iota
+)
+
+func logError(err error) {
+	greenerthumb.Error("bytes", err)
+}
+
 func main() {
-	r := bufio.NewReader(os.Stdin)
 	m := &message.Wrapper{}
-	for {
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
 		x := make(map[string]interface{})
-		bs, err := r.ReadSlice('\n')
-		if err == io.EOF {
-			break
-		} else if err != nil {
-			fmt.Fprintln(os.Stderr, err)
+		bs := scanner.Bytes()
+
+		if err := json.Unmarshal(bs, &x); err != nil {
+			logError(err)
 			continue
 		}
-		if err = json.Unmarshal(bs, &x); err != nil {
-			fmt.Fprintln(os.Stderr, err)
+		if err := m.DeserializeJSON(x); err != nil {
+			logError(err)
 			continue
 		}
-		if err = m.DeserializeJSON(x); err != nil {
-			fmt.Fprintln(os.Stderr, err)
-			continue
-		}
+
 		for _, b := range m.SerializeBytes() {
 			fmt.Printf("%02x", b)
 		}
 		fmt.Println()
+	}
+
+	if err := scanner.Err(); err != nil {
+		logError(err)
+		os.Exit(ReadInput)
 	}
 }
 
 func init() {
 	p := func(l string) { fmt.Fprintln(os.Stderr, l) }
 	flag.Usage = func() {
+		p("")
+		p("./bytes")
 		p("")
 		p("bytes converts JSON messages from STDIN to bytes written to")
 		p("STDOUT.")
@@ -53,6 +67,12 @@ func init() {
 		p("")
 		p("    < {\"Name\": \"Soil\", \"Timestamp\": 0, \"Moisture\": 0.37}")
 		p("    0100000000000000003ebd70a410")
+		p("")
+		p("Error-codes are used for the following:")
+		p("")
+		p(fmt.Sprintf(
+			"    %d = Failed to read input.",
+			ReadInput))
 		p("")
 
 		os.Exit(2)

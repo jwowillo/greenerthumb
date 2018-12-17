@@ -1,3 +1,4 @@
+# connected.test tests that each out-program is connected to every in-program.
 ./fan --out 'echo test 1' --out 'echo test 2' --in 'cat' --in 'cat' --in 'cat'
 0
 test 1

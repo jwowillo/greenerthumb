@@ -1,3 +1,5 @@
+# error.test tests that filter reports the right errors when missing mandatory
+# values.
 A
 1
 

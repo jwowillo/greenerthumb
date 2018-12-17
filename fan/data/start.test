@@ -1,3 +1,4 @@
+# start.test tests that programs that can't start report the correct error-code.
 ./fan --out 'not-a-program' --out 'echo a' --in 'cat'
 8
 a

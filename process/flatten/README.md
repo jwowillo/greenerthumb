@@ -14,6 +14,12 @@ middle instance.
 
 ```
 ./flatten
+```
+
+An example is:
+
+```
+./flatten
 
 < {"Name": "A", "Timestamp": 0, "1": 1, "2": 7}
 < {"Name": "A", "Timestamp": 1, "1": 2, "2": 3}

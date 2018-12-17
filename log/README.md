@@ -17,6 +17,12 @@ used before being rotated.
 ## Running
 
 ```
+./log ?--duration <duration>
+```
+
+An example is:
+
+```
 echo 'line' | ./log
 ```
 

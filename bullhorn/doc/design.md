@@ -1,69 +1,22 @@
 # `bullhorn` Design
 
-## Network
+`bullhorn` allows data to be sent on a network from publishers to subscribers
+(3).
 
 ![Sequence Diagram](sequence.png)
 
-## Programs
+This is done via a pub/sub system which operates over UDP with a TCP trunk. The
+TCP trunk allows the publisher to know when to stop publishing to subscribers
+and lets the subscriber know when it needs to try to reconnect to a publisher if
+reconnect is enabled. The unreliable UDP connection is fine because mostly
+periodic statuses are sent through the system.
 
-### Publisher
+The publisher will publish all newline-separated lines it receives over STDIN to
+every subscriber until STDIN is closed.
 
-`./publish <port>`
-
-Runs `publish` which publishes newline-delimited messages from STDIN to
-subscribers received on `<port>`.
-
-`publish` exits when STDIN is closed.
-
-### Subscriber
-
-```
-./subscribe <publish_host> <publish_port> ?--reconnect-delay <delay>
-```
-
-Runs `subscribe` which prints messages to STDOUT published from `publish`
-running at the `<publish_host>` and `<publish_port>`.
-
-An optional reconnect delay will cause suscribers to attempt to reconnect to the
-publisher.
-
-## Examples
-
-Machine 1 (192.168.1.50):
-
-```
-./publish 5050
-```
-
-Machine 2 (192.168.1.80):
-
-```
-./subscribe 192.168.1.50 5050
-```
-
-Machine 3 (192.168.1.81):
-
-```
-./subscribe 192.168.1.50 5050
-```
-
-Machine 1 (192.168.1.50):
-
-```
-< message1
-< message2
-```
-
-Machine 2 (192.168.1.80):
-
-```
-message1
-message2
-```
-
-Machine 3 (192.168.1.81):
-
-```
-message1
-message2
-```
+The subscriber prints all newline-separated lines it receives from the
+publisher until the publisher is closed if reconnect isn't enabled. The
+subscriber never closes if reconnect is enabled and will just periodically
+attempt reconnects. The subscriber will always exit with a failure to connect
+unless terminated because it will either try to reconnect forever or fail to
+connect to a terminated publisher.

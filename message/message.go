@@ -7,12 +7,14 @@ import (
 )
 
 var (
-	// ErrMessage is returned if a Message is malformed.
-	ErrMessage = errors.New("bad message")
-	// ErrJSON is returned if JSON is malformed.
-	ErrJSON = errors.New("bad JSON")
-	// ErrBytes is return if bytes are malformed.
-	ErrBytes = errors.New("bad bytes")
+	// ErrMessage is returned if a Message doesn't exist.
+	ErrMessage = errors.New("message doesn't exist")
+	// ErrJSON is returned if a Message doesn't have the right amount of
+	// keys.
+	ErrJSON = errors.New("message doesn't have the correct number of keys")
+	// ErrBytes is return if bytes message doesn't have the correct buffer
+	// length.
+	ErrBytes = errors.New("message doesn't have the correct buffer length")
 )
 
 // JSONMessage is a message that supports the JSON format.
@@ -119,22 +121,37 @@ func (w Wrapper) SerializeJSON() map[string]interface{} {
 func (w *Wrapper) DeserializeJSON(x map[string]interface{}) error {
 	xName, ok := x["Name"]
 	if !ok {
-		return ErrJSON
+		return JSONError{
+			Data:   x,
+			BadKey: "Name",
+			Reason: "missing"}
 	}
 	xTimestamp, ok := x["Timestamp"]
 	if !ok {
-		return ErrJSON
+		return JSONError{
+			Data:   x,
+			BadKey: "Timestamp",
+			Reason: "missing"}
 	}
 	name, ok := xName.(string)
 	if !ok {
-		return ErrJSON
+		return JSONError{
+			Data:   x,
+			BadKey: "Name",
+			Reason: "not a string"}
 	}
 	timestamp, ok := xTimestamp.(float64)
 	if !ok {
-		return ErrJSON
+		return JSONError{
+			Data:   x,
+			BadKey: "Timestamp",
+			Reason: "not a number"}
 	}
 	if math.Floor(timestamp) != timestamp {
-		return ErrJSON
+		return JSONError{
+			Data:   x,
+			BadKey: "Timestamp",
+			Reason: "not an integer"}
 	}
 	delete(x, "Name")
 	delete(x, "Timestamp")

@@ -27,11 +27,17 @@ func (m *AirStatus) DeserializeJSON(x map[string]interface{}) error {
 	}
 	xTemperature, ok := x["Temperature"]
 	if !ok {
-		return ErrJSON
+		return JSONError{
+			Data:   x,
+			BadKey: "Temperature",
+			Reason: "missing"}
 	}
 	temperature, ok := xTemperature.(float64)
 	if !ok {
-		return ErrJSON
+		return JSONError{
+			Data:   x,
+			BadKey: "Temperature",
+			Reason: "not a number"}
 	}
 	m.Temperature = float32(temperature)
 	return nil

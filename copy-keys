@@ -37,6 +37,8 @@ def copy_keys(user, host):
 def usage():
     p = lambda *args, **kwargs: print(*args, file=sys.stderr, **kwargs)
     p('')
+    p('./copy-keys <user> <host>')
+    p('')
     p("copy-keys checks if any ssh-keys exist, generates them if they don't")
     p('and copys them to a passed remote user and host.')
     p('')

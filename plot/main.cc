@@ -12,9 +12,11 @@
 void Usage() {
   const auto p = [](const auto& l) { std::cerr << l << std::endl; };
   p("");
+  p("./plot");
+  p("");
   p("plots greenerthumb JSON messages from STDIN.");
   p("");
-  p("Example:");
+  p("An example is:");
   p("");
   p("    ./plot");
   p("");
@@ -36,6 +38,15 @@ constexpr auto name = "plot";
 constexpr auto width = 900;
 constexpr auto height = 500;
 
+void log_error(const std::exception& exception) {
+  char buffer[32];
+  auto time = std::time(nullptr);
+  auto utc = std::gmtime(&time);
+  std::strftime(buffer, 32, "%Y-%m-%d %H:%M:%S", utc);
+  std::cerr << "ERROR plot " << buffer << " - " << exception.what()
+            << std::endl;
+}
+
 int main(int argc, char** argv) {
   if (argc > 1) {
     Usage();
@@ -55,7 +66,7 @@ int main(int argc, char** argv) {
           plot.AddData(field.key, plot::Data{message.timestamp, field.value});
         }
       } catch (std::exception& exception) {
-        std::cerr << exception.what() << std::endl;
+        log_error(exception);
       }
     }
   });
@@ -71,6 +82,6 @@ int main(int argc, char** argv) {
       std::this_thread::sleep_for(std::chrono::milliseconds(100));  // 10 Hz.
     }
   } catch (std::exception& exception) {
-    std::cerr << exception.what() << std::endl;
+    log_error(exception);
   }
 }

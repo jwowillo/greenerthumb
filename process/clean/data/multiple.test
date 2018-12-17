@@ -1,3 +1,4 @@
+# multiple.test tests that clean works with multiple kinds of items.
 1
 10
 {"Name": "A", "Timestamp": 0, "1": 1}

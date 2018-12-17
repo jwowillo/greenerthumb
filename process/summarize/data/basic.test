@@ -1,3 +1,5 @@
+# basic.test test that summarize calculates the correct five-number-summary with
+# standard input.
 5
 {"Name": "A", "Timestamp": 0, "1": 1}
 {"Name": "A", "Timestamp": 0, "1": 2}

@@ -16,6 +16,18 @@ epsilon is used otherwise.
 ## Running
 
 ```
+./filter <name> <key> \
+    ?--epsilon <epsilon> \
+    ?--e <equal> \
+    ?--lt <less_than> \
+    ?--lte <less_than_or_equal_to> \
+    ?--gt <greater_than> \
+    ?--gte <greater_than_or_equal_to>
+```
+
+An example is:
+
+```
 ./filter A 1 --lt 4 --gt 2
 
 < {"Name": "A", "Timestamp": 0, "1": 1}

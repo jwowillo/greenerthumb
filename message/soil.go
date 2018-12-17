@@ -27,11 +27,17 @@ func (m *SoilStatus) DeserializeJSON(x map[string]interface{}) error {
 	}
 	xMoisture, ok := x["Moisture"]
 	if !ok {
-		return ErrJSON
+		return JSONError{
+			Data:   x,
+			BadKey: "Moisture",
+			Reason: "missing"}
 	}
 	moisture, ok := xMoisture.(float64)
 	if !ok {
-		return ErrJSON
+		return JSONError{
+			Data:   x,
+			BadKey: "Moisture",
+			Reason: "not a number"}
 	}
 	m.Moisture = float32(moisture)
 	return nil

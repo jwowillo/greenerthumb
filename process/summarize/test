@@ -72,7 +72,7 @@ def assert_result(path, actual_out, out, actual_err_lines, err_lines,
 def test(base):
     for path in glob.glob('{}/*.test'.format(base)):
         with open(path) as handle:
-            lines = [line[:-1] for line in handle]
+            lines = [line[:-1] for line in handle if not line.startswith('#')]
             n_input = int(lines[0])
             in_lines = lines[1:n_input + 1]
             output_start = n_input + 1
@@ -101,6 +101,9 @@ def test(base):
                 [line.decode('utf-8')[:-1] for line in result.stdout])
             actual_err_lines = [
                 line.decode('utf-8')[:-1] for line in result.stderr
+            ]
+            actual_err_lines = [
+                line.split(' - ')[1] for line in actual_err_lines
             ]
 
             assert_result(path, actual_out, out, actual_err_lines, err_lines,

@@ -23,7 +23,8 @@ freely, subject to the following restrictions:
     distribution.
 */
 
-// This source was altered to remove future work comments.
+// This source was altered to remove future work comments and make consistent
+// with existing files.
 
 #ifndef LODEPNG_H
 #define LODEPNG_H
