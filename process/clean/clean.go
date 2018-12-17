@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/jwowillo/greenerthumb"
 	"github.com/jwowillo/greenerthumb/process"
 )
 
@@ -19,7 +20,7 @@ const (
 func main() {
 	var ec int
 
-	errorHandler := func(err error) { fmt.Fprintln(os.Stderr, err) }
+	errorHandler := func(err error) { greenerthumb.Error("clean", err) }
 	data := make(map[string]map[string][]Pair)
 
 	err := process.Fields(os.Stdin, makeFieldHandler(data), errorHandler)
@@ -61,6 +62,8 @@ var limit int
 func init() {
 	p := func(l string) { fmt.Fprintln(os.Stderr, l) }
 	flag.Usage = func() {
+		p("")
+		p("./clean <standard_deviation_limit>")
 		p("")
 		p("clean reads all input until STDIN is closed and filters")
 		p("instances that are more than a passed number of standard")

@@ -1,3 +1,5 @@
+# basic_or_equal.test tests that filter filters out data that isn't in a range
+# defined by a less-than-or-equal/greater-than-or-equal pair.
 A
 1
 --lte 4 --gte 2

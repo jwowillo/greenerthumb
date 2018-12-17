@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"sort"
 )
 
 // Serialize the name, timestamp, field, and value into a JSON string.
@@ -78,13 +79,26 @@ func parseObjects(
 }
 
 func parseLines(rd io.Reader, cb func([]byte) error, ecb ErrorHandler) error {
-	scanner := bufio.NewScanner(bufio.NewReader(rd))
+	scanner := bufio.NewScanner(rd)
 	for scanner.Scan() {
 		if err := cb(scanner.Bytes()); err != nil {
 			ecb(err)
 		}
 	}
 	return scanner.Err()
+}
+
+func mapToString(x map[string]interface{}) string {
+	var keys []string
+	for k := range x {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	var pairs []string
+	for _, k := range keys {
+		pairs = append(pairs, fmt.Sprintf("%s:%v", k, x[k]))
+	}
+	return fmt.Sprintf("map%v", pairs)
 }
 
 // KeyError is returned when an expected key is missing from an object.
@@ -95,7 +109,7 @@ type KeyError struct {
 
 func (e KeyError) Error() string {
 	return fmt.Sprintf("key \"%s\" is missing from object %v",
-		e.MissingKey, e.Object)
+		e.MissingKey, mapToString(e.Object))
 }
 
 // TypeError is returned when an value has an unexpected type.

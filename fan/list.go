@@ -6,13 +6,14 @@ import (
 	"os"
 )
 
-// MakePrograms makes all the programs in the list so that they write to out.
-func MakePrograms(cmds []string, out io.Writer) []*Program {
+// MakePrograms makes all the programs in the list so that they write to STDOUT
+// to stdOut and STDERR to stdErr.
+func MakePrograms(cmds []string, stdOut, stdErr io.Writer) []*Program {
 	ps := make([]*Program, 0, len(cmds))
 	for _, cmd := range cmds {
-		p, err := NewProgram(cmd, out)
+		p, err := NewProgram(cmd, stdOut, stdErr)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "%v\n", err)
+			fmt.Fprintf(stdErr, "%v\n", err)
 			continue
 		}
 		ps = append(ps, p)

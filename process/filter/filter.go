@@ -6,6 +6,7 @@ import (
 	"math"
 	"os"
 
+	"github.com/jwowillo/greenerthumb"
 	"github.com/jwowillo/greenerthumb/process"
 )
 
@@ -19,7 +20,7 @@ const (
 func main() {
 	var ec int
 
-	errorHandler := func(err error) { fmt.Fprintln(os.Stderr, err) }
+	errorHandler := func(err error) { greenerthumb.Error("clean", err) }
 
 	fieldHandler := makeFieldHandler(
 		epsilon,
@@ -103,6 +104,14 @@ var (
 func init() {
 	p := func(l string) { fmt.Fprintln(os.Stderr, l) }
 	flag.Usage = func() {
+		p("")
+		p("./filter <name> <key> \\")
+		p("    ?--epsilon <epsilon> \\")
+		p("    ?--e <epsilon> \\")
+		p("    ?--lt <less_than> \\")
+		p("    ?--lte <less_than_or_equal_to> \\")
+		p("    ?--gt <greater_than> \\")
+		p("    ?--gte <greater_than_or_equal_to> \\")
 		p("")
 		p("filter instances of data-types by specifying a list of")
 		p("ANDing conditions in the set of less than or equal to,")

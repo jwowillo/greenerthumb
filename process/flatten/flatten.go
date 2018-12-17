@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/jwowillo/greenerthumb"
 	"github.com/jwowillo/greenerthumb/process"
 )
 
@@ -18,7 +19,7 @@ const (
 func main() {
 	var ec int
 
-	errorHandler := func(err error) { fmt.Fprintln(os.Stderr, err) }
+	errorHandler := func(err error) { greenerthumb.Error("clean", err) }
 	windows := make(map[string]map[string]window)
 
 	err := process.Fields(os.Stdin, makeFieldHandler(windows), errorHandler)
@@ -68,12 +69,14 @@ func init() {
 	p := func(l string) { fmt.Fprintln(os.Stderr, l) }
 	flag.Usage = func() {
 		p("")
+		p("./flatten")
+		p("")
 		p("flatten smooths data by keeping a sliding window of 3")
 		p("instances of a data-type and replacing it with a weighted")
 		p("average of the 3 instances biased towards the middle")
 		p("instance.")
 		p("")
-		p("Example:")
+		p("An example is:")
 		p("")
 		p("    ./flatten")
 		p("")

@@ -13,11 +13,32 @@
 
 ## Running
 
+### Air
+
+```
+./air ?--rate <rate> ?--pin <pin>
+```
+
+An example is:
+
 ```
 ./air
 
 {"Name": "Air", "Timestamp": 0, "Temperature": 67.4}
 ```
+
+### Soil
+
+```
+./soil ?--rate <rate> \
+    ?--channel <channel> \
+    ?--clk <clk> \
+    ?--miso <miso> \
+    ?--mosi <mosi> \
+    ?--cs <cs>
+```
+
+An example is:
 
 ```
 ./soil
@@ -31,3 +52,7 @@ flags with defaults chosen from the schematics.
 ## Emulators
 
 Emulators are provided for all programs and each accepts an optional rate flag.
+
+```
+./<sensor> ?--rate <rate>
+```

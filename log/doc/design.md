@@ -1,22 +1,6 @@
 # `log` Design
 
-`log` messages from STDIN to a file.
+`log` messages from STDIN to a file (4).
 
-## Program
-
-`log` appends messages to rotated generated file.
-
-An optional duration flag can be specified which sets the duration a log file is
-used before being rotated.
-
-## Example
-
-```
-echo 'line' | ./log
-```
-
-```
-cat log-1543537416.log
-
-line
-```
+This just copies each line of STDIN to a file. Logs have the time appended to
+the file-name and are rotated each day.

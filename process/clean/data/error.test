@@ -1,3 +1,5 @@
+# error.test tests that clean reports the right errors when missing mandatory
+# values.
 1
 2
 {"Timestamp": 0}

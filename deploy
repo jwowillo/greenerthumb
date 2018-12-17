@@ -69,6 +69,8 @@ EOF
 
 def usage():
     log_err('')
+    log_err('./deploy <user> <host> <target> <args>')
+    log_err('')
     log_err('deploy builds the passed target, copies and installs it onto the')
     log_err('passed remote user and host, and restarts the target.')
     log_err('')

@@ -1,3 +1,5 @@
+# basic.test tests that clean removes items more than 1 standard deviation away
+# from the average.
 1
 5
 {"Name": "A", "Timestamp": 0, "1": 1}

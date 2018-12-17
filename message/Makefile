@@ -5,10 +5,12 @@ all: message test
 message: bytes json
 
 bytes: build
-	cd bytes && go build -o ../build/bytes
+	$(MAKE) -C bytes
+	cp -rf bytes/build/. build
 
 json: build
-	cd json && go build -o ../build/json
+	$(MAKE) -C json
+	cp -rf json/build/. build
 
 test: bytes json build
 	rm -rf build/data

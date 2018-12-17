@@ -1,4 +1,4 @@
-.PHONY: test build
+.PHONY: test
 
 all: flatten test
 

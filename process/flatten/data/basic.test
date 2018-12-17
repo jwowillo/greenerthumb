@@ -1,3 +1,4 @@
+# basic.test tests that flatten flattens data as defined.
 4
 {"Name": "A", "Timestamp": 0, "1": 1, "2": 7}
 {"Name": "A", "Timestamp": 1, "1": 2, "2": 3}

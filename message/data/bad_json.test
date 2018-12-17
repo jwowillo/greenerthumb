@@ -1,3 +1,5 @@
+# bad_json.test tests that json prints the correct error-message when bad
+# JSON is given.
 ./bytes
 1
 "Name": "Air", "Timestamp": 1, "Temperature": 0.5}

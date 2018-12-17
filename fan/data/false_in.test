@@ -1,0 +1,10 @@
+# false_in.test tests that the correct error-code is used for an in-program
+# that trivially fails to run.
+#
+# The in-program with false comes first to cause that to fail first.
+#
+# Note that both the out-program and the first in-program should fail to run
+# since the out-program will try to echo to a broken pipe.
+./fan --out 'echo a' --in 'false' --in 'cat'
+16
+a

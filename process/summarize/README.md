@@ -13,7 +13,13 @@ data-type were included.
 ## Running
 
 ```
-,/summarize
+./summarize
+```
+
+An example is:
+
+```
+./summarize
 
 < {"Name": "A", "Timestamp": 0, "1": 1}
 < {"Name": "A", "Timestamp": 1, "1": 2}

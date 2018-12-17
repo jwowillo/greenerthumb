@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"os"
 	"time"
+
+	"github.com/jwowillo/greenerthumb"
 )
 
 const (
@@ -17,13 +19,17 @@ const (
 	MakeFile = 1 << iota
 )
 
+func logError(err error) {
+	greenerthumb.Error("log", err)
+}
+
 func main() {
 	// The error logic is defined here instead of in the makeFile function
 	// because we want to avoid calling os.Exit anywhere except main.
 	mf := func(s int64) *os.File {
 		f, err := makeFile(s)
 		if err != nil {
-			fmt.Fprintln(os.Stderr, err)
+			logError(err)
 			os.Exit(MakeFile)
 		}
 		return f
@@ -31,7 +37,7 @@ func main() {
 
 	var f *os.File
 	current := time.Now().Unix()
-	scanner := bufio.NewScanner(bufio.NewReader(os.Stdin))
+	scanner := bufio.NewScanner(os.Stdin)
 
 	for scanner.Scan() {
 		// First file. This is done separately because we don't want to
@@ -58,8 +64,8 @@ func main() {
 		f.Close()
 	}
 
-	if scanner.Err() != nil {
-		fmt.Fprintln(os.Stderr, scanner.Err())
+	if err := scanner.Err(); err != nil {
+		logError(err)
 		os.Exit(ReadInput)
 	}
 }
@@ -75,14 +81,16 @@ func init() {
 	p := func(l string) { fmt.Fprintln(os.Stderr, l) }
 	flag.Usage = func() {
 		p("")
+		p("./log ?--duration <duration>")
+		p("")
 		p("log messages from STDIN to a file.")
 		p("")
 		p("An optional duration flag can be specified which sets the")
 		p("duration a log file is used before being rotated.")
 		p("")
-		p("An example is:")
+		p("An example which rotates logs every hour is:")
 		p("")
-		p("    echo 'line' | ./log")
+		p("    echo 'line' | ./log --duration 3600")
 		p("")
 		p("    cat log-1543537416.log")
 		p("")
@@ -97,11 +105,12 @@ func init() {
 			"    %d = Failed to make a file.",
 			MakeFile))
 		p("")
+
+		os.Exit(2)
 	}
 	flag.Int64Var(&duration, "duration", timeInDay, "duration before rotating")
 	flag.Parse()
 	if len(flag.Args()) != 0 {
 		flag.Usage()
-		os.Exit(2)
 	}
 }

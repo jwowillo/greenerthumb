@@ -2,11 +2,14 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"flag"
 	"fmt"
 	"io"
 	"os"
 	"strings"
+
+	"github.com/jwowillo/greenerthumb"
 )
 
 const (
@@ -20,15 +23,22 @@ const (
 	WaitProgram = 1 << iota
 	// CloseStdout is the error-code for failing to close STDOUT.
 	CloseStdout = 1 << iota
+	// ReadInput is the error-code for failing to read input.
+	ReadInput = 1 << iota
 )
+
+func logError(err error) {
+	greenerthumb.Error("fan", err)
+}
 
 func main() {
 	var ec int
 
 	// Programs that receive input output to STDOUT.
-	inPrograms := MakePrograms(ins, os.Stdout)
+	inPrograms := MakePrograms(ins, os.Stdout, os.Stderr)
 	if len(inPrograms) != len(ins) {
-		ec |= 1 << OpenStdin
+		logError(errors.New("failed to parse an in-program"))
+		ec |= OpenStdin
 	}
 
 	// Programs that write output write to those that receive input.
@@ -36,41 +46,47 @@ func main() {
 	for _, in := range inPrograms {
 		inWriters = append(inWriters, in)
 	}
-	inWriter := io.MultiWriter(inWriters...)
-	outPrograms := MakePrograms(outs, inWriter)
+	inWriter := NewMultiWriter(inWriters)
+	outPrograms := MakePrograms(outs, inWriter, os.Stderr)
 	if len(outPrograms) != len(outs) {
-		ec |= 1 << OpenStdin
+		logError(errors.New("failed to parse an out-program"))
+		ec |= OpenStdin
 	}
 
 	outWriters := make([]io.Writer, 0, len(outPrograms))
 	for _, out := range outPrograms {
 		outWriters = append(outWriters, out)
 	}
-	outWriter := io.MultiWriter(outWriters...)
+	outWriter := NewMultiWriter(outWriters)
 
-	// Write STDIN to out programs.
+	// Write STDIN to out-programs.
 	go func() {
-		r := bufio.NewReader(os.Stdin)
-		for {
-			in, err := r.ReadSlice('\n')
-			if err == io.EOF {
-				break
-			} else if err != nil {
-				fmt.Fprintln(os.Stderr, err)
-				continue
+		scanner := bufio.NewScanner(os.Stdin)
+
+		for scanner.Scan() {
+			in := append(scanner.Bytes(), '\n')
+
+			if _, err := outWriter.Write(in); err != nil {
+				logError(err)
 			}
-			outWriter.Write(in)
+		}
+
+		if err := scanner.Err(); err != nil {
+			logError(err)
+			ec |= ReadInput
 		}
 	}()
 
 	// Start all the input programs first so they can receive all output.
 	startedIns := MapOverPrograms(inPrograms, Start)
 	if len(startedIns) != len(inPrograms) {
+		logError(errors.New("failed to start an in-program"))
 		ec |= StartProgram
 	}
 	// Start all the output programs once the input programs are running.
 	startedOuts := MapOverPrograms(outPrograms, Start)
 	if len(startedOuts) != len(outPrograms) {
+		logError(errors.New("failed to start an out-program"))
 		ec |= StartProgram
 	}
 
@@ -78,10 +94,12 @@ func main() {
 	// first so none of their output is missed.
 	waitedOuts := MapOverPrograms(startedOuts, Wait)
 	if len(waitedOuts) != len(startedOuts) {
+		logError(errors.New("failed to run an out-program"))
 		ec |= WaitProgram
 	}
 	closedOuts := MapOverPrograms(waitedOuts, Close)
 	if len(closedOuts) != len(waitedOuts) {
+		logError(errors.New("failed to close an out-program"))
 		ec |= CloseStdout
 	}
 
@@ -90,14 +108,14 @@ func main() {
 	// don't cause the programs to hang.
 	closedIns := MapOverPrograms(startedIns, Close)
 	if len(closedIns) != len(startedIns) {
+		logError(errors.New("failed to close an in-program"))
 		ec |= CloseStdout
 	}
 	waitedIns := MapOverPrograms(closedIns, Wait)
 	if len(waitedIns) != len(closedIns) {
+		logError(errors.New("failed to run an in-program"))
 		ec |= WaitProgram
 	}
-
-	os.Stdin.Close()
 
 	os.Exit(ec)
 }
@@ -125,10 +143,12 @@ func init() {
 	p := func(l string) { fmt.Fprintln(os.Stderr, l) }
 	flag.Usage = func() {
 		p("")
+		p("./fan [--out <out>...] [--in <in>...]")
+		p("")
 		p("fan connects STDOUTS from listed out-programs to STDINs of")
 		p("listed in-programs.")
 		p("")
-		p("Example:")
+		p("An example is:")
 		p("")
 		p("    ./fan --out 'echo a' --out 'echo b' \\")
 		p("        --in 'cat' --in 'cat'")
@@ -152,6 +172,9 @@ func init() {
 		p(fmt.Sprintf(
 			"    %d = Failed to close a program's STDOUT.",
 			CloseStdout))
+		p(fmt.Sprintf(
+			"    %d = Failed to read input.",
+			ReadInput))
 		p("")
 
 		os.Exit(2)

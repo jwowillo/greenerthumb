@@ -31,6 +31,8 @@ def cat_error_log(user, host):
 def usage():
     p = lambda *args, **kwargs: print(*args, file=sys.stderr, **kwargs)
     p('')
+    p('./cat-error-log <user> <host>')
+    p('')
     p('cat-error-log cats the error-log of a deployed greenerthumb program')
     p('at a remote user and host.')
     p('')

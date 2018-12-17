@@ -1,3 +1,5 @@
+# air_json.test tests that json serializes bytes to JSON properly for air
+# messages.
 ./json
 1
 0000000000000000013f00000040

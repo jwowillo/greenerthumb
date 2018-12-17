@@ -1,3 +1,5 @@
+# soil_json.test tests that json serializes bytes to JSON properly for soil
+# messages.
 ./json
 1
 0100000000000000013f00000041

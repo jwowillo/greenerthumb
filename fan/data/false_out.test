@@ -1,0 +1,7 @@
+# false_out.test tests that the correct error-code is used for an out-program
+# that trivially fails to run.
+#
+# The out-program with false comes first to cause that to fail first.
+./fan --out 'false' --out 'echo a' --in 'cat'
+16
+a

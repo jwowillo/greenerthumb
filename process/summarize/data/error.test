@@ -1,3 +1,5 @@
+# error.test tests that summarize reports the right errors when missing
+# mandatory values.
 2
 {"Timestamp": 0}
 {"Name": "A"}
