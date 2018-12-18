@@ -28,7 +28,7 @@ test: libraries | build
 		-lpthread \
 		-lXi
 
-libraries:
+libraries: | build
 	$(MAKE) -C message
 	cp message/build/message.a build
 	$(MAKE) -C plot
