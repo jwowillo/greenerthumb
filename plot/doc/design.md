@@ -35,3 +35,7 @@ A save button makes screenshots.
 
 `plot` only closes once commanded to close instead of once STDIN is closed.
 
+## Performance
+
+`plot` is expected to be able to render 2-weeks worth of 5 kinds of data at a
+sample rate of 1 instance per second in less than 1 second per frame.
