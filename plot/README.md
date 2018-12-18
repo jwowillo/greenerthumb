@@ -10,7 +10,7 @@
 
 * `make` builds all targets.
 * `make plot` builds `plot`.
-* `make test` copies a sample log into the build directory with `plot`.
+* `make test` builds `plot`'s tests.
 
 ## Running
 
@@ -40,3 +40,13 @@ Pressing 's' will also save a screenshot of the plot with a unique name.
 
 `gen_icon.py` is a utility script that generates the icon into the correct c++
 file. It should be run whenever the icon is updated.
+
+## Data
+
+Sample data to create a simple plot is included in the 'data' directory.
+
+## Testing
+
+``
+cd build && ./test
+``
