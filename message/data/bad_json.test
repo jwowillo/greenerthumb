@@ -1,6 +1,8 @@
+# bad_json.test tests that json prints the correct error-message when bad
+# JSON is given.
 ./bytes
 1
-"Name": "Air", "Timestamp": 1, "Temperature": 0.5, "Humidity": 1}
+"Name": "Air", "Timestamp": 1, "Temperature": 0.5}
 
 invalid character ':' after top-level value
 0

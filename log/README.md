@@ -1,6 +1,9 @@
 # `log`
 
-`log`s JSON messages from STDIN to a file.
+`log` messages from STDIN to a file.
+
+An optional duration flag can be specified which sets the duration a log file is
+used before being rotated.
 
 ## Documentation
 
@@ -14,11 +17,17 @@
 ## Running
 
 ```
-echo 'line' | ./log log.txt
+./log ?--duration <duration>
+```
+
+An example is:
+
+```
+echo 'line' | ./log
 ```
 
 ```
-cat log.txt
+cat log-1543537416.log
 
 line
 ```

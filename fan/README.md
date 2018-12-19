@@ -16,7 +16,7 @@ listed out-programs to STDINs of listed in-programs.
 ## Running
 
 ```
-./fan [--out '<out>'...] [--in '<in>'...]
+./fan [--out <out>...] [--in <in>...]
 ```
 
 An example is:

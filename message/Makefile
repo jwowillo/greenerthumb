@@ -1,12 +1,18 @@
-.PHONY: build
+.PHONY: bytes json test
 
 all: message test
 
-message: build
-	cd bytes && go build -o ../build/bytes
-	cd json && go build -o ../build/json
+message: bytes json
 
-test: message build
+bytes: build
+	$(MAKE) -C bytes
+	cp -rf bytes/build/. build
+
+json: build
+	$(MAKE) -C json
+	cp -rf json/build/. build
+
+test: bytes json build
 	rm -rf build/data
 	cp -rf data build
 	cp test build/test

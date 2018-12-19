@@ -1,6 +1,8 @@
+# air_bytes.test tests that bytes serializes JSON to bytes properly for air
+# messages.
 ./bytes
 1
-{"Name": "Air", "Timestamp": 1, "Temperature": 0.5, "Humidity": 1}
-0000000000000000013f0000003f800000ff
+{"Name": "Air", "Timestamp": 1, "Temperature": 0.5}
+0000000000000000013f00000040
 
 0

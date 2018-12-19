@@ -1,0 +1,52 @@
+#!/usr/bin/env python3
+"""
+cat-error-log cats the error-log of a deployed greenerthumb program at a remote
+user and host.
+"""
+
+import sys
+import subprocess
+
+
+def run(cmd):
+    return subprocess.check_output(
+        cmd, shell=True, stderr=subprocess.STDOUT).decode('utf-8')
+
+
+def cat_error_log(user, host):
+    command = "ssh {}@{} 'cd /opt/greenerthumb; cat error.log'".format(
+        user, host)
+    try:
+        print(run(command))
+    except subprocess.CalledProcessError as exc:
+        output = exc.output.decode('utf-8')
+        if output == 'cat: error.log: No such file or directory\n':
+            return
+        print()
+        print("Error with command '{}':".format(exc.cmd))
+        print()
+        print(output)
+
+
+def usage():
+    p = lambda *args, **kwargs: print(*args, file=sys.stderr, **kwargs)
+    p('')
+    p('./cat-error-log <user> <host>')
+    p('')
+    p('cat-error-log cats the error-log of a deployed greenerthumb program')
+    p('at a remote user and host.')
+    p('')
+    p('An example is:')
+    p('')
+    p('    ./cat-error-log pi 192.168.1.100')
+    p('')
+    sys.exit(2)
+
+
+if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        usage()
+    user = sys.argv[1]
+    host = sys.argv[2]
+
+    cat_error_log(user, host)

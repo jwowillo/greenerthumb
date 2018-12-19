@@ -1,3 +1,5 @@
+# basic.test tests that an out-program writes output into an in-program that
+# gets passed along to STDOUT.
 ./fan --out 'echo a' --in 'cat'
 0
 a

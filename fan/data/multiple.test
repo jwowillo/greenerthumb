@@ -1,3 +1,6 @@
+# multiple.test tests that out-programs that fail for different reasons have
+# their error-codes ORed together and that the functional out-program is still
+# connected to the in-program.
 ./fan --out 'not-a-program' --out 'false' --out 'echo a' --in 'cat'
 24
 a

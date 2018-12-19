@@ -1,0 +1,11 @@
+# error.test tests that clean reports the right errors when missing mandatory
+# values.
+1
+2
+{"Timestamp": 0}
+{"Name": "A"}
+0
+2
+key "Name" is missing from object map[Timestamp:0]
+key "Timestamp" is missing from object map[Name:A]
+0

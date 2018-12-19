@@ -1,6 +1,6 @@
 # `sense`
 
-`sense` writes `greenerthumb` JSON messages from sensors to STDOUT.
+`sense` programs write `greenerthumb` JSON messages from sensors to STDOUT.
 
 # Documentation
 
@@ -9,15 +9,36 @@
 ## Building
 
 * `make` builds all targets.
-* `make sense` builds `air` and `soil`.
+* `make sense` builds all sense programs.
 
 ## Running
+
+### Air
+
+```
+./air ?--rate <rate> ?--pin <pin>
+```
+
+An example is:
 
 ```
 ./air
 
-{"Name": "Air", "Timestamp": 0, "Temperature": 67.4, "Humidity": 0.58}
+{"Name": "Air", "Timestamp": 0, "Temperature": 67.4}
 ```
+
+### Soil
+
+```
+./soil ?--rate <rate> \
+    ?--channel <channel> \
+    ?--clk <clk> \
+    ?--miso <miso> \
+    ?--mosi <mosi> \
+    ?--cs <cs>
+```
+
+An example is:
 
 ```
 ./soil
@@ -27,3 +48,11 @@
 
 Each accepts all necessary GPIO pin numbers, ADC channels, and rates as optional
 flags with defaults chosen from the schematics.
+
+## Emulators
+
+Emulators are provided for all programs and each accepts an optional rate flag.
+
+```
+./<sensor> ?--rate <rate>
+```

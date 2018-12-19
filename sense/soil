@@ -7,26 +7,25 @@ import time
 
 import Adafruit_MCP3008
 
-# LOW analog value indicating least dry.
-LOW = 400
-# HIGH analog value indicating most dry.
-HIGH = 850
-
 
 def to_ratio(signal):
     """to_ratio converts the signal to a ratio."""
+    LOW = 400  # LOW analog value indicating least dry.
+    HIGH = 850  # HIGH analog value indicating most dry.
     return 1 - ((signal - LOW) / (HIGH - LOW))
 
 
 def sense(sensor, channel, rate):
     """
+    sense soil moisture at the provided rate using the sensor and the channel
+    on the ADC.
     """
     while True:
-        signal = sensor.read_adc(channel)
+        moisture = to_ratio(sensor.read_adc(channel))
         print(json.dumps({
             'Name': 'Soil',
             'Timestamp': int(time.time()),
-            'Moisture': to_ratio(signal)
+            'Moisture': moisture
         }))
         sys.stdout.flush()
         time.sleep(1 / rate)

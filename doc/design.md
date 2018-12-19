@@ -1,56 +1,37 @@
 # `greenerthumb` Design
 
-## `fan`
+`greenerthumb` is implemented with a subprogram approach. This allows each
+sensor or client to be implemented with the least extra code and the most reuse
+of tests. It also simplifies using different languages where they make sense. An
+example is that this facilitates using Python for the sensors where library
+support is excellent, Go for infrastructure where efficiency is important, and
+c++ for GUIs where OpenGL bindings are mature.
 
-`fan` connects its STDIN to the STDINs of listed out-programs and STDOUTs from
-listed out-programs to STDINs of listed in-programs.
+Some downsides of this architecture are working with the paths to the
+subprograms, remembering all the necessary subprograms for a task, and
+messaging. An activate.sh/deactivate.sh pair is provided to mitigate the first
+problem. The scripts create aliases to all programs such that they can be run
+from anywhere.  The second problem is addressed by giving composite scripts for
+some useful combinations of subprograms. Finally, internal messaging is handled
+by passing JSON lines from STDIN to STDOUT. This allows subprograms to not have
+to understand the messages, just how to handle JSON
 
-## `message`
+Subprograms are described in later sections. Some of the subprograms also
+fulfill requirements themselves. An example of this is the `process`
+subprograms. Four major composite programs are provided:
 
-`message` is where `greenerthumb` messages from the ICD are defined and the
-bytes-JSON conversion is implemented.
+## `run-air`
 
-### `bytes`
+![run-air](run-air.png)
 
-`bytes` converts JSON messages from STDIN to bytes written to STDOUT.
+## `run-soil`
 
-### `json`
+![run-soil](run-soil.png)
 
-`json` converts bytes messages from STDIN to JSON written to STDOUT.
+## `run-logger`
 
-## `bullhorn`
+![run-logger](run-logger.png)
 
-`bullhorn` allows data to be sent on a network from publishers to subscribers
-(3).
+## `run-plotter`
 
-### `publish`
-
-`publish`es data from STDIN to all subscribers.
-
-### `subscribe`
-
-`subscribe`s to a publisher and write data to STDOUT.
-
-## `sense`
-
-`sense` writes `greenerthumb` JSON messages from sensors to STDOUT. These can be
-`fan`ned into `message/bytes` piped into `bullhorn/publish`. This allows sensors
-to be excluded (1).
-
-### `air`
-
-`air` senses the 'Air Status Message' (2a).
-
-### `soil`
-
-`soil` senses the 'Soil Moisture Status Message' (2b).
-
-## `log`
-
-`log`s JSON messages from STDIN to a file. This can be used with
-`bullhorn/subscribe` piped into `message/json` to log sensed data (4).
-
-## `plot`
-
-`plot`s `greenerthumb` JSON messages from STDIN. This can be used with
-`bullhorn/subscribe` piped into `message/json` to plot sensed data (5).
+![run-plotter](run-plotter.png)

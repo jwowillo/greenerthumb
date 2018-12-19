@@ -1,0 +1,114 @@
+#!/usr/bin/env python3
+"""
+test finds all files with extension 'test' in the directory 'data' and runs
+them.
+
+Tests are expected to have the format:
+
+    <in_count>
+    <in_lines>...
+    <out>
+    <error_count>
+    <error_lines>...
+    <error_code>
+
+test runs summarize with the in-lines and checks that the out-lines,
+error-lines, and error-codes match.
+
+test exits with a non-zero exit-code and the failed assertion if any file fails.
+
+An example passing test is:
+
+    1
+    {"Name": "A", "Timestamp": 0, "1": 0}
+    {"A": {"1": {"N": 1, "Minimum": 1, "Q1": 1, "Median": 1, "Q3": 1, "Maximum": 1}}}
+    0
+    0
+"""
+
+import glob
+import os
+import subprocess
+import json
+
+
+def are_equal(x, y):
+    x = json.dumps(json.loads(x), sort_keys=True)
+    y = json.dumps(json.loads(y), sort_keys=True)
+
+    return x == y
+
+
+def assert_result(path, actual_out, out, actual_err_lines, err_lines,
+                  actual_err_code, err_code):
+    try:
+        assert are_equal(actual_out, out)
+        assert actual_err_lines == err_lines
+        assert actual_err_code == err_code
+    except AssertionError as error:
+        print('Error in', path)
+        print()
+        print('Actual output:')
+        print(actual_out)
+        print()
+        print('Expected output:')
+        print(out)
+        print()
+        print('Actual err:')
+        print(actual_err_lines)
+        print()
+        print('Expected err:')
+        print(err_lines)
+        print()
+        print('Actual error-code:')
+        print(actual_err_code)
+        print()
+        print('Expected error-code:')
+        print(err_code)
+        print()
+        raise error
+
+
+def test(base):
+    for path in glob.glob('{}/*.test'.format(base)):
+        with open(path) as handle:
+            lines = [line[:-1] for line in handle if not line.startswith('#')]
+            n_input = int(lines[0])
+            in_lines = lines[1:n_input + 1]
+            output_start = n_input + 1
+            err_start = output_start + 1
+            out = lines[output_start]
+
+            n_err = int(lines[err_start])
+            err_code_start = err_start + 1 + n_err
+            err_lines = lines[err_start + 1:err_code_start]
+            err_code = int(lines[err_code_start])
+
+            result = subprocess.Popen(
+                './summarize',
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE)
+
+            for line in in_lines:
+                result.stdin.write((line + '\n').encode())
+            result.stdin.flush()
+
+            result.stdin.close()
+            result.wait()
+
+            actual_out = '\n'.join(
+                [line.decode('utf-8')[:-1] for line in result.stdout])
+            actual_err_lines = [
+                line.decode('utf-8')[:-1] for line in result.stderr
+            ]
+            actual_err_lines = [
+                line.split(' - ')[1] for line in actual_err_lines
+            ]
+
+            assert_result(path, actual_out, out, actual_err_lines, err_lines,
+                          result.returncode, err_code)
+
+
+if __name__ == '__main__':
+    test('data')

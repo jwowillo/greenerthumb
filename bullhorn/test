@@ -42,7 +42,7 @@ def run(cmd):
 
 
 def parse(handle):
-    lines = [line[:-1] for line in handle]
+    lines = [line[:-1] for line in handle if not line.startswith('#')]
     publish = lines[0]
     subscribe_count = int(lines[1])
     input_start = 2 + subscribe_count

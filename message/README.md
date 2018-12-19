@@ -11,6 +11,8 @@ bytes-JSON conversion is implemented.
 
 * `make` builds all targets.
 * `make message` builds `bytes` and `json`.
+* `make bytes` builds `bytes`.
+* `make json` builds `json`.
 * `make test` builds `message`'s tests.
 
 ## Running

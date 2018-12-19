@@ -1,0 +1,15 @@
+# basic.test tests that flatten flattens data as defined.
+4
+{"Name": "A", "Timestamp": 0, "1": 1, "2": 7}
+{"Name": "A", "Timestamp": 1, "1": 2, "2": 3}
+{"Name": "B", "Timestamp": 0, "3": 4}
+{"Name": "A", "Timestamp": 2, "2": 5}
+6
+{"Name": "A", "Timestamp": 0, "1": 1.16667}
+{"Name": "A", "Timestamp": 0, "2": 6.33334}
+{"Name": "B", "Timestamp": 0, "3": 4}
+{"Name": "A", "Timestamp": 1, "1": 1.83333}
+{"Name": "A", "Timestamp": 1, "2": 4}
+{"Name": "A", "Timestamp": 2, "2": 4.66667}
+0
+0

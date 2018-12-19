@@ -1,10 +1,12 @@
+# basic.test tests the normal case of one publisher, two subscribers, and some
+# data published to both of them.
 ./publish 5050
 2
-./subscribe 8080 127.0.0.1 5050
-./subscribe 8081 127.0.0.1 5050
+./subscribe 127.0.0.1 5050
+./subscribe 127.0.0.1 5050
 2
 a
 b
 0
-0
-0
+16
+16

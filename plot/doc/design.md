@@ -23,31 +23,19 @@ the line will be determined by concatenating the `<message_name>` and the
 field's `<name>`. The line's will be assigned unique random colors which will be
 displayed in a legend with the message name's on the right side of the plot.
 
-Each line will be overlayed to allow trend comparison. To do this ,each line
+Each line will be overlayed to allow trend comparison. To do this, each line
 will have units normalized to eachother. The x-axis will have units of hours
-scaled to the period of all the received messages.
+scaled to the period of all the received messages. Ranges of units are presented
+in the legend to account for the normalization.
 
 If received messages have the same timestamp, the newest message will overwrite
 the older messages.
 
-## Program
+A save button makes screenshots.
 
-```
-./plot
-```
+`plot` only closes once commanded to close instead of once STDIN is closed.
 
-## Example
+## Performance
 
-```
-./plot
-
-< {"Name": "Soil", "Timestamp": 0, "Moisture": 0.37}
-< {"Name": "Air", "Timestamp": 3600, "Temperature": 84.5, "Humidity": 0.54}
-< {"Name": "Soil", "Timestamp": 3600, "Moisture": 0.35}
-< {"Name": "Air": "Timestamp": 7200, "Temperature": 82.1, "Humidity": 0.51}
-```
-
-This will plot 3 lines labelled 'Soil Moisture', 'Air Temperature', and 'Air
-Humidity'. Each will have 2 points. The 'Soil'-line will start at hour 0 and
-finish at hour 1. The 'Air'-lines will start at hour 1 and finish at hour 2. The
-entire plot will occupy 2 hours.
+`plot` is expected to be able to render 2-weeks worth of 5 kinds of data at a
+sample rate of 1 instance per second in less than 1 second per frame.

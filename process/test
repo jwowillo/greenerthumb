@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+#
+# test is a convenience script to run all process program tests.
+
+set -e
+set -u
+set -o pipefail
+
+test_subcomponent() {
+	echo "testing $1"
+	cd $1 && ./test && cd ../
+}
+
+test_subcomponent flatten
+test_subcomponent summarize
+test_subcomponent filter
+test_subcomponent clean

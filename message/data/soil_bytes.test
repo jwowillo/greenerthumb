@@ -1,3 +1,5 @@
+# soil_bytes.test tests that bytes serializes JSOn to bytes properly for soil
+# messages.
 ./bytes
 1
 {"Name": "Soil", "Timestamp": 1, "Moisture": 0.5}

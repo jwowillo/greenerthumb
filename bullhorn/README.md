@@ -2,6 +2,9 @@
 
 `bullhorn` allows data to be sent on a network from publishers to subscribers.
 
+An optional reconnect delay will cause subscribers to attempt to reconnect to
+the publisher.
+
 ## Documentation
 
 * `make` in the 'doc' directory generates PDF documentation.
@@ -10,6 +13,8 @@
 
 * `make` builds all targets.
 * `make bullhorn` builds `publish` and `subscribe`.
+* `make publish` builds `publish`.
+* `make subscribe` builds `subscribe`.
 * `make test` builds `bullhorn`'s tests.
 
 ## Running
@@ -19,7 +24,7 @@
 ```
 
 ```
-./subscribe <port> <publish_host> <publish_port>
+./subscribe <publish_host> <publish_port> ?--reconnect-delay <delay>
 ```
 
 An example is:
@@ -33,13 +38,13 @@ Machine 1 (192.168.1.50):
 Machine 2 (192.168.1.80):
 
 ```
-./subscribe 8080 192.168.1.50 5050
+./subscribe 192.168.1.50 5050
 ```
 
 Machine 3 (192.168.1.81):
 
 ```
-./subscribe 8081 192.168.1.50 5050
+./subscribe 192.168.1.50 5050
 ```
 
 Machine 1 (192.168.1.50):

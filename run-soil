@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -e
+set -u
+set -o pipefail
+
+function usage {
+  echo "" >&2
+  echo "./run-soil <port>" >&2
+  echo "" >&2
+  echo "run-soil sensor into bullhorn/publish." >&2
+  echo "" >&2
+  echo "Accepts the port to publish on." >&2
+  echo "" >&2
+  exit 2
+}
+
+if (($# != 1)); then
+  usage
+fi
+
+greenerthumb-sense-soil | greenerthumb-message-bytes |
+	greenerthumb-bullhorn-publish ${1}

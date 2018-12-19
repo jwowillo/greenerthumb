@@ -1,0 +1,8 @@
+# subscribe_connect.test tests that subscribe exits with error-code 16 if passed
+# an IP and port that doesn't have a publish running.
+./publish 5050
+1
+./subscribe 127.0.0.1 5051
+0
+0
+16

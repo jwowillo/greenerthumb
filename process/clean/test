@@ -1,0 +1,147 @@
+#!/usr/bin/env python3
+"""
+test finds all files with extension 'test' in the directory 'data' and runs
+them.
+
+Tests are expected to have the format:
+
+    <standard_deviations>
+    <in_count>
+    <in_lines>...
+    <out_count>
+    <out_lines>...
+    <error_count>
+    <error_lines>...
+    <error_code>
+
+test runs clean with the standard deviations and in-lines and checks that the
+out-lines, error-lines, and error-codes match.
+
+test exits with a non-zero exit-code and the failed assertion if any file fails.
+
+An example passing test is:
+
+    1
+    5
+    {"Name": "A", "Timestamp": 0, "1": 1}
+    {"Name": "A", "Timestamp": 1, "1": 2}
+    {"Name": "A", "Timestamp": 2, "1": 3}
+    {"Name": "A", "Timestamp": 3, "1": 4}
+    {"Name": "A", "Timestamp": 4, "1": 5}
+    3
+    {"Name": "A", "Timestamp": 1, "1": 2}
+    {"Name": "A", "Timestamp": 2, "1": 3}
+    {"Name": "A", "Timestamp": 3, "1": 4}
+    0
+    0
+"""
+
+import glob
+import os
+import subprocess
+import json
+
+
+def are_equal(xs, ys):
+    # 4 is chosen as the rounding precision due to the precision from the
+    # examples.
+    for i, x in enumerate(xs):
+        obj = json.loads(x)
+        for k, v in obj.items():
+            if k == 'Name' or k == 'Timestamp':
+                continue
+            obj[k] = round(float(v), 4)
+        xs[i] = obj
+    for i, y in enumerate(ys):
+        obj = json.loads(y)
+        for k, v in obj.items():
+            if k == 'Name' or k == 'Timestamp':
+                continue
+            obj[k] = round(float(v), 4)
+        ys[i] = obj
+
+    xs = set(json.dumps(x, sort_keys=True) for x in xs)
+    ys = set(json.dumps(y, sort_keys=True) for y in ys)
+
+    return xs == ys
+
+
+def assert_result(path, limit, actual_out_lines, out_lines, actual_err_lines,
+                  err_lines, actual_err_code, err_code):
+    try:
+        assert are_equal(actual_out_lines, out_lines)
+        assert actual_err_lines == err_lines
+        assert actual_err_code == err_code
+    except AssertionError as error:
+        print('Error in', path)
+        print()
+        print('Arguments:')
+        print(limit)
+        print()
+        print('Actual output:')
+        print(actual_out_lines)
+        print()
+        print('Expected output:')
+        print(out_lines)
+        print()
+        print('Actual err:')
+        print(actual_err_lines)
+        print()
+        print('Expected err:')
+        print(err_lines)
+        print()
+        print('Actual err-code:')
+        print(actual_err_code)
+        print()
+        print('Expected err-code:')
+        print(err_code)
+        print()
+        raise error
+
+
+def test(base):
+    for path in glob.glob('{}/*.test'.format(base)):
+        with open(path) as handle:
+            lines = [line[:-1] for line in handle if not line.startswith('#')]
+            limit = lines[0]
+            n_input = int(lines[1])
+            in_lines = lines[2:1 + n_input + 1]
+            output_start = 1 + n_input + 1
+            n_output = int(lines[output_start])
+            err_start = output_start + 1 + n_output
+            out_lines = lines[output_start + 1:err_start]
+            n_err = int(lines[err_start])
+            err_code_start = err_start + 1 + n_err
+            err_lines = lines[err_start + 1:err_code_start]
+            err_code = int(lines[err_code_start])
+
+            result = subprocess.Popen(
+                ('./clean', limit),
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE)
+
+            for line in in_lines:
+                result.stdin.write((line + '\n').encode())
+            result.stdin.flush()
+
+            result.stdin.close()
+            result.wait()
+
+            actual_out_lines = [
+                line.decode('utf-8')[:-1] for line in result.stdout
+            ]
+            actual_err_lines = [
+                line.decode('utf-8')[:-1] for line in result.stderr
+            ]
+            actual_err_lines = [
+                line.split(' - ')[1] for line in actual_err_lines
+            ]
+
+            assert_result(path, limit, actual_out_lines, out_lines,
+                          actual_err_lines, err_lines, result.returncode,
+                          err_code)
+
+
+if __name__ == '__main__':
+    test('data')

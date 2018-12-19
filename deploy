@@ -1,0 +1,94 @@
+#!/usr/bin/env python3
+"""
+deploy builds the passed target, copies and installs it onto the passed remote
+user and host, and restarts the target.
+
+This needs to be run from the project root.
+"""
+
+import sys
+import subprocess
+
+
+def run(cmd):
+    return subprocess.check_output(
+        cmd, shell=True, stderr=subprocess.STDOUT).decode('utf-8').split()
+
+
+def log_err(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
+
+def deploy(user, host, target, args):
+    try:
+        user_and_host = '{}@{}'.format(user, host)
+
+        print('Making {}.'.format(target))
+        run('make {}'.format(target))
+        print()
+
+        files = {
+            'activate.sh', 'deactivate.sh', 'run-{}'.format(target),
+            'find-aliases', 'build'
+        }
+        print('Copying files to remote.')
+        run('rsync -az {} {}:~/greenerthumb'.format(' '.join(files),
+                                                    user_and_host, host))
+        print()
+
+        print('Restarting the target on the remote.')
+        command = '''ssh {} << EOF
+sudo rsync -a greenerthumb /opt
+rm -rf greenerthumb
+cd /opt/greenerthumb
+rm -f error.log
+source activate.sh
+pkill -f greenerthumb || true
+nohup bash -c 'greenerthumb-run-{} {}' > /dev/null 2>> error.log &
+EOF
+        '''.format(user_and_host, target, args)
+        run(command)
+        print()
+
+        print('Checking for success.')
+        print()
+        result = run(
+            'ssh {} cat /opt/greenerthumb/error.log'.format(user_and_host))
+        if result == '':
+            log_err("Couldn't start the target:")
+            log_err()
+            log_err(result)
+            log_err()
+            sys.exit(4)
+    except subprocess.CalledProcessError as exc:
+        log_err()
+        log_err("Error with command '{}':".format(exc.cmd))
+        log_err()
+        log_err(exc.output.decode('utf-8'))
+
+
+def usage():
+    log_err('')
+    log_err('./deploy <user> <host> <target> <args>')
+    log_err('')
+    log_err('deploy builds the passed target, copies and installs it onto the')
+    log_err('passed remote user and host, and restarts the target.')
+    log_err('')
+    log_err('This needs to be run from the project root.')
+    log_err('')
+    log_err('An example is:')
+    log_err('')
+    log_err('    ./deploy pi 192.168.1.100 air 5050')
+    log_err('')
+    sys.exit(2)
+
+
+if __name__ == '__main__':
+    if len(sys.argv) != 5:
+        usage()
+    user = sys.argv[1]
+    host = sys.argv[2]
+    target = sys.argv[3]
+    args = sys.argv[4]
+
+    deploy(user, host, target, args)

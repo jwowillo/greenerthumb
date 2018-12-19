@@ -1,8 +1,10 @@
 # `sense` Design
 
-`sense` writes `greenerthumb` JSON messages from sensors to STDOUT.
+`sense` programs write `greenerthumb` JSON messages from sensors to STDOUT.
 
-## Program
+These can be `fan`ned into `message/bytes` piped into `bullhorn/publish`.
+
+## Sensors
 
 ### `air`
 
@@ -16,20 +18,6 @@
 
 ![Soil Schematic](soil.png)
 
-## Example
+## Emulators
 
-### `air`
-
-```
-./air
-
-{"Name": "Air", "Timestamp": 0, "Temperature": 67.4, "Humidity": 0.58}
-```
-
-### `soil`
-
-```
-./soil
-
-{"Name": "Soil", "Timestamp": 0, "Moisture": 0.37}
-```
+Emulators are provided for all programs and each accepts an optional rate flag.

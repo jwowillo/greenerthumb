@@ -11,22 +11,39 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+
+	"github.com/jwowillo/greenerthumb"
 )
 
-// mux synchronizes net.Conns.
-var mux sync.RWMutex
+const (
+	_ = iota
+	_
+	// Listen is the error-code for failing to listen for TCP-connections.
+	Listen = 1 << iota
+	// Accept is the error-code for failing to accept a TCP-connection.
+	Accept = 1 << iota
+	// ReadInput is the error-code for failing to read input.
+	ReadInput = 1 << iota
+)
+
+func logInfo(l string, args ...interface{}) {
+	greenerthumb.Info("publish", l, args...)
+}
+
+func logError(err error) {
+	greenerthumb.Error("publish", err)
+}
 
 // conns are active net.Conns.
+var mux sync.RWMutex
 var conns map[string]net.Conn = make(map[string]net.Conn)
 
-// Host part of the address.
-func Host(addr net.Addr) string {
+func parseHost(addr net.Addr) string {
 	parts := strings.Split(addr.String(), ":")
 	return strings.Join(parts[:len(parts)-1], "")
 }
 
-// ReadPort from the net.Conn.
-func ReadPort(conn net.Conn) (int, error) {
+func readPort(conn net.Conn) (int, error) {
 	portString, err := bufio.NewReader(conn).ReadString('\n')
 	if err != nil {
 		return -1, err
@@ -34,12 +51,12 @@ func ReadPort(conn net.Conn) (int, error) {
 	return strconv.Atoi(portString[:len(portString)-1])
 }
 
-// StoreUntilClosed stores the UDP connection indicated from the net.Conn until
+// storeUntilClosed stores the UDP connection indicated from the net.Conn until
 // the net.Conn is closed.
-func StoreUntilClosed(conn net.Conn) error {
+func storeUntilClosed(conn net.Conn) error {
 	defer conn.Close()
-	host := Host(conn.RemoteAddr())
-	port, err := ReadPort(conn)
+	host := parseHost(conn.RemoteAddr())
+	port, err := readPort(conn)
 	if err != nil {
 		return err
 	}
@@ -49,12 +66,14 @@ func StoreUntilClosed(conn net.Conn) error {
 		return err
 	}
 	func() {
+		logInfo("connection to %s:%d started", host, port)
 		mux.Lock()
 		defer mux.Unlock()
 		conns[addr] = udpConn
 	}()
 	ioutil.ReadAll(conn)
 	func() {
+		logInfo("connection to %s:%d ended", host, port)
 		mux.Lock()
 		defer mux.Unlock()
 		delete(conns, addr)
@@ -62,18 +81,12 @@ func StoreUntilClosed(conn net.Conn) error {
 	return nil
 }
 
-// ReadIntoConns reads lines from the io.Reader into all the stored net.Conns.
-func ReadIntoConns(r io.Reader, handler func(error)) {
-	br := bufio.NewReader(r)
-	for {
-		line, err := br.ReadBytes('\n')
-		if err != nil {
-			if err == io.EOF {
-				return
-			}
-			handler(err)
-			continue
-		}
+// readIntoConns reads lines from the io.Reader into all the stored net.Conns.
+func readIntoConns(r io.Reader, handler func(error)) error {
+	scanner := bufio.NewScanner(r)
+	for scanner.Scan() {
+		line := append(scanner.Bytes(), '\n')
+
 		func() {
 			mux.RLock()
 			defer mux.RUnlock()
@@ -84,36 +97,39 @@ func ReadIntoConns(r io.Reader, handler func(error)) {
 			}
 		}()
 	}
+
+	return scanner.Err()
 }
 
-const (
-	_ = iota
-	_
-	// Listen is the error-code for failing to listen for TCP-connections.
-	Listen = 1 << iota
-	// Accept is the error-code for failing to accept a TCP-connection.
-	Accept = 1 << iota
-)
-
-func main() {
-	handler := func(err error) { fmt.Fprintln(os.Stderr, err) }
-	go ReadIntoConns(os.Stdin, handler)
-	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
-	if err != nil {
-		handler(err)
-		os.Exit(Listen)
-	}
+// acceptConnections accepts connections from the net.Listener until closed.
+func acceptConnections(ln net.Listener, handler func(err error)) {
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
 			handler(err)
-			os.Exit(Accept)
+			return
 		}
 		go func() {
-			if err := StoreUntilClosed(conn); err != nil {
+			if err := storeUntilClosed(conn); err != nil {
 				handler(err)
 			}
 		}()
+	}
+}
+
+func main() {
+	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+	if err != nil {
+		logError(err)
+		os.Exit(Listen)
+	}
+
+	logInfo("listening on :%d", port)
+
+	go acceptConnections(ln, logError)
+	if err := readIntoConns(os.Stdin, logError); err != nil {
+		logError(err)
+		os.Exit(ReadInput)
 	}
 }
 
@@ -124,8 +140,9 @@ func init() {
 	p := func(l string) { fmt.Fprintln(os.Stderr, l) }
 	flag.Usage = func() {
 		p("")
-		p("publish data from STDIN on a network to bullhorn")
-		p("subscribers as a bullhorn publisher.")
+		p("./publish <port>")
+		p("")
+		p("publish data from STDIN on a network to subscribers.")
 		p("")
 		p("A port to listen on for subscribers must be passed.")
 		p("")
@@ -144,6 +161,9 @@ func init() {
 		p(fmt.Sprintf(
 			"    %d = Failed to accept a TCP-connection.",
 			Accept))
+		p(fmt.Sprintf(
+			"    %d = Failed to read input.",
+			ReadInput))
 		p("")
 
 		os.Exit(2)

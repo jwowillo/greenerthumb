@@ -1,0 +1,59 @@
+#!/usr/bin/env python3
+"""
+find-aliases finds all executable programs in build and outputs alias-name,path
+pairs for all of them.
+"""
+
+import subprocess
+import pathlib
+
+
+def find_programs():
+    result = subprocess.check_output(
+        'find build -type f -executable'.split(' '))
+    programs = result.decode('utf-8').split()
+
+    if pathlib.Path('run-air').exists():
+        programs.append('run-air')
+    if pathlib.Path('run-logger').exists():
+        programs.append('run-logger')
+    if pathlib.Path('run-plotter').exists():
+        programs.append('run-plotter')
+    if pathlib.Path('run-sensors').exists():
+        programs.append('run-sensors')
+    if pathlib.Path('run-soil').exists():
+        programs.append('run-soil')
+
+    return programs
+
+
+def find_working_directory():
+    return subprocess.check_output('pwd').decode('utf-8')[:-1]
+
+
+def make_alias(path):
+    if 'build' in path:
+        path = path[len('build/'):]
+    parts = path.split('/')
+    if len(parts) >= 2:
+        if parts[-1] == parts[-2]:
+            parts.pop()
+    parts.insert(0, 'greenerthumb')
+    return '-'.join(parts)
+
+
+def make_aliases():
+    aliases = []
+    wd = find_working_directory()
+    for program in find_programs():
+        if 'test' in program:
+            continue
+        alias = make_alias(program)
+        full = '/'.join((wd, program))
+        aliases.append(','.join((alias, full)))
+    return aliases
+
+
+if __name__ == '__main__':
+    for alias in make_aliases():
+        print(alias)

@@ -508,8 +508,6 @@ JSON parse_object(const string &str, size_t &offset) {
     JSON Key = parse_next(str, offset);
     consume_ws(str, offset);
     if (str[offset] != ':') {
-      std::cerr << "Error: Object: Expected colon, found '" << str[offset]
-                << "'\n";
       break;
     }
     consume_ws(str, ++offset);
@@ -524,8 +522,6 @@ JSON parse_object(const string &str, size_t &offset) {
       ++offset;
       break;
     } else {
-      std::cerr << "ERROR: Object: Expected comma, found '" << str[offset]
-                << "'\n";
       break;
     }
   }
@@ -555,8 +551,6 @@ JSON parse_array(const string &str, size_t &offset) {
       ++offset;
       break;
     } else {
-      std::cerr << "ERROR: Array: Expected ',' or ']', found '" << str[offset]
-                << "'\n";
       return std::move(JSON::Make(JSON::Class::Array));
     }
   }
@@ -602,9 +596,6 @@ JSON parse_string(const string &str, size_t &offset) {
                 (c >= 'A' && c <= 'F'))
               val += c;
             else {
-              std::cerr << "ERROR: String: Expected hex character in unicode "
-                           "escape, found '"
-                        << c << "'\n";
               return std::move(JSON::Make(JSON::Class::String));
             }
           }
@@ -649,15 +640,12 @@ JSON parse_number(const string &str, size_t &offset) {
       if (c >= '0' && c <= '9')
         exp_str += c;
       else if (!isspace(c) && c != ',' && c != ']' && c != '}') {
-        std::cerr << "ERROR: Number: Expected a number for exponent, found '"
-                  << c << "'\n";
         return std::move(JSON::Make(JSON::Class::Null));
       } else
         break;
     }
     exp = std::stol(exp_str);
   } else if (!isspace(c) && c != ',' && c != ']' && c != '}') {
-    std::cerr << "ERROR: Number: unexpected character '" << c << "'\n";
     return std::move(JSON::Make(JSON::Class::Null));
   }
   --offset;
@@ -680,8 +668,6 @@ JSON parse_bool(const string &str, size_t &offset) {
   else if (str.substr(offset, 5) == "false")
     Bool = false;
   else {
-    std::cerr << "ERROR: Bool: Expected 'true' or 'false', found '"
-              << str.substr(offset, 5) << "'\n";
     return std::move(JSON::Make(JSON::Class::Null));
   }
   offset += (Bool.ToBool() ? 4 : 5);
@@ -691,8 +677,6 @@ JSON parse_bool(const string &str, size_t &offset) {
 JSON parse_null(const string &str, size_t &offset) {
   JSON Null;
   if (str.substr(offset, 4) != "null") {
-    std::cerr << "ERROR: Null: Expected 'null', found '"
-              << str.substr(offset, 4) << "'\n";
     return std::move(JSON::Make(JSON::Class::Null));
   }
   offset += 4;

@@ -1,0 +1,12 @@
+# epsilon.test tests that filter treats values as the same when they are within
+# an epsilon value of each other.
+A
+1
+--e 3 --epsilon 0.01
+2
+{"Name": "A", "Timestamp": 0, "1": 2.99}
+{"Name": "A", "Timestamp": 1, "1": 2.98999}
+1
+{"Name": "A", "Timestamp": 0, "1": 2.99}
+0
+0
