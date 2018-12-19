@@ -8,13 +8,13 @@ These can be `fan`ned into `message/bytes` piped into `bullhorn/publish`.
 
 ### `air`
 
-`air` senses the 'Air Status Message' at 0.1 hertz (2a).
+`air` senses the 'Air Status Message' at 0.1 hertz.
 
 ![Air Schematic](air.png)
 
 ### `soil`
 
-`soil` senses the 'Soil Status Message' at 0.1 hertz (2b).
+`soil` senses the 'Soil Status Message' at 0.1 hertz.
 
 ![Soil Schematic](soil.png)
 

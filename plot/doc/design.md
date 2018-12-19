@@ -1,6 +1,6 @@
 # `plot` Design
 
-`plot`s `greenerthumb` JSON messages from STDIN (5).
+`plot`s `greenerthumb` JSON messages from STDIN.
 
 ## UI
 
