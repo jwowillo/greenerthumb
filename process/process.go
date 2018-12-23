@@ -5,7 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"sort"
+
+	"github.com/jwowillo/greenerthumb"
 )
 
 // Serialize the name, timestamp, field, and value into a JSON string.
@@ -34,28 +35,38 @@ func Fields(rd io.Reader, cb FieldHandler, ecb ErrorHandler) error {
 	f := func(x map[string]interface{}) error {
 		rawName, ok := x["Name"]
 		if !ok {
-			return KeyError{Object: x, MissingKey: "Name"}
+			return greenerthumb.KeyError{
+				Object:     x,
+				MissingKey: "Name"}
 		}
 		rawTimestamp, ok := x["Timestamp"]
 		if !ok {
-			return KeyError{Object: x, MissingKey: "Timestamp"}
+			return greenerthumb.KeyError{
+				Object:     x,
+				MissingKey: "Timestamp"}
 		}
 		delete(x, "Name")
 		delete(x, "Timestamp")
 
 		name, ok := rawName.(string)
 		if !ok {
-			return TypeError{Value: rawName, Type: "string"}
+			return greenerthumb.TypeError{
+				Value: rawName,
+				Type:  "string"}
 		}
 		timestamp, ok := rawTimestamp.(float64)
 		if !ok {
-			return TypeError{Value: rawTimestamp, Type: "float64"}
+			return greenerthumb.TypeError{
+				Value: rawTimestamp,
+				Type:  "float64"}
 		}
 
 		for k, rawV := range x {
 			v, ok := rawV.(float64)
 			if !ok {
-				return TypeError{Value: rawV, Type: "float64"}
+				return greenerthumb.TypeError{
+					Value: rawV,
+					Type:  "float64"}
 			}
 			cb(name, int64(timestamp), k, v)
 		}
@@ -86,39 +97,4 @@ func parseLines(rd io.Reader, cb func([]byte) error, ecb ErrorHandler) error {
 		}
 	}
 	return scanner.Err()
-}
-
-func mapToString(x map[string]interface{}) string {
-	var keys []string
-	for k := range x {
-		keys = append(keys, k)
-	}
-	sort.Strings(keys)
-	var pairs []string
-	for _, k := range keys {
-		pairs = append(pairs, fmt.Sprintf("%s:%v", k, x[k]))
-	}
-	return fmt.Sprintf("map%v", pairs)
-}
-
-// KeyError is returned when an expected key is missing from an object.
-type KeyError struct {
-	Object     map[string]interface{}
-	MissingKey string
-}
-
-func (e KeyError) Error() string {
-	return fmt.Sprintf("key \"%s\" is missing from object %v",
-		e.MissingKey, mapToString(e.Object))
-}
-
-// TypeError is returned when an value has an unexpected type.
-type TypeError struct {
-	Value interface{}
-	Type  string
-}
-
-func (e TypeError) Error() string {
-	return fmt.Sprintf("value %v has type %T instead of %s",
-		e.Value, e.Value, e.Type)
 }

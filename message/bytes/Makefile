@@ -1,6 +1,6 @@
 all: bytes
 
-bytes: build
+bytes: | build
 	go build -o build/bytes
 
 build:

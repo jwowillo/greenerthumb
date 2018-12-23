@@ -1,22 +1,22 @@
-.PHONY: test
+.PHONY: clean flatten summarize filter test
 
 all: process test
 
 process: clean summarize filter flatten
 
-clean: build
+clean: | build
 	$(MAKE) -C clean clean
 	cp -rf clean/build/. build/clean
 
-flatten: build
+flatten: | build
 	$(MAKE) -C flatten flatten
 	cp -rf flatten/build/. build/flatten
 
-summarize: build
+summarize: | build
 	$(MAKE) -C summarize summarize
 	cp -rf summarize/build/. build/summarize
 
-filter: build
+filter: | build
 	$(MAKE) -C filter filter
 	cp -rf filter/build/. build/filter
 

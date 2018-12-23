@@ -6,16 +6,19 @@ greenerthumb: clean build
 	$(call subcomponent,log,log)
 	$(call subcomponent,sense,sense)
 	$(call subcomponent,process,process)
+	$(call subcomponent,store,store)
 
 air: clean build
 	env GOOS=linux GOARCH=arm $(call subcomponent,sense,air)
 	env GOOS=linux GOARCH=arm $(call subcomponent,message,bytes)
 	env GOOS=linux GOARCH=arm $(call subcomponent,bullhorn,publish)
+	env GOOS=linux GOARCH=arm $(call subcomponent,store,store)
 
 soil: clean build
 	env GOOS=linux GOARCH=arm $(call subcomponent,sense,soil)
 	env GOOS=linux GOARCH=arm $(call subcomponent,message,bytes)
 	env GOOS=linux GOARCH=arm $(call subcomponent,bullhorn,publish)
+	env GOOS=linux GOARCH=arm $(call subcomponent,store,store)
 
 test: clean build
 	$(call subcomponent_test,fan)
@@ -23,6 +26,7 @@ test: clean build
 	$(call subcomponent_test,plot)
 	$(call subcomponent_test,message)
 	$(call subcomponent_test,process)
+	$(call subcomponent_test,store)
 
 build:
 	mkdir -p build

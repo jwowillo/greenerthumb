@@ -1,6 +1,6 @@
 all: json
 
-json: build
+json: | build
 	go build -o build/json
 
 build:
