@@ -4,15 +4,15 @@ all: message test
 
 message: bytes json
 
-bytes: build
+bytes: | build
 	$(MAKE) -C bytes
 	cp -rf bytes/build/. build
 
-json: build
+json: | build
 	$(MAKE) -C json
 	cp -rf json/build/. build
 
-test: bytes json build
+test: bytes json | build
 	rm -rf build/data
 	cp -rf data build
 	cp test build/test

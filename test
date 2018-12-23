@@ -15,4 +15,5 @@ test_subcomponent fan
 test_subcomponent bullhorn
 test_subcomponent message
 test_subcomponent process
+test_subcomponent store
 test_subcomponent plot

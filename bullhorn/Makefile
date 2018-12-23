@@ -20,7 +20,7 @@ yell: | build
 snoop: | build
 	cd snoop && go build -o ../build/snoop
 
-test: publish subscribe yell build
+test: bullhorn | build
 	rm -rf build/data
 	cp -rf data build
 	cp test build/test

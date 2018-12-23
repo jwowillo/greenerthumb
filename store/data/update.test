@@ -1,0 +1,7 @@
+# udpate.test tests that store updates existing messages.
+2
+{"Name": "A", "Value": 0}
+{"Name": "A", "Value": 1}
+1
+{"Name": "A", "Value": 1}
+0

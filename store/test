@@ -1,0 +1,115 @@
+#!/usr/bin/env python3
+"""
+test finds all files with extension 'test' in the directory 'data' and runs
+them.
+
+Tests are expected to have the format:
+
+    <write_count>
+    <write_line>...
+    <read_count>
+    <read_line>...
+    <write_err_count>
+    <write_err_line>...
+
+test runs the write-command with all the input and the read-command. Once all
+the input is written, the output of read is compared with the expected output.
+
+An example passing test is:
+
+    2
+    {"Name": "A"}
+    {"Name": "B"}
+    2
+    {"Name": "A"}
+    {"Name": "B"}
+    0
+"""
+
+import glob
+import subprocess
+import time
+
+
+def run(cmd):
+    return subprocess.Popen(
+        cmd.split(),
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE)
+
+
+def parse(handle):
+    lines = [line[:-1] for line in handle if not line.startswith('#')]
+    in_count = int(lines[0])
+    out_start = 1 + in_count
+    in_lines = lines[1:out_start]
+    out_count = int(lines[out_start])
+    err_start = out_start + 1 + out_count
+    out_lines = lines[out_start + 1:err_start]
+    err_lines = lines[err_start + 1:]
+    return in_lines, out_lines, err_lines
+
+
+def assert_result(path, actual_out_lines, out_lines, actual_err_lines,
+                  err_lines):
+    try:
+        assert actual_out_lines == out_lines
+        assert actual_err_lines == err_lines
+    except AssertionError as error:
+        print('Error in', path)
+        print()
+        print('Actual out-lines:')
+        for line in actual_out_lines:
+            print(line)
+        print()
+        print('Expected out-lines:')
+        for line in out_lines:
+            print(line)
+        print()
+        print('Actual err-lines:')
+        for line in actual_err_lines:
+            print(line)
+        print()
+        print('Expected err-lines:')
+        for line in err_lines:
+            print(line)
+        print()
+
+
+def test(base):
+    for path in glob.glob('{}/*.test'.format(base)):
+        with open(path) as handle:
+            in_lines, out_lines, err_lines = parse(handle)
+
+            write_result = run('./write store.db')
+            for line in in_lines:
+                write_result.stdin.write((line + '\n').encode())
+                write_result.stdin.flush()
+            write_result.stdin.close()
+            write_result.wait()
+
+            read_result = run('./read store.db')
+            read_result.wait()
+
+            actual_out_lines = [
+                line.decode('utf-8')[:-1] for line in read_result.stdout
+            ]
+            actual_err_lines = [
+                line.decode('utf-8')[:-1] for line in write_result.stderr
+            ][1:]
+            actual_err_lines = [
+                line.split(' - ')[1] for line in actual_err_lines
+            ]
+
+            assert_result(path, actual_out_lines, out_lines, actual_err_lines,
+                          err_lines)
+
+            run('rm -f store.db')
+
+
+if __name__ == '__main__':
+    try:
+        test('data')
+    finally:
+        run('rm -f store.db')
