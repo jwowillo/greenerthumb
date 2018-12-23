@@ -15,13 +15,13 @@ const (
 	write  = "REPLACE INTO command (name, message) VALUES (?, ?)"
 )
 
-// SQLITEStore ...
+// SQLITEStore stores messages in SQLITE.
 type SQLITEStore struct {
 	db          *sql.DB
 	read, write *sql.Stmt
 }
 
-// NewSQLITEStore ...
+// NewSQLITEStore connects to a SQLITE store at the path.
 func NewSQLITEStore(path string) (*SQLITEStore, error) {
 	db, err := sql.Open("sqlite3", path)
 	if err != nil {
@@ -50,7 +50,9 @@ func NewSQLITEStore(path string) (*SQLITEStore, error) {
 	return &SQLITEStore{db: db, read: read, write: write}, nil
 }
 
-// Write ...
+// Write the message to the store.
+//
+// Returns an error if the message couldn't be written.
 func (s *SQLITEStore) Write(msg string) error {
 	var x map[string]interface{}
 	json.Unmarshal([]byte(msg), &x)
@@ -66,7 +68,9 @@ func (s *SQLITEStore) Write(msg string) error {
 	return err
 }
 
-// Read ...
+// Read all the messages from the store.
+//
+// Returns an error if the messages couldn't be read.
 func (s *SQLITEStore) Read() ([]string, error) {
 	rs, err := s.read.Query()
 	if err != nil {
@@ -85,7 +89,7 @@ func (s *SQLITEStore) Read() ([]string, error) {
 	return msgs, rs.Err()
 }
 
-// Close ...
+// Close the connection.
 func (s *SQLITEStore) Close() error {
 	s.read.Close()
 	s.write.Close()
