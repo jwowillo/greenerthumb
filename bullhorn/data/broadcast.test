@@ -1,0 +1,10 @@
+# broadcast.test tests the normal case of one yeller and one snooper, and some
+# data sent to both of them.
+./yell 5050
+1
+./snoop 5050
+2
+a
+b
+0
+0
