@@ -1,0 +1,6 @@
+# broadcast_dial.test tests that yell exits with error-code 4 if passed a
+# port outside the max range.
+./yell 65536
+0
+0
+4

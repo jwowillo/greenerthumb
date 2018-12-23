@@ -1,16 +1,26 @@
-.PHONY: publish subscribe test
+.PHONY: publish subscribe yell snoop test
 
 all: bullhorn test
 
-bullhorn: publish subscribe
+bullhorn: pubsub broadcast
 
-publish: build
+pubsub: publish subscribe
+
+broadcast: yell snoop
+
+publish: | build
 	cd publish && go build -o ../build/publish
 
-subscribe: build
+subscribe: | build
 	cd subscribe && go build -o ../build/subscribe
 
-test: publish subscribe build
+yell: | build
+	cd yell && go build -o ../build/yell
+
+snoop: | build
+	cd snoop && go build -o ../build/snoop
+
+test: publish subscribe yell build
 	rm -rf build/data
 	cp -rf data build
 	cp test build/test

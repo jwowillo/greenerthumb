@@ -1,4 +1,4 @@
-# basic.test tests the normal case of one publisher, two subscribers, and some
+# pubsub.test tests the normal case of one publisher, two subscribers, and some
 # data published to both of them.
 ./publish 5050
 2

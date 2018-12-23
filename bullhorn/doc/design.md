@@ -1,6 +1,11 @@
 # `bullhorn` Design
 
-`bullhorn` allows data to be sent on a network from publishers to subscribers.
+`bullhorn` contains program pairs for networked communication. Included methods
+are pub/sub and broadcast.
+
+## pub/sub
+
+pub/sub allows messages to be sent from publishers to subscribers.
 
 ![Sequence Diagram](sequence.png)
 
@@ -13,9 +18,19 @@ periodic statuses are sent through the system.
 The publisher will publish all newline-separated lines it receives over STDIN to
 every subscriber until STDIN is closed.
 
-The subscriber prints all newline-separated lines it receives from the
-publisher until the publisher is closed if reconnect isn't enabled. The
-subscriber never closes if reconnect is enabled and will just periodically
-attempt reconnects. The subscriber will always exit with a failure to connect
-unless terminated because it will either try to reconnect forever or fail to
+The subscribers print all newline-separated lines they receive from the
+publisher until the publisher is closed if reconnect isn't enabled. Subscribers
+never close if reconnect is enabled and will just periodically attempt
+reconnects. Subscribers will always exit with a failure to connect
+unless terminated because they will either try to reconnect forever or fail to
 connect to a terminated publisher.
+
+## broadcast
+
+broadcast messages to all clients.
+
+This is done via the broadcast address.
+
+The server will send all newline-separated lines it receives over STDIN to every
+client until STDIN is closed. The clients print all newline-separated lines they
+receive until they are terminated.
