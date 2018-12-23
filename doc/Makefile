@@ -1,8 +1,4 @@
-all: bullhorn fan log message plot process sense
-	pandoc requirements.md --latex-engine xelatex -o requirements.pdf
-	pandoc -f markdown-implicit_figures design.md --latex-engine xelatex \
-		-o design.pdf
-	pandoc icd.md --latex-engine xelatex -o icd.pdf
+all: requirements.pdf design.pdf icd.pdf
 	pdfunite design.pdf \
 		../bullhorn/doc/design.pdf \
 		../fan/doc/design.pdf \
@@ -13,6 +9,16 @@ all: bullhorn fan log message plot process sense
 		../sense/doc/design.pdf \
 		merged.pdf
 	mv merged.pdf design.pdf
+
+requirements.pdf: requirements.md
+	pandoc requirements.md --latex-engine xelatex -o requirements.pdf
+
+design.pdf: design.md bullhorn fan log message plot process sense
+	pandoc -f markdown-implicit_figures design.md --latex-engine xelatex \
+		-o design.pdf
+
+icd.pdf: icd.md
+	pandoc icd.md --latex-engine xelatex -o icd.pdf
 
 %:
 	$(MAKE) -C ../$*/doc
