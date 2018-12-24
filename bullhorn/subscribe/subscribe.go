@@ -82,10 +82,9 @@ func keepOpen(
 		}
 
 		ioutil.ReadAll(monitorConn)
+		monitorConn.Close()
 		monitorConn = nil
 	}
-
-	conn.Close()
 
 	return nil
 }
@@ -114,6 +113,7 @@ func main() {
 		logError(err)
 		os.Exit(Listen)
 	}
+	defer conn.Close()
 
 	_, port, err := parseHostAndPort(conn.LocalAddr())
 	if err != nil {
@@ -122,6 +122,9 @@ func main() {
 	}
 
 	tcpConn := makeConn(port, publishHost, publishPort)
+	if tcpConn != nil {
+		defer tcpConn.Close()
+	}
 	go func() {
 		if err := keepOpen(
 			tcpConn, conn,
@@ -153,8 +156,8 @@ func init() {
 		p("./subscribe <publish_host> <publish_port> \\")
 		p("    ?--reconnect-delay <delay>")
 		p("")
-		p("subscribe to a publisher on a network and write its data to")
-		p("STDOUT.")
+		p("subscribe to a publisher on a network and write its")
+		p("messages to STDOUT.")
 		p("")
 		p("The publisher's host and port must be passed. A reconnect")
 		p("delay that will cause the subscriber to attempt to")

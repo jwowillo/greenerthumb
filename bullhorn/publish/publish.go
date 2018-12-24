@@ -73,6 +73,7 @@ func storeUntilClosed(conn net.Conn) error {
 	}()
 	ioutil.ReadAll(conn)
 	func() {
+		defer conns[addr].Close()
 		logInfo("connection to %s:%d ended", host, port)
 		mux.Lock()
 		defer mux.Unlock()
@@ -123,8 +124,8 @@ func main() {
 		logError(err)
 		os.Exit(Listen)
 	}
-
-	logInfo("listening on :%d", port)
+	defer ln.Close()
+	logInfo("listening at :%d", port)
 
 	go acceptConnections(ln, logError)
 	if err := readIntoConns(os.Stdin, logError); err != nil {
@@ -142,7 +143,7 @@ func init() {
 		p("")
 		p("./publish <port>")
 		p("")
-		p("publish data from STDIN on a network to subscribers.")
+		p("publish messages from STDIN on a network to subscribers.")
 		p("")
 		p("A port to listen on for subscribers must be passed.")
 		p("")

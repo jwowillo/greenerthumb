@@ -1,7 +1,7 @@
 # `bullhorn` Design
 
 `bullhorn` contains program pairs for networked communication. Included methods
-are pub/sub and broadcast.
+are pub/sub, broadcast, and reliable.
 
 ## pub/sub
 
@@ -34,3 +34,14 @@ This is done via the broadcast address.
 The server will send all newline-separated lines it receives over STDIN to every
 client until STDIN is closed. The clients print all newline-separated lines they
 receive until they are terminated.
+
+## Reliable
+
+Reliable allows messages to be reliably sent from talkers to a listener.
+
+This is done via TCP.
+
+The clients will connect to the servers, write all their input from STDIN to the
+connections, and the server will echo the messages to STDOUT. Clients run until
+STDIN is closed or the connection is closed. The servers run until they're
+terminated.

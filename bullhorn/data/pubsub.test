@@ -2,11 +2,16 @@
 # data published to both of them.
 ./publish 5050
 2
-./subscribe 127.0.0.1 5050
-./subscribe 127.0.0.1 5050
+./subscribe 127.0.0.1 5050 --reconnect-delay 1
+./subscribe 127.0.0.1 5050 --reconnect-delay 1
 2
 a
 b
 0
-16
-16
+0
+2
+a
+b
+0
+0
+0

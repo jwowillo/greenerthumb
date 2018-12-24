@@ -1,7 +1,7 @@
 # `bullhorn`
 
 `bullhorn` contains program pairs for networked communication. Included methods
-are pub/sub and broadcast.
+are pub/sub, broadcast, and reliable.
 
 ## Documentation
 
@@ -17,6 +17,9 @@ are pub/sub and broadcast.
 * `make broadcast` builds `yell` and `snoop`.
 * `make yell` builds `yell`.
 * `make snoop` builds `snoop`.
+* `make reliable` builds `talk` and `listen`.
+* `make talk` builds `talk`.
+* `make listen` builds `listen`.
 * `make test` builds `bullhorn`'s tests.
 
 ## pub/sub
@@ -126,6 +129,42 @@ Machine 3 (192.168.1.81):
 ```
 message1
 message2
+```
+
+## Reliable
+
+Reliable allows messages to be reliably sent from talkers to a listener.
+
+```
+./listen ?--host <host>
+```
+
+```
+./talk <host>
+```
+
+An example is:
+
+Machine 1 (192.168.1.50):
+
+```
+./listen
+```
+
+Machine 2 (192.168.1.80):
+
+```
+./talk
+
+< a
+< b
+```
+
+Machine 1 (192.168.1.50):
+
+```
+a
+b
 ```
 
 ## Testing

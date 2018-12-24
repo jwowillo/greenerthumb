@@ -39,10 +39,10 @@ func main() {
 		logError(err)
 		os.Exit(Listen)
 	}
+	defer conn.Close()
 
 	logInfo("receiving broadcasts from %d", port)
 
-	defer conn.Close()
 	io.Copy(os.Stdout, conn)
 }
 
@@ -56,11 +56,14 @@ func init() {
 		p("")
 		p("snoop messages from yellers.")
 		p("")
-		p("An example is:")
+		p("An example that receives 'a' and 'b' from a broadcaster is:")
 		p("")
 		p("    ./snoop 5050")
 		p("")
-		p("Error-codes are used for the following.")
+		p("    a")
+		p("    b")
+		p("")
+		p("Error-codes are used for the following:")
 		p("")
 		p(fmt.Sprintf(
 			"    %d = Failed to resolve a UDP address.",
@@ -69,6 +72,8 @@ func init() {
 			"    %d = Failed to listen for UDP messages.",
 			Listen))
 		p("")
+
+		os.Exit(2)
 	}
 	flag.Parse()
 

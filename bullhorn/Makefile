@@ -1,12 +1,14 @@
-.PHONY: publish subscribe yell snoop test
+.PHONY: publish subscribe yell snoop talk listen test
 
 all: bullhorn test
 
-bullhorn: pubsub broadcast
+bullhorn: pubsub broadcast reliable
 
 pubsub: publish subscribe
 
 broadcast: yell snoop
+
+reliable: listen talk
 
 publish: | build
 	cd publish && go build -o ../build/publish
@@ -19,6 +21,12 @@ yell: | build
 
 snoop: | build
 	cd snoop && go build -o ../build/snoop
+
+listen: | build
+	cd listen && go build -o ../build/listen
+
+talk: | build
+	cd talk && go build -o ../build/talk
 
 test: bullhorn | build
 	rm -rf build/data

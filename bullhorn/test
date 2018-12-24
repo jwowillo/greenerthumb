@@ -8,20 +8,31 @@ Tests are expected to have the format:
     <server_command>
     <client_count>
     <client_command>...
-    <input_count>
-    <input>...
+    <server_input_count>
+    <server_input>...
+    <server_output_count>
+    <server_output>...
+    <clients_input_count>
+    <clients_input>...
+    <clients_output_count>
+    <clients_output>...
     <server_error_code>
     <client_error_code>...
 
 test runs the server-command and all the client-commands. All the input is then
-written to the server's STDIN. The server is closed. Finally, all the
-error-codes are checked.
+written to the server or client's STDIN based on the value o
+<server_or_client>. The server is closed. Finally, all the error-codes are
+checked.
 
 An example passing test is:
 
     ./server 5050
     1
-    ./client 8080 127.0.0.1 5050
+    ./client 8080 127.0.0.1 5050 CHECK
+    1
+    message
+    0
+    0
     1
     message
     0
@@ -43,56 +54,77 @@ def run(cmd):
 
 def parse(handle):
     lines = [line[:-1] for line in handle if not line.startswith('#')]
+
     server = lines[0]
     client_count = int(lines[1])
-    input_start = 2 + client_count
-    clients = lines[2:input_start]
-    input_count = int(lines[input_start])
-    input_lines = lines[input_start + 1:input_start + 1 + input_count]
-    error_code_start = input_start + 1 + input_count
-    error_codes = [int(error_code) for error_code in lines[error_code_start:]]
-    return server, clients, input_lines, error_codes
+    clients = lines[2:2 + client_count]
+
+    lines = lines[2 + client_count:]
+
+    server_input_count = int(lines[0])
+    server_input = lines[1:1 + server_input_count]
+
+    lines = lines[1 + server_input_count:]
+
+    server_output_count = int(lines[0])
+    server_output = lines[1:1 + server_output_count]
+
+    lines = lines[1 + server_output_count:]
+
+    client_input_count = int(lines[0])
+    client_input = lines[1:1 + client_input_count]
+
+    lines = lines[1 + client_input_count:]
+
+    client_output_count = int(lines[0])
+    client_output = lines[1:1 + client_output_count]
+
+    lines = lines[1 + client_output_count:]
+
+    error_codes = [int(line) for line in lines]
+
+    return (server, clients, server_input, server_output, client_input,
+            client_output, error_codes)
 
 
-TERMINATED_ERROR_CODE = -15
-
-
-def assert_result(path, actual, expected):
+def assert_result(path, actual_server_output, expected_server_output,
+                  actual_clients_output, expected_client_output,
+                  actual_error_codes, expected_error_codes):
+    actual_error_codes = [convert_error(error) for error in actual_error_codes]
     try:
-        assert actual[0] == expected[0]
-        assert_error(path, actual[1], expected[1])
+        assert actual_server_output == expected_server_output
+        for output in actual_clients_output:
+            assert output == expected_client_output
+        assert actual_error_codes == expected_error_codes
     except AssertionError as error:
         print('Error in', path)
         print()
-        print('Actual output:')
-        print(actual[0])
+        print('Actual server output:')
+        print(actual_server_output)
         print()
-        print('Expected output:')
-        print(expected[0])
+        print('Expected server output:')
+        print(expected_server_output)
         print()
-        print('Actual error-code:')
-        print(actual[1])
+        print('Actual clients output:')
+        print(actual_clients_output)
         print()
-        print('Expected error-code:')
-        print(expected[1])
+        print('Expected client output:')
+        print(expected_client_output)
+        print()
+        print('Actual error-codes:')
+        print(actual_error_codes)
+        print()
+        print('Expected error-codes:')
+        print(expected_error_codes)
         print()
         raise error
 
 
-def assert_error(path, actual, expected):
-    if actual == TERMINATED_ERROR_CODE:
-        actual = 0
-    try:
-        assert actual == expected
-    except AssertionError as error:
-        print('Error in', path)
-        print()
-        print('Actual error-code:')
-        print(actual)
-        print()
-        print('Expected error-code:')
-        print(expected)
-        print()
+def convert_error(error):
+    TERMINATED_ERROR_CODE = -15
+    if error == TERMINATED_ERROR_CODE:
+        error = 0
+    return error
 
 
 def wait():
@@ -102,34 +134,47 @@ def wait():
 def test(base):
     for path in glob.glob('{}/*.test'.format(base)):
         with open(path) as handle:
-            server, clients, input_lines, error_codes = parse(handle)
+            (server, clients, server_input, server_output, client_input,
+             client_output, error_codes) = parse(handle)
 
             server_result = run(server)
-            wait()  # Give command time to start.
 
             client_results = [run(client) for client in clients]
-            wait()  # Give commands time to start.
 
-            for line in input_lines:
+            wait()  # Give programs time to start.
+
+            for line in server_input:
                 server_result.stdin.write((line + '\n').encode())
-                server_result.stdin.flush()
-            wait()  # Give message time to go across network.
+            server_result.stdin.flush()
+
+            for client in client_results:
+                for line in client_input:
+                    client.stdin.write((line + '\n').encode())
+                client.stdin.flush()
+
+            wait()  # Give messages time to go across network.
 
             server_result.terminate()
-            while server_result.poll() is None:
-                wait()  # Wait until command terminates.
+            server_result.wait()
+            for client in client_results:
+                client.terminate()
+                client.wait()
 
-            for result in client_results:
-                result.terminate()
-                while result.poll() is None:
-                    wait()  # Wait until command terminates.
+            actual_server_output = [
+                line.decode('utf-8')[:-1] for line in server_result.stdout
+            ]
+            actual_clients_output = []
+            for client in client_results:
+                actual_clients_output.append(
+                    [line.decode('utf-8')[:-1] for line in client.stdout])
 
-            assert_error(path, server_result.returncode, error_codes[0])
-            for i, result in enumerate(client_results):
-                raw_out, _ = result.communicate()
-                out = raw_out.decode('utf-8').split('\n')[:-1]
-                assert_result(path, (out, result.returncode),
-                              (input_lines, error_codes[i + 1]))
+            actual_error_codes = [server_result.returncode]
+            for client in client_results:
+                actual_error_codes.append(client.returncode)
+
+            assert_result(path, actual_server_output, server_output,
+                          actual_clients_output, client_output,
+                          actual_error_codes, error_codes)
 
 
 if __name__ == '__main__':
