@@ -4,7 +4,7 @@ all: summarize test
 
 summarize: build/summarize
 
-build/summarize: calculate.go summarize.go
+build/summarize: *.go ../*.go ../../*.go
 	go build -o build/summarize
 
 test: summarize | build

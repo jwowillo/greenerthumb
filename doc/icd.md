@@ -17,14 +17,32 @@
 
 ## Soil Status Message
 
-| Byte | Name      | Type   |
-| ---- | --------- | ------ |
-| 1    | ID (0x01) | Byte   |
-| 2    | Timestamp | Long   |
-| 10   | Moisture  | Float  |
-| 14   | Checksum  | Byte   |
+| Byte | Name      | Type  |
+| ---- | --------- | ----- |
+| 1    | ID (0x01) | Byte  |
+| 2    | Timestamp | Long  |
+| 10   | Moisture  | Float |
+| 14   | Checksum  | Byte  |
 
 * Moisture is the ratio of water to soil.
+
+## Disclosure Message
+
+| Byte                  | Name                    | Type          |
+| --------------------- | ----------------------- | ------------- |
+| 1                     | ID (0x02)               | Byte          |
+| 2                     | Timestamp               | Long          |
+| 3                     | Package Name Length (l) | Byte          |
+| 4                     | Package Name            | Byte Sequence |
+| 4 + l                 | Publish Host Length (m) | Byte          |
+| 4 + l + 1             | Publish Host            | Byte Sequence |
+| 4 + l + 1 + m         | Command Host Length (n) | Byte          |
+| 4 + l + 1 + m + 1     | Command Host            | Byte Sequence |
+| 4 + l + 1 + m + 1 + n | Checksum                | Byte          |
+
+* Package name is the name of the package.
+* Publish host is the host the package publishes to.
+* Command host is the host the package receives commands from.
 
 ## JSON
 

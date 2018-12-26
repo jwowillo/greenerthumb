@@ -4,7 +4,7 @@ all: flatten test
 
 flatten: build/flatten
 
-build/flatten: flatten.go window.go
+build/flatten: *.go ../*.go ../../*.go
 	go build -o build/flatten
 
 test: flatten | build

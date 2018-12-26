@@ -1,7 +1,6 @@
 all: json
 
-json: | build
-	go build -o build/json
+json: build/json
 
-build:
-	mkdir -p build
+build/json: *.go ../*.go ../../*.go
+	go build -o build/json
