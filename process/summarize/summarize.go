@@ -22,7 +22,7 @@ const (
 func main() {
 	var ec int
 
-	errorHandler := func(err error) { greenerthumb.Error("clean", err) }
+	errorHandler := func(err error) { greenerthumb.Error("summarize", err) }
 	data := make(map[string]map[string][]float64)
 
 	err := process.Fields(os.Stdin, makeFieldHandler(data), errorHandler)

@@ -2,10 +2,12 @@
 
 all: summarize test
 
-summarize: build
+summarize: build/summarize
+
+build/summarize: calculate.go summarize.go
 	go build -o build/summarize
 
-test: summarize build
+test: summarize | build
 	rm -rf build/data
 	cp -rf data build
 	cp test build/test

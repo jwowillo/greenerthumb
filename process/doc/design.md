@@ -37,3 +37,7 @@ epsilon is used otherwise.
 
 `clean` reads all input until STDIN is closed and filters instances that are
 more than a passed number of standard deviations away from the mean.
+
+### `select`
+
+`select` messages from STDIN with names in an included set.
