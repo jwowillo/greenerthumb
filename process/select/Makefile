@@ -4,7 +4,7 @@ all: select test
 
 select: build/select
 
-build/select: select.go
+build/select: *.go ../*.go ../../*.go
 	go build -o build/select
 
 test: select | build

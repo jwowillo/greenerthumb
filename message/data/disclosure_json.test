@@ -1,0 +1,8 @@
+# disclosure_json.test tests that json serializes bytes to JSON properly for
+# disclosure messages.
+./json
+1
+0200000000000000010454657374053a38303830053a38303831c6
+{"CommandHost":":8081","Name":"Disclosure","PackageName":"Test","PublishHost":":8080","Timestamp":1}
+
+0

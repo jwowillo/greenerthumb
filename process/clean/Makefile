@@ -4,7 +4,7 @@ all: clean test
 
 clean: build/clean
 
-build/clean: calculate.go clean.go
+build/clean: *.go ../*.go ../../*.go
 	go build -o build/clean
 
 test: clean | build

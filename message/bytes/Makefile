@@ -1,7 +1,6 @@
 all: bytes
 
-bytes: | build
-	go build -o build/bytes
+bytes: build/bytes
 
-build:
-	mkdir -p build
+build/bytes: *.go ../*.go ../../*.go
+	go build -o build/bytes

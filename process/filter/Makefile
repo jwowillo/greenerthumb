@@ -4,7 +4,7 @@ all: filter test
 
 filter: build/filter
 
-build/filter: filter.go
+build/filter: *.go ../*.go ../../*.go
 	go build -o build/filter
 
 test: filter | build
