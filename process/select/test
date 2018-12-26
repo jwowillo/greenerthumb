@@ -1,0 +1,150 @@
+#!/usr/bin/env python3
+"""
+test finds all files with extension 'test' in the directory 'data' and runs
+them.
+
+Tests are expected to have the format:
+
+    <name_count>
+    <name>...
+    <input_count>
+    <input>...
+    <output_count>
+    <output>...
+    <error_count>
+    <error>...
+    <error_code>
+
+test runs select with the names included, the input piped into STDIN, and
+compares the output and error code to the expected values.
+
+test exits with a non-zero exit-code and the failed assertion if any file fails.
+
+An example passing test is:
+
+    1
+    A
+    1
+    {"Name": "A", "Timestamp": 0, "1": 1}
+    1
+    {"Name": "A", "Timestamp": 0, "1": 1}
+    0
+"""
+
+import glob
+import os
+import subprocess
+import json
+
+
+def are_equal(xs, ys):
+    # 4 is chosen as the rounding precision due to the precision from the
+    # examples.
+    for i, x in enumerate(xs):
+        obj = json.loads(x)
+        for k, v in obj.items():
+            if k == 'Name' or k == 'Timestamp':
+                continue
+            obj[k] = round(float(v), 4)
+        xs[i] = obj
+    for i, y in enumerate(ys):
+        obj = json.loads(y)
+        for k, v in obj.items():
+            if k == 'Name' or k == 'Timestamp':
+                continue
+            obj[k] = round(float(v), 4)
+        ys[i] = obj
+
+    xs = set(json.dumps(x, sort_keys=True) for x in xs)
+    ys = set(json.dumps(y, sort_keys=True) for y in ys)
+
+    return xs == ys
+
+
+def assert_result(path, includes, actual_out_lines, out_lines,
+                  actual_err_lines, err_lines, actual_err_code, err_code):
+    try:
+        assert are_equal(actual_out_lines, out_lines)
+        assert actual_err_lines == err_lines
+        assert actual_err_code == err_code
+    except AssertionError as error:
+        print('Error in', path)
+        print()
+        print('Arguments:')
+        print(includes)
+        print()
+        print('Actual output:')
+        print(actual_out_lines)
+        print()
+        print('Expected output:')
+        print(out_lines)
+        print()
+        print('Actual err:')
+        print(actual_err_lines)
+        print()
+        print('Expected err:')
+        print(err_lines)
+        print()
+        print('Actual error-code:')
+        print(actual_err_code)
+        print()
+        print('Expected error-code:')
+        print(err_code)
+        print()
+        raise error
+
+
+def test(base):
+    for path in glob.glob('{}/*.test'.format(base)):
+        with open(path) as handle:
+            lines = [line[:-1] for line in handle if not line.startswith('#')]
+
+            include_count = int(lines[0])
+            includes = lines[1:1 + include_count]
+            lines = lines[1 + include_count:]
+            in_count = int(lines[0])
+            in_lines = lines[1:1 + in_count]
+            lines = lines[1 + in_count:]
+            out_count = int(lines[0])
+            out_lines = lines[1:1 + out_count]
+            lines = lines[1 + out_count:]
+            err_count = int(lines[0])
+            err_lines = lines[1:1 + err_count]
+            lines = lines[1 + err_count:]
+            err_code = int(lines[0])
+
+            args = ['./select'] + [
+                x for pair in zip(['--include'] * len(includes), includes)
+                for x in pair
+            ]
+
+            result = subprocess.Popen(
+                args,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE)
+
+            for line in in_lines:
+                result.stdin.write((line + '\n').encode())
+            result.stdin.flush()
+
+            result.stdin.close()
+            result.wait()
+
+            actual_out_lines = [
+                line.decode('utf-8')[:-1] for line in result.stdout
+            ]
+            actual_err_lines = [
+                line.decode('utf-8')[:-1] for line in result.stderr
+            ]
+            actual_err_lines = [
+                line.split(' - ')[1] for line in actual_err_lines
+            ]
+
+            assert_result(path, includes, actual_out_lines, out_lines,
+                          actual_err_lines, err_lines, result.returncode,
+                          err_code)
+
+
+if __name__ == '__main__':
+    test('data')

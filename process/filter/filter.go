@@ -20,7 +20,7 @@ const (
 func main() {
 	var ec int
 
-	errorHandler := func(err error) { greenerthumb.Error("clean", err) }
+	errorHandler := func(err error) { greenerthumb.Error("filter", err) }
 
 	fieldHandler := makeFieldHandler(
 		epsilon,
@@ -118,7 +118,7 @@ func init() {
 		p("less than, equal, greater than, and greater than or equal")
 		p("to and filtering STDIN according to the conditions.")
 		p("")
-		p("An epsilon value for comparisons can also optionall be")
+		p("An epsilon value for comparisons can also optionally be")
 		p("passed. The system epsilon is used otherwise.")
 		p("")
 		p("An example is:")

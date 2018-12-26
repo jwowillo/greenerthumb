@@ -19,7 +19,7 @@ const (
 func main() {
 	var ec int
 
-	errorHandler := func(err error) { greenerthumb.Error("clean", err) }
+	errorHandler := func(err error) { greenerthumb.Error("flatten", err) }
 	windows := make(map[string]map[string]window)
 
 	err := process.Fields(os.Stdin, makeFieldHandler(windows), errorHandler)

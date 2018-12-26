@@ -1,0 +1,13 @@
+# basic.test tests select in a normal case.
+2
+A
+B
+3
+{"Name": "A", "Timestamp": 0, "1": 1}
+{"Name": "B", "Timestamp": 0, "1": 1}
+{"Name": "C", "Timestamp": 0, "1": 1}
+2
+{"Name": "A", "Timestamp": 0, "1": 1}
+{"Name": "B", "Timestamp": 0, "1": 1}
+0
+0

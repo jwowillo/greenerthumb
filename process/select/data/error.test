@@ -1,0 +1,12 @@
+# error.test tests that select reports errors correctly.
+2
+A
+B
+2
+{"Timestamp": 0}
+{"Name": "A"}
+0
+2
+key "Name" is missing from object map[Timestamp:0]
+key "Timestamp" is missing from object map[Name:A]
+0
