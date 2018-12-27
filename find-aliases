@@ -23,6 +23,8 @@ def find_programs():
         programs.append('run-sensors')
     if pathlib.Path('run-soil').exists():
         programs.append('run-soil')
+    if pathlib.Path('run-disclosure').exists():
+        programs.append('run-disclosure')
 
     return programs
 

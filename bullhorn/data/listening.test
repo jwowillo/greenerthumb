@@ -1,4 +1,4 @@
-# reliable.test tests the normal case of one listener, two talkers, and some
+# listening.test tests the normal case of one listener, two talkers, and some
 # data published to both of them.
 ./listen --host :5050
 2

@@ -2,9 +2,9 @@ package message
 
 // Disclosure Message.
 //
-// Name, PublishHost, and CommandHost can't be more than a byte in length.
+// DeviceName, PublishHost, and CommandHost can't be more than a byte in length.
 type Disclosure struct {
-	PackageName string
+	DeviceName  string
 	PublishHost string
 	CommandHost string
 }
@@ -22,7 +22,7 @@ func (m Disclosure) Name() string {
 // SerializeJSON from the Message.
 func (m Disclosure) SerializeJSON() map[string]interface{} {
 	return map[string]interface{}{
-		"PackageName": m.PackageName,
+		"DeviceName":  m.DeviceName,
 		"PublishHost": m.PublishHost,
 		"CommandHost": m.CommandHost}
 }
@@ -32,18 +32,18 @@ func (m *Disclosure) DeserializeJSON(x map[string]interface{}) error {
 	if len(x) != 3 {
 		return ErrJSON
 	}
-	xPackageName, ok := x["PackageName"]
+	xDeviceName, ok := x["DeviceName"]
 	if !ok {
 		return JSONError{
 			Data:   x,
-			BadKey: "PackageName",
+			BadKey: "DeviceName",
 			Reason: "missing"}
 	}
-	packageName, ok := xPackageName.(string)
+	deviceName, ok := xDeviceName.(string)
 	if !ok {
 		return JSONError{
 			Data:   x,
-			BadKey: "PackageName",
+			BadKey: "DeviceName",
 			Reason: "not a string"}
 	}
 	xPublishHost, ok := x["PublishHost"]
@@ -74,7 +74,7 @@ func (m *Disclosure) DeserializeJSON(x map[string]interface{}) error {
 			BadKey: "CommandHost",
 			Reason: "not a string"}
 	}
-	m.PackageName = packageName
+	m.DeviceName = deviceName
 	m.PublishHost = publishHost
 	m.CommandHost = commandHost
 	return nil
@@ -82,8 +82,8 @@ func (m *Disclosure) DeserializeJSON(x map[string]interface{}) error {
 
 // SerializeBytes from the Message.
 func (m Disclosure) SerializeBytes() []byte {
-	bs := []byte{byte(len(m.PackageName))}
-	bs = append(bs, []byte(m.PackageName)...)
+	bs := []byte{byte(len(m.DeviceName))}
+	bs = append(bs, []byte(m.DeviceName)...)
 	bs = append(bs, byte(len(m.PublishHost)))
 	bs = append(bs, []byte(m.PublishHost)...)
 	bs = append(bs, byte(len(m.CommandHost)))
@@ -100,7 +100,7 @@ func (m *Disclosure) DeserializeBytes(bs []byte) error {
 	if byte(len(bs)) < 1+length {
 		return ErrBytes
 	}
-	packageName := string(bs[1 : 1+length])
+	deviceName := string(bs[1 : 1+length])
 	bs = bs[1+length:]
 
 	if len(bs) < 1 {
@@ -127,7 +127,7 @@ func (m *Disclosure) DeserializeBytes(bs []byte) error {
 		return ErrBytes
 	}
 
-	m.PackageName = packageName
+	m.DeviceName = deviceName
 	m.PublishHost = publishHost
 	m.CommandHost = commandHost
 

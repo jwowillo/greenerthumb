@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -e
+set -u
+set -o pipefail
+
+function usage {
+  echo "" >&2
+  echo "./run-disclosure <port> <device_name> <publish_host> <command_host>" >&2
+  echo "" >&2
+  echo "run-disclosure into bullhorn/yell." >&2
+  echo "" >&2
+  echo "Accepts the port to yell on." >&2
+  echo "" >&2
+  exit 2
+}
+
+if (($# != 4)); then
+  usage
+fi
+
+greenerthumb-disclosure ${2} ${3} ${4} | greenerthumb-message-bytes |
+	greenerthumb-bullhorn-yell ${1}
