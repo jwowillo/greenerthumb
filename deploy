@@ -23,6 +23,9 @@ def deploy(user, host, target, args):
     try:
         user_and_host = '{}@{}'.format(user, host)
 
+        print('Cleaning')
+        run('rm -rf build')
+
         print('Making {}.'.format(target))
         run('make {}'.format(target))
         print()

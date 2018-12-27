@@ -1,4 +1,4 @@
-# reliable_invalid_host.test tests listen and talk exit with the write
+# listening_invalid_host.test tests listen and talk exit with the write
 # exit-codes when passed invalid hosts.
 ./listen --host :65536
 1

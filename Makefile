@@ -1,4 +1,6 @@
-greenerthumb: clean build
+.PHONY: test
+
+greenerthumb: | build
 	$(call subcomponent,fan,fan)
 	$(call subcomponent,bullhorn,bullhorn)
 	$(call subcomponent,plot,plot)
@@ -7,26 +9,30 @@ greenerthumb: clean build
 	$(call subcomponent,sense,sense)
 	$(call subcomponent,process,process)
 	$(call subcomponent,store,store)
+	$(call subcomponent,disclosure,disclosure)
 
-air: clean build
+device: | build
+	env GOOS=linux GOARCH=arm $(call subcomponent,message,bytes)
+	env GOOS=linux GOARCH=arm $(call subcomponent,bullhorn,publish)
+	env GOOS=linux GOARCH=arm $(call subcomponent,store,store)
+	env GOOS=linux GOARCH=arm $(call subcomponent,disclosure,disclosure)
+
+disclosure: device
+
+air: device | build
 	env GOOS=linux GOARCH=arm $(call subcomponent,sense,air)
-	env GOOS=linux GOARCH=arm $(call subcomponent,message,bytes)
-	env GOOS=linux GOARCH=arm $(call subcomponent,bullhorn,publish)
-	env GOOS=linux GOARCH=arm $(call subcomponent,store,store)
 
-soil: clean build
+soil: device | build
 	env GOOS=linux GOARCH=arm $(call subcomponent,sense,soil)
-	env GOOS=linux GOARCH=arm $(call subcomponent,message,bytes)
-	env GOOS=linux GOARCH=arm $(call subcomponent,bullhorn,publish)
-	env GOOS=linux GOARCH=arm $(call subcomponent,store,store)
 
-test: clean build
+test: | build
 	$(call subcomponent_test,fan)
 	$(call subcomponent_test,bullhorn)
 	$(call subcomponent_test,plot)
 	$(call subcomponent_test,message)
 	$(call subcomponent_test,process)
 	$(call subcomponent_test,store)
+	$(call subcomponent_test,disclosure)
 
 build:
 	mkdir -p build

@@ -2,13 +2,13 @@
 
 all: bullhorn test
 
-bullhorn: pubsub broadcast reliable
+bullhorn: pubsub broadcast listening
 
 pubsub: publish subscribe
 
 broadcast: yell snoop
 
-reliable: listen talk
+listening: listen talk
 
 publish: | build
 	cd publish && go build -o ../build/publish

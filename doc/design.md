@@ -18,7 +18,7 @@ to understand the messages, just how to handle JSON
 
 Subprograms are described in later sections. Some of the subprograms also
 fulfill requirements themselves. An example of this is the `process`
-subprograms. Four major composite programs are provided:
+subprograms. Several major composite programs are provided:
 
 ## `run-air`
 
@@ -27,6 +27,10 @@ subprograms. Four major composite programs are provided:
 ## `run-soil`
 
 ![run-soil](run-soil.png)
+
+## `run-disclosure`
+
+![run-disclosure](run-disclosure.png)
 
 ## `run-logger`
 

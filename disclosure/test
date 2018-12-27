@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+"""
+test runs disclosure with two different rates and verifies it outputs the
+correct data at the correct rates.
+"""
+
+import subprocess
+import time
+import json
+import collections
+
+
+def assert_result(lines, expected_rate):
+    try:
+        lines = [json.loads(line) for line in lines]
+        timestamps = [line['Timestamp'] for line in lines]
+        actual_rate = collections.Counter(timestamps).most_common(1)[0][1]
+        assert actual_rate == expected_rate
+        for line in lines:
+            assert line['Name'] == 'Disclosure'
+            assert line['DeviceName'] == 'a'
+            assert line['PublishHost'] == 'b'
+            assert line['CommandHost'] == 'c'
+    except AssertionError:
+        print('Error')
+        print()
+        print('Actual Lines:')
+        print(lines)
+        print()
+        print('Actual Rate:')
+        print(actual_rate)
+        print()
+        print('Expected Rate:')
+        print(expected_rate)
+        print()
+        raise error
+
+
+def run():
+    result = subprocess.Popen(
+        './disclosure a b c'.split(),
+        stdout=subprocess.PIPE,
+        stdin=subprocess.PIPE,
+        stderr=subprocess.PIPE)
+    time.sleep(2)
+    result.terminate()
+    result.wait()
+    return [line.decode('utf-8')[:-1] for line in result.stdout]
+
+
+def run_with_rate(rate):
+    result = subprocess.Popen(
+        './disclosure a b c --rate {}'.format(rate).split(),
+        stdout=subprocess.PIPE,
+        stdin=subprocess.PIPE,
+        stderr=subprocess.PIPE)
+    time.sleep(2)
+    result.terminate()
+    result.wait()
+    return [line.decode('utf-8')[:-1] for line in result.stdout]
+
+
+def test():
+    assert_result(run(), 5)
+    assert_result(run_with_rate(3), 3)
+
+
+if __name__ == '__main__':
+    test()
