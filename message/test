@@ -17,6 +17,10 @@ and error-codes match.
 
 test exits with a non-zero exit-code and the failed assertion if any file fails.
 
+If bytes and json are used as the programs, the bytes input and output is
+written as a string of hex characters. They are converted to actual bytes
+objects in the test.
+
 An example passing test is:
 
     echo test
@@ -51,6 +55,14 @@ def parse(handle):
     err_lines = lines[err_start:err_start + count]
     err_lines = [line for line in err_lines if line != '']
     err_code = int(lines[err_start + count])
+
+    if command == './bytes':
+        out_lines = [bytes(bytearray.fromhex(line)) for line in out_lines]
+        in_lines = [line.encode() for line in in_lines]
+    if command == './json':
+        out_lines = [line.encode() for line in out_lines]
+        in_lines = [bytes(bytearray.fromhex(line)) for line in in_lines]
+
     return command, in_lines, out_lines, err_lines, err_code
 
 
@@ -90,15 +102,20 @@ def test(base):
             command, in_lines, out_lines, err_lines, err_code = parse(handle)
             result = run(command)
             for line in in_lines:
-                result.stdin.write((line + '\n').encode())
+                result.stdin.write(line)
+                result.stdin.write('\n'.encode())
             result.stdin.flush()
 
             result.stdin.close()
             result.wait()
 
-            actual_out_lines = [
-                line.decode('utf-8')[:-1] for line in result.stdout
-            ]
+            actual_out_lines = [line[:-1] for line in result.stdout]
+
+            if command == 'json':
+                actual_out_lines = [
+                    line.decode('utf-8') for line in actual_out_lines
+                ]
+
             actual_err_lines = [
                 line.decode('utf-8')[:-1] for line in result.stderr
             ]

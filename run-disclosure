@@ -19,5 +19,5 @@ if (($# != 4)); then
   usage
 fi
 
-greenerthumb-disclosure ${2} ${3} ${4} | greenerthumb-message-bytes |
-	greenerthumb-bullhorn-yell ${1}
+greenerthumb-disclosure "${2}" "${3}" "${4}" | greenerthumb-message-bytes |
+	greenerthumb-bullhorn-yell "${1}"

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">greenerthumb</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="no_devices_message">No devices found.</string>
+
+    <string name="publish_host_label">Publish Host:</string>
+    <string name="command_host_label">Command Host:</string>
+</resources>

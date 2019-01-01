@@ -19,6 +19,16 @@ bytes-JSON conversion is implemented.
 
 ```
 ./bytes
+```
+
+```
+./json
+```
+
+Examples are:
+
+```
+./bytes
 
 < {"Name": "Soil", "Timestamp": 0, "Moisture": 0.37}
 0100000000000000003ebd70a410
@@ -30,6 +40,9 @@ bytes-JSON conversion is implemented.
 < 0100000000000000003ebd70a410
 {"Name": "Soil", "Timestamp": 0, "Moisture": 0.37}
 ```
+
+The examples show the bytes written and received as hex-strings for
+documentation purposes.
 
 ## Testing
 

@@ -32,6 +32,9 @@ subprograms. Several major composite programs are provided:
 
 ![run-disclosure](run-disclosure.png)
 
+The disclosures are broadcasted on port 35053 by default. This is something all
+devices need to agree on by convention.
+
 ## `run-logger`
 
 ![run-logger](run-logger.png)

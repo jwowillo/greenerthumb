@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent">
+
+    <EditTextPreference
+        android:layout_width="match_parent"
+        android:defaultValue="35053"
+        android:key="port"
+        android:selectAllOnFocus="true"
+        android:inputType="numberDecimal"
+        android:digits="0123456789"
+        android:summary="(Default: 35053)"
+        android:title="Device-finder Port" />
+
+</PreferenceScreen>

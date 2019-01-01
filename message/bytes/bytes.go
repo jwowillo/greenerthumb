@@ -38,10 +38,7 @@ func main() {
 			continue
 		}
 
-		for _, b := range m.SerializeBytes() {
-			fmt.Printf("%02x", b)
-		}
-		fmt.Println()
+		fmt.Printf("%s\n", m.SerializeBytes())
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -67,6 +64,9 @@ func init() {
 		p("")
 		p("    < {\"Name\": \"Soil\", \"Timestamp\": 0, \"Moisture\": 0.37}")
 		p("    0100000000000000003ebd70a410")
+		p("")
+		p("The example shows the bytes written as a hex-string for")
+		p("documentation purposes.")
 		p("")
 		p("Error-codes are used for the following:")
 		p("")
