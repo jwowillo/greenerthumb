@@ -3,6 +3,7 @@
 * Timestamps are 8-byte unix timestamps.
 * Checksums are cyclic sums of all of a message's bytes excluding the checksum.
 * Multi-byte fields are big-endian.
+* All messages are newline-terminated across the network for simplicity.
 
 ## Air Status Message (pub/sub)
 
@@ -26,19 +27,19 @@
 
 * Moisture is the ratio of water to soil.
 
-## Disclosure Message (Broadcast)
+## Disclosure Message (Broadcast on port 35053 by default)
 
-| Byte                  | Name                    | Type          |
-| --------------------- | ----------------------- | ------------- |
-| 1                     | ID (0x02)               | Byte          |
-| 2                     | Timestamp               | Long          |
-| 3                     | Device Name Length (l)  | Byte          |
-| 4                     | Device Name             | Byte Sequence |
-| 4 + l                 | Publish Host Length (m) | Byte          |
-| 4 + l + 1             | Publish Host            | Byte Sequence |
-| 4 + l + 1 + m         | Command Host Length (n) | Byte          |
-| 4 + l + 1 + m + 1     | Command Host            | Byte Sequence |
-| 4 + l + 1 + m + 1 + n | Checksum                | Byte          |
+| Byte                   | Name                    | Type          |
+| ---------------------- | ----------------------- | ------------- |
+| 1                      | ID (0x02)               | Byte          |
+| 2                      | Timestamp               | Long          |
+| 10                     | Device Name Length (l)  | Byte          |
+| 11                     | Device Name             | Byte Sequence |
+| 11 + l                 | Publish Host Length (m) | Byte          |
+| 11 + l + 1             | Publish Host            | Byte Sequence |
+| 11 + l + 1 + m         | Command Host Length (n) | Byte          |
+| 11 + l + 1 + m + 1     | Command Host            | Byte Sequence |
+| 11 + l + 1 + m + 1 + n | Checksum                | Byte          |
 
 * Device name is the name of the device.
 * Publish host is the host the device publishes to.

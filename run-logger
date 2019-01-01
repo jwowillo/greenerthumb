@@ -19,5 +19,5 @@ if (($# != 2)); then
   usage
 fi
 
-greenerthumb-bullhorn-subscribe ${1} ${2} --reconnect-delay 5 |
+greenerthumb-bullhorn-subscribe "${1}" "${2}" --reconnect-delay 5 |
 	greenerthumb-message-json | greenerthumb-log

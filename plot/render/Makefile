@@ -7,7 +7,7 @@ build/render.a: build/lodepng.o \
 	build/renderer.o | build
 	ar rvs build/render.a build/*.o
 
-build/%.o: %.cc | build
+build/%.o: %.cc icon.h | build
 	g++ -c -O2 -std=c++1z $< -o $@
 
 build:

@@ -1,4 +1,4 @@
-# soil_bytes.test tests that bytes serializes JSON to bytes properly for soil
+# soil_bytes.test tests that bytes serializes JSOn to bytes properly for soil
 # messages.
 ./bytes
 1
