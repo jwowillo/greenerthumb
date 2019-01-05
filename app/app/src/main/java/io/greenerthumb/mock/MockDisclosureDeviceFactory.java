@@ -11,9 +11,6 @@ import io.greenerthumb.message.data.Disclosure;
 public class MockDisclosureDeviceFactory implements DisclosureDeviceFactory {
     @Override
     public Device create(Disclosure disclosure) {
-        return new MockDevice(
-                disclosure.deviceName(),
-                disclosure.publishHost(),
-                disclosure.commandHost());
+        return new MockDevice(disclosure.host());
     }
 }

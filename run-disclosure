@@ -6,7 +6,7 @@ set -o pipefail
 
 function usage {
   echo "" >&2
-  echo "./run-disclosure <port> <device_name> <publish_host> <command_host>" >&2
+  echo "./run-disclosure <port> <host>" >&2
   echo "" >&2
   echo "run-disclosure into bullhorn/yell." >&2
   echo "" >&2
@@ -15,9 +15,9 @@ function usage {
   exit 2
 }
 
-if (($# != 4)); then
+if (($# != 2)); then
   usage
 fi
 
-greenerthumb-disclosure "${2}" "${3}" "${4}" | greenerthumb-message-bytes |
+greenerthumb-disclosure "${2}" | greenerthumb-message-bytes |
 	greenerthumb-bullhorn-yell "${1}"

@@ -18,9 +18,7 @@ def assert_result(lines, expected_rate):
         assert actual_rate == expected_rate
         for line in lines:
             assert line['Name'] == 'Disclosure'
-            assert line['DeviceName'] == 'a'
-            assert line['PublishHost'] == 'b'
-            assert line['CommandHost'] == 'c'
+            assert line['Host'] == 'a'
     except AssertionError:
         print('Error')
         print()
@@ -38,7 +36,7 @@ def assert_result(lines, expected_rate):
 
 def run():
     result = subprocess.Popen(
-        './disclosure a b c'.split(),
+        './disclosure a'.split(),
         stdout=subprocess.PIPE,
         stdin=subprocess.PIPE,
         stderr=subprocess.PIPE)
@@ -50,7 +48,7 @@ def run():
 
 def run_with_rate(rate):
     result = subprocess.Popen(
-        './disclosure a b c --rate {}'.format(rate).split(),
+        './disclosure a --rate {}'.format(rate).split(),
         stdout=subprocess.PIPE,
         stdin=subprocess.PIPE,
         stderr=subprocess.PIPE)

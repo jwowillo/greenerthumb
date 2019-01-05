@@ -29,21 +29,15 @@
 
 ## Disclosure Message (Broadcast on port 35053 by default)
 
-| Byte                   | Name                    | Type          |
-| ---------------------- | ----------------------- | ------------- |
-| 1                      | ID (0x02)               | Byte          |
-| 2                      | Timestamp               | Long          |
-| 10                     | Device Name Length (l)  | Byte          |
-| 11                     | Device Name             | Byte Sequence |
-| 11 + l                 | Publish Host Length (m) | Byte          |
-| 11 + l + 1             | Publish Host            | Byte Sequence |
-| 11 + l + 1 + m         | Command Host Length (n) | Byte          |
-| 11 + l + 1 + m + 1     | Command Host            | Byte Sequence |
-| 11 + l + 1 + m + 1 + n | Checksum                | Byte          |
+| Byte   | Name            | Type          |
+| ------ | --------------- | ------------- |
+| 1      | ID (0x02)       | Byte          |
+| 2      | Timestamp       | Long          |
+| 10     | Host Length (n) | Byte          |
+| 11     | Host            | Byte Sequence |
+| 11 + n | Checksum        | Byte          |
 
-* Device name is the name of the device.
-* Publish host is the host the device publishes to.
-* Command host is the host the device receives commands from.
+* Host is the host the device publishes to.
 
 ## JSON
 

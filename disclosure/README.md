@@ -14,15 +14,15 @@ The default rate is 5 hertz.
 ## Running
 
 ```
-./disclosure <device_name> <publish_host> <command_host> ?--rate <rate>
+./disclosure <host> ?--rate <rate>
 ```
 
 An example after one second is:
 
 ```
-./disclosure device :8080 :8081 --rate 1
+./disclosure :8080 --rate 1
 
-{"Name":"disclosure","Timestamp":0,"DeviceName":"device","PublishHost":":8080","CommandHost":":8081"}
+{"Name":"disclosure","Timestamp":0,"Host":":8080"}
 ```
 
 ## Testing
