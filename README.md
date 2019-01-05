@@ -1,6 +1,9 @@
 # `greenerthumb`
 
-`greenerthumb` is a garden automation package.
+`greenerthumb` is a garden automation package that allows multiple devices to
+cooperate and effectively manage garden operations.
+
+`greenerthumb` is in active development.
 
 ## Documentation
 
