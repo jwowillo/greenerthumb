@@ -22,16 +22,12 @@ public class DeviceFinderAdapter extends RecyclerView.Adapter<DeviceFinderAdapte
      * ViewHolder holds the cards used to display Devices.
      */
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView deviceName;
-        TextView publishHost;
-        TextView commandHost;
+        TextView host;
 
-        ViewHolder(CardView view, TextView deviceName, TextView publishHost, TextView commandHost) {
+        ViewHolder(CardView view, TextView host) {
             super(view);
 
-            this.deviceName = deviceName;
-            this.publishHost = publishHost;
-            this.commandHost = commandHost;
+            this.host = host;
         }
     }
 
@@ -50,18 +46,14 @@ public class DeviceFinderAdapter extends RecyclerView.Adapter<DeviceFinderAdapte
     public @NonNull ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         CardView view = (CardView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.device_card_view, parent, false);
-        TextView deviceName = view.findViewById(R.id.device_name);
-        TextView publishHost = view.findViewById(R.id.publish_host);
-        TextView commandHost = view.findViewById(R.id.command_host);
-        return new ViewHolder(view, deviceName, publishHost, commandHost);
+        TextView host = view.findViewById(R.id.host);
+        return new ViewHolder(view, host);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Device device = devices.get(position);
-        holder.deviceName.setText(device.name());
-        holder.publishHost.setText(device.publishHost());
-        holder.commandHost.setText(device.commandHost());
+        holder.host.setText(device.host());
     }
 
     @Override

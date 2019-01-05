@@ -6,26 +6,14 @@ import java.util.Objects;
  * Disclosure message.
  */
 public class Disclosure {
-    private final String deviceName;
-    private final String publishHost;
-    private final String commandHost;
+    private final String host;
 
-    public Disclosure(String deviceName, String publishHost, String commandHost) {
-        this.deviceName = deviceName;
-        this.publishHost = publishHost;
-        this.commandHost = commandHost;
+    public Disclosure(String host) {
+        this.host = host;
     }
 
-    public String deviceName() {
-        return deviceName;
-    }
-
-    public String publishHost() {
-        return publishHost;
-    }
-
-    public String commandHost() {
-        return commandHost;
+    public String host() {
+        return host;
     }
 
     @Override
@@ -33,13 +21,11 @@ public class Disclosure {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Disclosure that = (Disclosure) o;
-        return Objects.equals(deviceName, that.deviceName) &&
-                Objects.equals(publishHost, that.publishHost) &&
-                Objects.equals(commandHost, that.commandHost);
+        return Objects.equals(host, that.host);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(deviceName, publishHost, commandHost);
+        return host.hashCode();
     }
 }

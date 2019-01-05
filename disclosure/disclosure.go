@@ -7,36 +7,29 @@ import (
 	"time"
 )
 
-func serialize(deviceName, publishHost, commandHost string) string {
+func serialize(host string) string {
 	return fmt.Sprintf(
-		`{"Name":"%s","Timestamp":%d,"DeviceName":"%s","PublishHost":"%s","CommandHost":"%s"}`,
+		`{"Name":"%s","Timestamp":%d,"Host":"%s"}`,
 		"Disclosure", time.Now().Unix(),
-		deviceName, publishHost, commandHost)
+		host)
 }
 
 func main() {
 	duration := time.Duration(float64(time.Second) / rate)
 	for {
-		fmt.Println(serialize(deviceName, publishHost, commandHost))
+		fmt.Println(serialize(host))
 		time.Sleep(duration)
 	}
 }
 
-var (
-	deviceName  string
-	publishHost string
-	commandHost string
-)
+var host string
 
-var (
-	rate float64
-)
+var rate float64
 
 func init() {
 	p := func(l string) { fmt.Fprintln(os.Stderr, l) }
 	flag.Usage = func() {
-		p(`./disclosure <device_name> <publish_host> <command_host> \`)
-		p("    ?--rate <rate>")
+		p(`./disclosure <host> ?--rate <rate>`)
 		p("")
 		p("disclosure prints the disclosure message with the passed")
 		p("values periodically at the given rate in hertz.")
@@ -45,9 +38,9 @@ func init() {
 		p("")
 		p("An example after one second is:")
 		p("")
-		p("    ./disclosure device :8080 :8081 --rate 1")
+		p("    ./disclosure :8080 --rate 1")
 		p("")
-		p(`    {"Name":"disclosure","Timestamp":0,"DeviceName":"device","PublishHost":":8080","CommandHost":":8081"}`)
+		p(`    {"Name":"Disclosure","Timestamp":0,"Host":":8080"}`)
 		p("")
 
 		os.Exit(2)
@@ -59,15 +52,13 @@ func init() {
 		5,
 		"rate to print disclosures at")
 
-	if len(os.Args) < 4 {
+	if len(os.Args) < 2 {
 		flag.Usage()
 	}
 
-	deviceName = os.Args[1]
-	publishHost = os.Args[2]
-	commandHost = os.Args[3]
+	host = os.Args[1]
 
-	flag.CommandLine.Parse(os.Args[4:])
+	flag.CommandLine.Parse(os.Args[2:])
 
 	if len(flag.Args()) != 0 {
 		flag.Usage()

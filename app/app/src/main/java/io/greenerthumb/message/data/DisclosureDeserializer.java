@@ -21,29 +21,17 @@ public class DisclosureDeserializer implements Converter<Message, Disclosure> {
 
         ArrayView<Byte> data = message.data();
 
-        Optional<String> deviceName = parseString(data);
-        if (!deviceName.isPresent()) {
+        Optional<String> host = parseString(data);
+        if (!host.isPresent()) {
             return Optional.empty();
         }
-        data = ArrayView.advance(data,1 + deviceName.get().length());
-
-        Optional<String> publishHost = parseString(data);
-        if (!publishHost.isPresent()) {
-            return Optional.empty();
-        }
-        data = ArrayView.advance(data, 1 + publishHost.get().length());
-
-        Optional<String> commandHost = parseString(data);
-        if (!commandHost.isPresent()) {
-            return Optional.empty();
-        }
-        data = ArrayView.advance(data, 1 + commandHost.get().length());
+        data = ArrayView.advance(data,1 + host.get().length());
 
         if (data.size() != 0) {
             return Optional.empty();
         }
 
-        return Optional.of(new Disclosure(deviceName.get(), publishHost.get(), commandHost.get()));
+        return Optional.of(new Disclosure(host.get()));
     }
 
     /**
