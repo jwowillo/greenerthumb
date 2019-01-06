@@ -1,20 +1,21 @@
 # `sense` Design
 
-`sense` programs write `greenerthumb` JSON messages from sensors to STDOUT.
+`sense` programs write `greenerthumb` JSON message bodys from sensors to STDOUT.
 
-These can be `fan`ned into `message/bytes` piped into `bullhorn/publish`.
+These can be `fan`ned into `message/bytes` piped into `bullhorn/publish` after
+wrapping with headers.
 
 ## Sensors
 
 ### `air`
 
-`air` senses the 'Air Status Message' at 0.1 hertz.
+`air` senses the 'Air Status Message' body at 0.1 hertz.
 
 ![Air Schematic](air.png)
 
 ### `soil`
 
-`soil` senses the 'Soil Status Message' at 0.1 hertz.
+`soil` senses the 'Soil Status Message' body at 0.1 hertz.
 
 ![Soil Schematic](soil.png)
 

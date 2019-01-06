@@ -24,7 +24,7 @@ public class DisclosureDeviceFinderUnitTest {
         finder.addDevicesHandler(devices -> didTrigger[1] = true);
         finder.addDevicesHandler(devices -> didTrigger[2] = true);
 
-        receiver.receive(new Disclosure("a", "b", "c"));
+        receiver.receive(new Disclosure("a"));
 
         assertTrue(didTrigger[0]);
         assertTrue(didTrigger[1]);
@@ -43,8 +43,8 @@ public class DisclosureDeviceFinderUnitTest {
         finder.addDevicesHandler(devices -> triggeredCount[1]++);
         finder.addDevicesHandler(devices -> triggeredCount[2]++);
 
-        receiver.receive(new Disclosure("a", "b", "c"));
-        receiver.receive(new Disclosure("a", "b", "c"));
+        receiver.receive(new Disclosure("a"));
+        receiver.receive(new Disclosure("a"));
 
         assertEquals(triggeredCount[0], 1);
         assertEquals(triggeredCount[1], 1);
@@ -64,39 +64,27 @@ public class DisclosureDeviceFinderUnitTest {
             }
         });
 
-        Disclosure a = new Disclosure("a1", "a2", "a3");
-        Disclosure b = new Disclosure("b1", "b2", "b3");
-        Disclosure c = new Disclosure("c1", "c2", "c3");
+        Disclosure a = new Disclosure("a1");
+        Disclosure b = new Disclosure("b1");
+        Disclosure c = new Disclosure("c1");
 
         receiver.receive(a);
 
         assertEquals(1, devices.size());
-        assertEquals("a1", devices.get(0).name());
-        assertEquals("a2", devices.get(0).publishHost());
-        assertEquals("a3", devices.get(0).commandHost());
+        assertEquals("a1", devices.get(0).host());
 
         receiver.receive(b);
 
         assertEquals(2, devices.size());
-        assertEquals("a1", devices.get(0).name());
-        assertEquals("a2", devices.get(0).publishHost());
-        assertEquals("a3", devices.get(0).commandHost());
-        assertEquals("b1", devices.get(1).name());
-        assertEquals("b2", devices.get(1).publishHost());
-        assertEquals("b3", devices.get(1).commandHost());
+        assertEquals("a1", devices.get(0).host());
+        assertEquals("b1", devices.get(1).host());
 
         receiver.receive(c);
 
         assertEquals(3, devices.size());
-        assertEquals("a1", devices.get(0).name());
-        assertEquals("a2", devices.get(0).publishHost());
-        assertEquals("a3", devices.get(0).commandHost());
-        assertEquals("b1", devices.get(1).name());
-        assertEquals("b2", devices.get(1).publishHost());
-        assertEquals("b3", devices.get(1).commandHost());
-        assertEquals("c1", devices.get(2).name());
-        assertEquals("c2", devices.get(2).publishHost());
-        assertEquals("c3", devices.get(2).commandHost());
+        assertEquals("a1", devices.get(0).host());
+        assertEquals("b1", devices.get(1).host());
+        assertEquals("c1", devices.get(2).host());
     }
 
     @Test
@@ -106,8 +94,8 @@ public class DisclosureDeviceFinderUnitTest {
         DeviceFinder finder = new DisclosureDeviceFinder(receiver, factory);
         finder.addDevicesHandler(devices -> assertEquals(1, size(devices)));
 
-        receiver.receive(new Disclosure("a", "b", "c"));
-        receiver.receive(new Disclosure("a", "b", "c"));
+        receiver.receive(new Disclosure("a"));
+        receiver.receive(new Disclosure("a"));
     }
 
     private static <T> int size(Iterable<T> ts) {

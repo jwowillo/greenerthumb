@@ -1,7 +1,7 @@
 # `greenerthumb`
 
-`greenerthumb` is a garden automation package that allows multiple devices to
-cooperate and effectively manage garden operations.
+`greenerthumb` is a garden automation tool that allows multiple devices to
+cooperate and effectively manage garden operations as packages.
 
 `greenerthumb` is in active development.
 
@@ -29,8 +29,8 @@ All the sub-components' tests can be run with:
 `activate.sh` must be run in the project root before running any of the
 utilities to set up aliases. `deactivate.sh` removes the aliases.
 
-* `greenerthumb-run-air`: Runs `sense/air` into `bullhorn/publish`.
-* `greenerthumb-run-soil`: Runs `sense/soil` into `bullhorn/publish`.
+* `greenerthumb-run-air`: run-air device.
+* `greenerthumb-run-soil`: run-soil device.
 * `greenerthumb-run-logger`: Runs `bullhorn/subscribe` into `log`.
 * `greenerthumb-run-plotter`: Runs `bullhorn/subscribe` into `log` and `plot`.
 

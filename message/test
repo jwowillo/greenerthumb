@@ -1,131 +1,16 @@
-#!/usr/bin/env python3
-"""
-test finds all files with extension 'test' in the directory 'data' and runs
-them.
+#!/usr/bin/env bash
+#
+# test is a convenience script to run all message program tests.
 
-Tests are expected to have the format:
+set -e
+set -u
+set -o pipefail
 
-    <command>
-    <in_line_count>
-    <in_line>...
-    <out_line>...
-    <err_line>...
-    <error_code>...
+test_subcomponent() {
+        echo "testing $1"
+        cd $1 && ./test && cd ../
+}
 
-test runs the command with all the input, and makes sure all the STDOUT, STDERR,
-and error-codes match.
-
-test exits with a non-zero exit-code and the failed assertion if any file fails.
-
-If bytes and json are used as the programs, the bytes input and output is
-written as a string of hex characters. They are converted to actual bytes
-objects in the test.
-
-An example passing test is:
-
-    echo test
-    1
-    test
-
-    0
-"""
-
-import glob
-import subprocess
-
-
-def run(cmd):
-    return subprocess.Popen(
-        cmd.split(),
-        stdin=subprocess.PIPE,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE)
-
-
-def parse(handle):
-    lines = [line[:-1] for line in handle if not line.startswith('#')]
-    command = lines[0]
-    count = int(lines[1])
-    in_start = 2
-    out_start = 2 + count
-    err_start = out_start + count
-    in_lines = lines[in_start:out_start]
-    out_lines = lines[out_start:err_start]
-    out_lines = [line for line in out_lines if line != '']
-    err_lines = lines[err_start:err_start + count]
-    err_lines = [line for line in err_lines if line != '']
-    err_code = int(lines[err_start + count])
-
-    if command == './bytes':
-        out_lines = [bytes(bytearray.fromhex(line)) for line in out_lines]
-        in_lines = [line.encode() for line in in_lines]
-    if command == './json':
-        out_lines = [line.encode() for line in out_lines]
-        in_lines = [bytes(bytearray.fromhex(line)) for line in in_lines]
-
-    return command, in_lines, out_lines, err_lines, err_code
-
-
-def assert_result(path, actual_out, expected_out, actual_err, expected_err,
-                  actual_err_code, expected_err_code):
-    try:
-        assert actual_out == expected_out
-        assert actual_err == expected_err
-        assert actual_err_code == expected_err_code
-    except AssertionError as error:
-        print('Error in', path)
-        print()
-        print('Actual STDOUT:')
-        print(actual_out)
-        print()
-        print('Expected STDOUT:')
-        print(expected_out)
-        print()
-        print('Actual STDERR:')
-        print(actual_err)
-        print()
-        print('Expected STDERR:')
-        print(expected_err)
-        print()
-        print('Actual error-code:')
-        print(actual_err_code)
-        print()
-        print('Expected error-code:')
-        print(expected_err_code)
-        print()
-        raise error
-
-
-def test(base):
-    for path in glob.glob('{}/*.test'.format(base)):
-        with open(path) as handle:
-            command, in_lines, out_lines, err_lines, err_code = parse(handle)
-            result = run(command)
-            for line in in_lines:
-                result.stdin.write(line)
-                result.stdin.write('\n'.encode())
-            result.stdin.flush()
-
-            result.stdin.close()
-            result.wait()
-
-            actual_out_lines = [line[:-1] for line in result.stdout]
-
-            if command == 'json':
-                actual_out_lines = [
-                    line.decode('utf-8') for line in actual_out_lines
-                ]
-
-            actual_err_lines = [
-                line.decode('utf-8')[:-1] for line in result.stderr
-            ]
-            actual_err_lines = [
-                line.split(' - ')[1] for line in actual_err_lines
-            ]
-
-            assert_result(path, actual_out_lines, out_lines, actual_err_lines,
-                          err_lines, result.returncode, err_code)
-
-
-if __name__ == '__main__':
-    test('data')
+test_subcomponent header
+test_subcomponent bytes
+test_subcomponent json

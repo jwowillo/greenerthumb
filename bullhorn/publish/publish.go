@@ -27,11 +27,11 @@ const (
 )
 
 func logInfo(l string, args ...interface{}) {
-	greenerthumb.Info("publish", l, args...)
+	greenerthumb.Info("bullhorn-publish", l, args...)
 }
 
 func logError(err error) {
-	greenerthumb.Error("publish", err)
+	greenerthumb.Error("bullhorn-publish", err)
 }
 
 // conns are active net.Conns.

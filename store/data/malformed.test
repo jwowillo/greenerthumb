@@ -1,6 +1,6 @@
 # malformed.test tests that malformed messages write errors and are ignored.
 1
-{}
+{"Header": {}}
 0
 1
-key "Name" is missing from object map[]
+key "Header/Name" is missing from object map[Header:map[]]

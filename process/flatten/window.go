@@ -1,8 +1,10 @@
 package main
 
+import "github.com/jwowillo/greenerthumb/process"
+
 type window struct {
-	Timestamp int64
-	A, B, C   float64
+	Header  process.Header
+	A, B, C float64
 }
 
 func slide(w window, v float64) window {

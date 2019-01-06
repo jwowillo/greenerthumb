@@ -20,11 +20,7 @@ def sense(sensor, pin, rate):
     """
     while True:
         temperature = to_fahrenheit(Adafruit_DHT.read_retry(sensor, pin)[1])
-        print(json.dumps({
-            'Name': 'Air',
-            'Timestamp': int(time.time()),
-            'Temperature': temperature,
-        }))
+        print(json.dumps({'Temperature': temperature}))
         sys.stdout.flush()
         time.sleep(1 / rate)
 

@@ -9,18 +9,57 @@ import (
 	"github.com/jwowillo/greenerthumb"
 )
 
-// Serialize the name, timestamp, field, and value into a JSON string.
-func Serialize(name string, timestamp int64, field string, value float64) string {
-	return fmt.Sprintf(
-		"{\"Name\":\"%s\",\"Timestamp\":%d,\"%s\":%f}",
-		name, timestamp, field, value)
+// Header of a message.
+type Header map[string]interface{}
+
+// GetInt from the Header.
+//
+// Return an error if the value is bad.
+func (h Header) GetInt(k string) (int64, error) {
+	x, ok := h[k]
+	if !ok {
+		return -1, greenerthumb.KeyError{
+			Object:     h,
+			MissingKey: "Header/" + k}
+	}
+	v, ok := x.(float64)
+	if !ok {
+		return -1, greenerthumb.TypeError{Value: x, Type: "float64"}
+	}
+	return int64(v), nil
 }
 
-// FieldHandler is called with the message name and timestamp for the field and
-// the field name and value.
+// GetString from the Header.
+//
+// Return an error if the value is bad.
+func (h Header) GetString(k string) (string, error) {
+	x, ok := h[k]
+	if !ok {
+		return "", greenerthumb.KeyError{
+			Object:     h,
+			MissingKey: "Header/" + k}
+	}
+	v, ok := x.(string)
+	if !ok {
+		return "", greenerthumb.TypeError{Value: x, Type: "string"}
+	}
+	return v, nil
+}
+
+// Serialize the Header, field, and value into a JSON string.
+func Serialize(h Header, field string, value float64) (string, error) {
+	bs, err := json.Marshal(h)
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf(`{"Header":%s,"%s":%f}`, bs, field, value), nil
+}
+
+// FieldHandler is called with the Header for the field and the field
+// name and value.
 //
 // Returns an error if the field couldn't be processed.
-type FieldHandler func(string, int64, string, float64)
+type FieldHandler func(Header, string, float64)
 
 //ErrorHandler is called whenever an error occurs.
 type ErrorHandler func(error)
@@ -33,33 +72,20 @@ type ErrorHandler func(error)
 // Returns an error if the io.Reader can't be read.
 func Fields(rd io.Reader, cb FieldHandler, ecb ErrorHandler) error {
 	f := func(x map[string]interface{}) error {
-		rawName, ok := x["Name"]
+		xHeader, ok := x["Header"]
 		if !ok {
 			return greenerthumb.KeyError{
 				Object:     x,
-				MissingKey: "Name"}
+				MissingKey: "Header"}
 		}
-		rawTimestamp, ok := x["Timestamp"]
+		header, ok := xHeader.(map[string]interface{})
 		if !ok {
-			return greenerthumb.KeyError{
-				Object:     x,
-				MissingKey: "Timestamp"}
+			return greenerthumb.TypeError{
+				Value: xHeader,
+				Type:  "Header"}
 		}
-		delete(x, "Name")
-		delete(x, "Timestamp")
 
-		name, ok := rawName.(string)
-		if !ok {
-			return greenerthumb.TypeError{
-				Value: rawName,
-				Type:  "string"}
-		}
-		timestamp, ok := rawTimestamp.(float64)
-		if !ok {
-			return greenerthumb.TypeError{
-				Value: rawTimestamp,
-				Type:  "float64"}
-		}
+		delete(x, "Header")
 
 		for k, rawV := range x {
 			v, ok := rawV.(float64)
@@ -68,7 +94,7 @@ func Fields(rd io.Reader, cb FieldHandler, ecb ErrorHandler) error {
 					Value: rawV,
 					Type:  "float64"}
 			}
-			cb(name, int64(timestamp), k, v)
+			cb(header, k, v)
 		}
 		return nil
 	}

@@ -30,14 +30,14 @@ An example is:
 ```
 ./filter A 1 --lt 4 --gt 2
 
-< {"Name": "A", "Timestamp": 0, "1": 1}
-< {"Name": "A", "Timestamp": 1, "1": 2}
+< {"Header": {}, "1": 1}
+< {"Header": {}, "1": 2}
 
-< {"Name": "A", "Timestamp": 2, "1": 3}
-{"Name": "A", "Timestamp": 2, "1": 3}
+< {"Header": {}, "1": 3}
+{"Header": {}, "1": 3}
 
-< {"Name": "A", "Timestamp": 3, "1": 4}
-< {"Name": "A", "Timestamp": 4, "1": 5}
+< {"Header": {}, "1": 4}
+< {"Header": {}, "1": 5}
 ```
 
 ## Testing

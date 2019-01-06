@@ -1,7 +1,7 @@
-{"Name": "Soil", "Timestamp": 0, "Moisture": 0.37}
-{"Name": "Soil", "Timestamp": 1000, "Moisture": 0.40}
-{"Name": "Soil", "Timestamp": 2000, "Moisture": 0.32}
-{"Name": "Soil", "Timestamp": 3000, "Moisture": 0.43}
-{"Name": "Soil", "Timestamp": 4000, "Moisture": 0.35}
-{"Name": "Air", "Timestamp": 3600, "Temperature": 84.5}
-{"Name": "Air", "Timestamp": 7200, "Temperature": 82.1}
+{"Header": {"Name": "Soil", "Timestamp": 0}, "Moisture": 0.37}
+{"Header": {"Name": "Soil", "Timestamp": 1000}, "Moisture": 0.40}
+{"Header": {"Name": "Soil", "Timestamp": 2000}, "Moisture": 0.32}
+{"Header": {"Name": "Soil", "Timestamp": 3000}, "Moisture": 0.43}
+{"Header": {"Name": "Soil", "Timestamp": 4000}, "Moisture": 0.35}
+{"Header": {"Name": "Air", "Timestamp": 3600}, "Temperature": 84.5}
+{"Header": {"Name": "Air", "Timestamp": 7200}, "Temperature": 82.1}

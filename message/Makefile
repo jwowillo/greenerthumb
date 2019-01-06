@@ -1,21 +1,27 @@
-.PHONY: bytes json test
+.PHONY: header bytes json test
 
 all: message test
 
-message: bytes json
+message: header bytes json
+
+header: | build
+	$(MAKE) -C header
+	cp -rf header/build/. build/header
 
 bytes: | build
 	$(MAKE) -C bytes
-	cp -rf bytes/build/. build
+	cp -rf bytes/build/. build/bytes
 
 json: | build
 	$(MAKE) -C json
-	cp -rf json/build/. build
+	cp -rf json/build/. build/json
 
-test: bytes json | build
-	rm -rf build/data
-	cp -rf data build
-	cp test build/test
+test: test_header test_bytes test_json
 
 build:
 	mkdir -p build
+
+test_%: % | build
+	$(MAKE) -C $* test
+	cp -rf $*/build/. build/$*
+	cp test build/test

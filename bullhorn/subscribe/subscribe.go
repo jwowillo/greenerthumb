@@ -29,11 +29,11 @@ const (
 )
 
 func logInfo(l string, args ...interface{}) {
-	greenerthumb.Info("subscribe", l, args...)
+	greenerthumb.Info("bullhorn-subscribe", l, args...)
 }
 
 func logError(err error) {
-	greenerthumb.Error("subscribe", err)
+	greenerthumb.Error("bullhorn-subscribe", err)
 }
 
 func makeConn(writePort int, host string, port int) net.Conn {

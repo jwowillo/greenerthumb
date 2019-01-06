@@ -21,19 +21,19 @@ An example is:
 ```
 ./flatten
 
-< {"Name": "A", "Timestamp": 0, "1": 1, "2": 7}
-< {"Name": "A", "Timestamp": 1, "1": 2, "2": 3}
+< {"Header": {"Name": "A"}, "1": 1, "2": 7}
+< {"Header": {"Name": "A"}, "1": 2, "2": 3}
 
-{"Name": "A", "Timestamp": 0, "1": 1.16667}
-{"Name": "A", "Timestamp": 0, "2": 6.33334}
+{"Header": {"Name": "A"}, "1": 1.16667}
+{"Header": {"Name": "A"}, "2": 6.33334}
 
-< {"Name": "B", "Timestamp": 0, "3": 4}
-< {"Name": "A", "Timestamp": 2, "2": 5}
+< {"Header": {"Name": "B"}, "3": 4}
+< {"Header": {"Name": "A"}, "2": 5}
 
-{"Name": "B", "Timestamp": 0, "3": 4}
-{"Name": "A", "Timestamp": 1, "1": 1.83333}
-{"Name": "A", "Timestamp": 1, "2": 4}
-{"Name": "A", "Timestamp": 2, "2": 4.66667}
+{"Header": {"Name": "B"}, "3": 4}
+{"Header": {"Name": "A"}, "1": 1.83333}
+{"Header": {"Name": "A"}, "2": 4}
+{"Header": {"Name": "A"}, "2": 4.66667}
 ```
 
 ## Testing

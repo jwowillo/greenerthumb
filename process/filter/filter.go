@@ -17,19 +17,21 @@ const (
 	ReadInput = 1 << iota
 )
 
+func logError(err error) {
+	greenerthumb.Error("process-filter", err)
+}
+
 func main() {
 	var ec int
-
-	errorHandler := func(err error) { greenerthumb.Error("filter", err) }
 
 	fieldHandler := makeFieldHandler(
 		epsilon,
 		equal,
 		lessThan, lessThanOrEqual,
 		greaterThan, greaterThanOrEqual)
-	err := process.Fields(os.Stdin, fieldHandler, errorHandler)
+	err := process.Fields(os.Stdin, fieldHandler, logError)
 	if err != nil {
-		errorHandler(err)
+		logError(err)
 		ec |= ReadInput
 	}
 
@@ -37,7 +39,7 @@ func main() {
 }
 
 func makeFieldHandler(epsilon, e, lt, lte, gt, gte float64) process.FieldHandler {
-	return func(name string, ts int64, field string, value float64) {
+	return func(header process.Header, field string, value float64) {
 		isGood := true
 
 		if !math.IsNaN(e) {
@@ -70,7 +72,13 @@ func makeFieldHandler(epsilon, e, lt, lte, gt, gte float64) process.FieldHandler
 			return
 		}
 
-		fmt.Println(process.Serialize(name, ts, field, value))
+		s, err := process.Serialize(header, field, value)
+		if err != nil {
+			logError(err)
+			return
+		}
+
+		fmt.Println(s)
 	}
 }
 
@@ -125,14 +133,14 @@ func init() {
 		p("")
 		p("    ./filter A 1 --lt 4 --gt 2")
 		p("")
-		p("    < {\"Name\": \"A\", \"Timestamp\": 0, \"1\": 1}")
-		p("    < {\"Name\": \"A\", \"Timestamp\": 1, \"1\": 2}")
+		p(`    < {"Header": {}, "1": 1}`)
+		p(`    < {"Header": {}, "1": 2}`)
 		p("")
-		p("    < {\"Name\": \"A\", \"Timestamp\": 2, \"1\": 3}")
-		p("    {\"Name\": \"A\", \"Timestamp\": 2, \"1\": 3}")
+		p(`    < {"Header": {}, "1": 3}`)
+		p(`    {"Header": {}, "1": 3}`)
 		p("")
-		p("    < {\"Name\": \"A\", \"Timestamp\": 3, \"1\": 4}")
-		p("    < {\"Name\": \"A\", \"Timestamp\": 4, \"1\": 5}")
+		p(`    < {"Header": {}, "1": 4}`)
+		p(`    < {"Header": {}, "1": 5}`)
 		p("")
 		p("Error-codes are used for the following:")
 		p("")

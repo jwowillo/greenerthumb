@@ -32,15 +32,15 @@ An example is:
 ```
 ./write store.db
 
-< {"Name": "A", "Timestamp": 0, "Value": 0}
-< {"Name": "A", "Timestamp": 1, "Value": 1}
-< {"Name": "A", "Timestamp": 2, "Value": 2}
+< {"Header": {"Name": "A"}, "Value": 0}
+< {"Header": {"Name": "A"}, "Value": 1}
+< {"Header": {"Name": "A"}, "Value": 2}
 ```
 
 ```
 ./read store.db
 
-{"Name": "A", "Timestamp": 2, "Value": 2}
+{"Header": {"Name": "A"}, "Value": 2}
 ```
 
 ## Testing

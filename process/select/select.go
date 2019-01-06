@@ -17,6 +17,10 @@ const (
 	ReadInput = 1 << iota
 )
 
+func logError(err error) {
+	greenerthumb.Error("process-select", err)
+}
+
 func main() {
 	var ec int
 
@@ -26,11 +30,10 @@ func main() {
 	}
 
 	fieldHandler := makeFieldHandler(includes)
-	errorHandler := func(err error) { greenerthumb.Error("select", err) }
 
-	err := process.Fields(os.Stdin, fieldHandler, errorHandler)
+	err := process.Fields(os.Stdin, fieldHandler, logError)
 	if err != nil {
-		errorHandler(err)
+		logError(err)
 		ec |= ReadInput
 	}
 
@@ -38,12 +41,24 @@ func main() {
 }
 
 func makeFieldHandler(includes map[string]interface{}) process.FieldHandler {
-	return func(name string, ts int64, field string, value float64) {
+	return func(header process.Header, field string, value float64) {
+		name, err := header.GetString("Name")
+		if err != nil {
+			logError(err)
+			return
+		}
+
 		if _, ok := includes[name]; !ok {
 			return
 		}
 
-		fmt.Println(process.Serialize(name, ts, field, value))
+		s, err := process.Serialize(header, field, value)
+		if err != nil {
+			logError(err)
+			return
+		}
+
+		fmt.Println(s)
 	}
 }
 
@@ -74,13 +89,14 @@ func init() {
 		p("")
 		p(`    ./select --include "A" --include "B"`)
 		p("")
-		p(`    < {"Name": "A", "Timestamp": 0, "1": 1}`)
-		p(`    {"Name": "A", "Timestamp": 0, "1": 1}`)
-		p(`    < {"Name": "B", "Timestamp": 0, "1": 1}`)
-		p(`    {"Name": "B", "Timestamp": 0, "1": 1}`)
-		p(`    < {"Name": "C", "Timestamp": 0, "1": 1}`)
+		p(`    < {"Header": {"Name": "A"}, "1": 1}`)
+		p(`    {"Header": {"Name": "A"}, "1": 1}`)
+		p(`    < {"Header": {"Name": "B"}, "1": 1}`)
+		p(`    {"Header": {"Name": "B"}, "1": 1}`)
+		p(`    < {"Header": {"Name": "C}", "1": 1}`)
 		p("")
 		p("Error-codes are used for the following:")
+		p("")
 		p(fmt.Sprintf(
 			"    %d = Failed to read input.",
 			ReadInput))

@@ -42,23 +42,30 @@ Message::Message(const std::string& raw) {
     throw std::invalid_argument{"bad JSON string: " + raw};
   }
 
-  const auto name_object = object["Name"];
+  auto header_object = object["Header"];
+  if (header_object.IsNull()) {
+    throw std::invalid_argument{
+        R"(key "Header" is missing from JSON string )" + raw};
+  }
+
+  const auto name_object = header_object["Name"];
   if (name_object.IsNull()) {
-    throw std::invalid_argument{"key \"Name\" is missing from JSON string " +
-                                raw};
+    throw std::invalid_argument{
+        R"(key "Header/Name" is missing from JSON string )" + raw};
   }
   const auto name = name_object.ToString();
-  const auto timestamp_object = object["Timestamp"];
+
+  const auto timestamp_object = header_object["Timestamp"];
   if (timestamp_object.IsNull()) {
     throw std::invalid_argument{
-        "key \"Timestamp\" is missing from JSON string " + raw};
+        R"(key "Header/Timestamp" is missing from JSON string )" + raw};
   }
   timestamp = timestamp_object.ToInt();
 
   for (const auto& value : object.ObjectRange()) {
     const auto key = value.first;
     // Ignore mandatory keys.
-    if (key == "Name" || key == "Timestamp") {
+    if (key == "Header") {
       continue;
     }
 

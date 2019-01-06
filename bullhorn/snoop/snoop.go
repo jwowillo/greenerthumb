@@ -21,11 +21,11 @@ const (
 )
 
 func logInfo(l string, args ...interface{}) {
-	greenerthumb.Info("snoop", l, args...)
+	greenerthumb.Info("bullhorn-snoop", l, args...)
 }
 
 func logError(err error) {
-	greenerthumb.Error("snoop", err)
+	greenerthumb.Error("bullhorn-snoop", err)
 }
 
 func main() {

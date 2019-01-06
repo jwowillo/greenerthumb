@@ -20,11 +20,11 @@ const (
 )
 
 func logInfo(l string, args ...interface{}) {
-	greenerthumb.Info("listen", l, args...)
+	greenerthumb.Info("bullhorn-listen", l, args...)
 }
 
 func logError(err error) {
-	greenerthumb.Error("listen", err)
+	greenerthumb.Error("bullhorn-listen", err)
 }
 
 func acceptConnections(ln net.Listener) error {

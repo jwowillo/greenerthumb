@@ -14,3 +14,7 @@ The app should be built in Android Studio.
 
 The app is expected to be run on an Android device after installing the APK in
 Android Studio.
+
+## Testing
+
+The app should be tested in Android Studio.

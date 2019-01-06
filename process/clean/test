@@ -23,15 +23,15 @@ An example passing test is:
 
     1
     5
-    {"Name": "A", "Timestamp": 0, "1": 1}
-    {"Name": "A", "Timestamp": 1, "1": 2}
-    {"Name": "A", "Timestamp": 2, "1": 3}
-    {"Name": "A", "Timestamp": 3, "1": 4}
-    {"Name": "A", "Timestamp": 4, "1": 5}
+    {"Header": {"Name": "name"}, "A": 1}
+    {"Header": {"Name": "name"}, "A": 2}
+    {"Header": {"Name": "name"}, "A": 3}
+    {"Header": {"Name": "name"}, "A": 4}
+    {"Header": {"Name": "name"}, "A": 5}
     3
-    {"Name": "A", "Timestamp": 1, "1": 2}
-    {"Name": "A", "Timestamp": 2, "1": 3}
-    {"Name": "A", "Timestamp": 3, "1": 4}
+    {"Header": {"Name": "name"}, "A": 2}
+    {"Header": {"Name": "name"}, "A": 3}
+    {"Header": {"Name": "name"}, "A": 4}
     0
     0
 """
@@ -48,14 +48,14 @@ def are_equal(xs, ys):
     for i, x in enumerate(xs):
         obj = json.loads(x)
         for k, v in obj.items():
-            if k == 'Name' or k == 'Timestamp':
+            if k == 'Header':
                 continue
             obj[k] = round(float(v), 4)
         xs[i] = obj
     for i, y in enumerate(ys):
         obj = json.loads(y)
         for k, v in obj.items():
-            if k == 'Name' or k == 'Timestamp':
+            if k == 'Header':
                 continue
             obj[k] = round(float(v), 4)
         ys[i] = obj

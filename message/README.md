@@ -1,7 +1,7 @@
 # `message`
 
-`message` is where `greenerthumb` messages from the ICD are defined and the
-bytes-JSON conversion is implemented.
+`message` is where `greenerthumb` messages from the ICD are defined, the
+bytes-JSON conversion is implemented, and header wrapping is provided.
 
 ## Documentation
 
@@ -10,12 +10,19 @@ bytes-JSON conversion is implemented.
 ## Building
 
 * `make` builds all targets.
-* `make message` builds `bytes` and `json`.
+* `make message` builds `header`, `bytes`, and `json`.
+* `make header` builds `header`.
 * `make bytes` builds `bytes`.
 * `make json` builds `json`.
 * `make test` builds `message`'s tests.
 
 ## Running
+
+```
+./header <name> <sender>
+```
+
+The sender can't be longer than 255 characters.
 
 ```
 ./bytes
@@ -26,6 +33,13 @@ bytes-JSON conversion is implemented.
 ```
 
 Examples are:
+
+```
+./header name sender
+
+< {"Key": "Value"}
+{"Header": {"Name": "name", "Sender": "sender", "Timestamp": 0}, "Key": "Value"}
+```
 
 ```
 ./bytes

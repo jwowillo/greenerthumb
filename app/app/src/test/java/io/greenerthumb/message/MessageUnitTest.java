@@ -15,6 +15,7 @@ public class MessageUnitTest {
         Message message = new Message(
                 expected,
                 OffsetDateTime.now(),
+                "sender",
                 new ArrayView<>(new Byte[]{}));
         assertEquals(expected, message.type());
     }
@@ -25,8 +26,20 @@ public class MessageUnitTest {
         Message message = new Message(
                 MessageType.DISCLOSURE,
                 expected,
+                "sender",
                 new ArrayView<>(new Byte[]{}));
         assertEquals(expected, message.timestamp());
+    }
+
+    @Test
+    public void sender() {
+        String expected = "sender";
+        Message message = new Message(
+                MessageType.DISCLOSURE,
+                OffsetDateTime.now(),
+                expected,
+                new ArrayView<>(new Byte[]{}));
+        assertEquals(expected, message.sender());
     }
 
     @Test
@@ -35,6 +48,7 @@ public class MessageUnitTest {
         Message message = new Message(
                 MessageType.DISCLOSURE,
                 OffsetDateTime.now(),
+                "sender",
                 expected);
         ArrayView<Byte> actual = message.data();
         assertEquals(actual.size(), 3);

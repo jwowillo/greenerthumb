@@ -1,0 +1,7 @@
+# empty.test tests that header outputs headers correctly for empty objects.
+name sender
+1
+{}
+{"Header":{"Name":"name","Sender":"sender","Timestamp":"?"}}
+
+0

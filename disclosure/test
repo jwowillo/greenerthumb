@@ -7,31 +7,54 @@ correct data at the correct rates.
 import subprocess
 import time
 import json
-import collections
+
+
+def assert_error(lines, expected_lines):
+    try:
+        assert lines == expected_lines
+    except AssertionError as error:
+        print('Error')
+        print()
+        print('Actual Error-lines:')
+        print(lines)
+        print()
+        print('Expected Error-lines:')
+        print(expected_lines)
+        print()
+        raise error
 
 
 def assert_result(lines, expected_rate):
     try:
+        assert len(lines) - 1 == expected_rate
         lines = [json.loads(line) for line in lines]
-        timestamps = [line['Timestamp'] for line in lines]
-        actual_rate = collections.Counter(timestamps).most_common(1)[0][1]
-        assert actual_rate == expected_rate
         for line in lines:
-            assert line['Name'] == 'Disclosure'
             assert line['Host'] == 'a'
-    except AssertionError:
+    except AssertionError as error:
         print('Error')
         print()
         print('Actual Lines:')
         print(lines)
         print()
         print('Actual Rate:')
-        print(actual_rate)
+        print(len(lines))
         print()
         print('Expected Rate:')
         print(expected_rate)
         print()
         raise error
+
+
+def run_with_bad_host():
+    result = subprocess.Popen(
+        './disclosure {}'.format('a' * 256).split(),
+        stdout=subprocess.PIPE,
+        stdin=subprocess.PIPE,
+        stderr=subprocess.PIPE)
+    result.wait()
+    return [
+        line.decode('utf-8')[:-1].split(' - ')[1] for line in result.stderr
+    ]
 
 
 def run():
@@ -40,7 +63,7 @@ def run():
         stdout=subprocess.PIPE,
         stdin=subprocess.PIPE,
         stderr=subprocess.PIPE)
-    time.sleep(2)
+    time.sleep(1.1)
     result.terminate()
     result.wait()
     return [line.decode('utf-8')[:-1] for line in result.stdout]
@@ -52,13 +75,16 @@ def run_with_rate(rate):
         stdout=subprocess.PIPE,
         stdin=subprocess.PIPE,
         stderr=subprocess.PIPE)
-    time.sleep(2)
+    time.sleep(1.1)
     result.terminate()
     result.wait()
     return [line.decode('utf-8')[:-1] for line in result.stdout]
 
 
 def test():
+    assert_error(run_with_bad_host(), [
+        'string "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" with length 256 is longer than limit 255'
+    ])
     assert_result(run(), 5)
     assert_result(run_with_rate(3), 3)
 

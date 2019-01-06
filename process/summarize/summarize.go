@@ -19,15 +19,18 @@ const (
 	MarshalJSON = 1 << iota
 )
 
+func logError(err error) {
+	greenerthumb.Error("process-summarize", err)
+}
+
 func main() {
 	var ec int
 
-	errorHandler := func(err error) { greenerthumb.Error("summarize", err) }
 	data := make(map[string]map[string][]float64)
 
-	err := process.Fields(os.Stdin, makeFieldHandler(data), errorHandler)
+	err := process.Fields(os.Stdin, makeFieldHandler(data), logError)
 	if err != nil {
-		errorHandler(err)
+		logError(err)
 		ec |= ReadInput
 	}
 
@@ -43,7 +46,13 @@ func main() {
 }
 
 func makeFieldHandler(data map[string]map[string][]float64) process.FieldHandler {
-	return func(name string, _ int64, field string, value float64) {
+	return func(header process.Header, field string, value float64) {
+		name, err := header.GetString("Name")
+		if err != nil {
+			logError(err)
+			return
+		}
+
 		if _, ok := data[name]; !ok {
 			data[name] = make(map[string][]float64)
 		}
@@ -65,13 +74,13 @@ func init() {
 		p("")
 		p("    ./summarize")
 		p("")
-		p("    < {\"Name\": \"A\", \"Timestamp\": 0, \"1\": 1}")
-		p("    < {\"Name\": \"A\", \"Timestamp\": 1, \"1\": 2}")
-		p("    < {\"Name\": \"A\", \"Timestamp\": 2, \"1\": 3}")
-		p("    < {\"Name\": \"A\", \"Timestamp\": 3, \"1\": 4}")
-		p("    < {\"Name\": \"A\", \"Timestamp\": 4, \"1\": 5}")
+		p(`    < {"Header": {"Name": "A"}, "1": 1}`)
+		p(`    < {"Header": {"Name": "A"}, "1": 2}`)
+		p(`    < {"Header": {"Name": "A"}, "1": 3}`)
+		p(`    < {"Header": {"Name": "A"}, "1": 4}`)
+		p(`    < {"Header": {"Name": "A"}, "1": 5}`)
 		p("")
-		p("    {\"A\": {\"1\": {\"N\": 5, \"Minimum\": 1, \"Q1\": 1.5, \"Median\": 3, \"Q1\": 4.5, \"Maximum\": 5}}}")
+		p(`    {"A": {"1": {"N": 5, "Minimum": 1, "Q1": 1.5, "Median": 3, "Q1": 4.5, "Maximum": 5}}}`)
 		p("")
 		p("Error-codes are used for the following:")
 		p("")

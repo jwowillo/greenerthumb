@@ -1,10 +1,10 @@
 # multiple.test tests that store can write and read multiple kinds of messages.
 3
-{"Name": "A"}
-{"Name": "B"}
-{"Name": "C"}
+{"Header": {"Name": "A"}}
+{"Header": {"Name": "B"}}
+{"Header": {"Name": "C"}}
 3
-{"Name": "A"}
-{"Name": "B"}
-{"Name": "C"}
+{"Header": {"Name": "A"}}
+{"Header": {"Name": "B"}}
+{"Header": {"Name": "C"}}
 0

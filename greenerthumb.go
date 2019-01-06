@@ -34,8 +34,20 @@ type KeyError struct {
 }
 
 func (e KeyError) Error() string {
-	return fmt.Sprintf("key \"%s\" is missing from object %v",
+	return fmt.Sprintf(`key "%s" is missing from object %v`,
 		e.MissingKey, mapToString(e.Object))
+}
+
+// StringError is returned when a string is longer than expected.
+type StringError struct {
+	String string
+	Limit  int
+}
+
+func (e StringError) Error() string {
+	return fmt.Sprintf(
+		`string "%s" with length %d is longer than limit %d`,
+		e.String, len(e.String), e.Limit)
 }
 
 // TypeError is returned when an value has an unexpected type.

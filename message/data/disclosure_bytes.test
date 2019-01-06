@@ -1,8 +1,0 @@
-# disclosure_bytes.test tests that bytes serializes JSON to bytes properly for
-# disclosure messages.
-./bytes
-1
-{"Name": "Disclosure", "Timestamp": 1, "Host": ":8080"}
-020000000000000001053a3830383012
-
-0

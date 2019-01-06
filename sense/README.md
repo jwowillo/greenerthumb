@@ -1,6 +1,6 @@
 # `sense`
 
-`sense` programs write `greenerthumb` JSON messages from sensors to STDOUT.
+`sense` programs write `greenerthumb` JSON message bodys from sensors to STDOUT.
 
 # Documentation
 
@@ -24,7 +24,7 @@ An example is:
 ```
 ./air
 
-{"Name": "Air", "Timestamp": 0, "Temperature": 67.4}
+{"Temperature": 67.4}
 ```
 
 ### Soil
@@ -43,7 +43,7 @@ An example is:
 ```
 ./soil
 
-{"Name": "Soil", "Timestamp": 0, "Moisture": 0.37}
+{"Moisture": 0.37}
 ```
 
 Each accepts all necessary GPIO pin numbers, ADC channels, and rates as optional
