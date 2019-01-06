@@ -56,14 +56,30 @@ func NewSQLITEStore(path string) (*SQLITEStore, error) {
 func (s *SQLITEStore) Write(msg string) error {
 	var x map[string]interface{}
 	json.Unmarshal([]byte(msg), &x)
-	rawName, ok := x["Name"]
+
+	rawHeader, ok := x["Header"]
 	if !ok {
-		return greenerthumb.KeyError{Object: x, MissingKey: "Name"}
+		return greenerthumb.KeyError{Object: x, MissingKey: "Header"}
+	}
+
+	xHeader, ok := rawHeader.(map[string]interface{})
+	if !ok {
+		return greenerthumb.TypeError{
+			Value: rawHeader,
+			Type:  "map[string]interface{}"}
+	}
+
+	rawName, ok := xHeader["Name"]
+	if !ok {
+		return greenerthumb.KeyError{
+			Object:     x,
+			MissingKey: "Header/Name"}
 	}
 	name, ok := rawName.(string)
 	if !ok {
 		return greenerthumb.TypeError{Value: rawName, Type: "string"}
 	}
+
 	_, err := s.write.Exec(name, msg)
 	return err
 }

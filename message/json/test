@@ -1,0 +1,127 @@
+#!/usr/bin/env python3
+"""
+test finds all files with extension 'test' in the directory 'data' and runs
+them.
+
+Tests are expected to have the format:
+
+    <in_line_count>
+    <in_line>...
+    <out_line>...
+    <err_line>...
+    <error_code>...
+
+test runs json with all the input, and makes sure all the STDOUT, STDERR, and
+error-codes match.
+
+test exits with a non-zero exit-code and the failed assertion if any file fails.
+
+Bytes are written as a string of hex characters for ease of use. They are
+converted to actual bytes objects in the tests.
+
+An example passing test is:
+
+    1
+    00000000000000000101413f00000082
+    {"Header":{"Name":"Air","Sender":"A","Timestamp":1},"Temperature":0.5}
+
+    0
+"""
+
+import glob
+import subprocess
+
+
+def run(cmd):
+    return subprocess.Popen(
+        cmd.split(),
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE)
+
+
+def parse(handle):
+    lines = [line[:-1] for line in handle if not line.startswith('#')]
+    count = int(lines[0])
+    in_start = 1
+    out_start = 1 + count
+    err_start = out_start + count
+    in_lines = lines[in_start:out_start]
+    out_lines = lines[out_start:err_start]
+    out_lines = [line for line in out_lines if line != '']
+    err_lines = lines[err_start:err_start + count]
+    err_lines = [line for line in err_lines if line != '']
+    err_code = int(lines[err_start + count])
+
+    out_lines = [line.encode() for line in out_lines]
+    in_lines = [bytes(bytearray.fromhex(line)) for line in in_lines]
+
+    return in_lines, out_lines, err_lines, err_code
+
+
+def assert_result(path, actual_out, expected_out, actual_err, expected_err,
+                  actual_err_code, expected_err_code):
+    try:
+        assert actual_out == expected_out
+        assert actual_err == expected_err
+        assert actual_err_code == expected_err_code
+    except AssertionError as error:
+        print('Error in', path)
+        print()
+        print('Actual STDOUT:')
+        print(actual_out)
+        print()
+        print('Expected STDOUT:')
+        print(expected_out)
+        print()
+        print('Actual STDERR:')
+        print(actual_err)
+        print()
+        print('Expected STDERR:')
+        print(expected_err)
+        print()
+        print('Actual error-code:')
+        print(actual_err_code)
+        print()
+        print('Expected error-code:')
+        print(expected_err_code)
+        print()
+        raise error
+
+
+def test(base):
+    for path in glob.glob('{}/*.test'.format(base)):
+        with open(path) as handle:
+            in_lines, out_lines, err_lines, err_code = parse(handle)
+            result = run('./json')
+            for line in in_lines:
+                result.stdin.write(line)
+                result.stdin.write('\n'.encode())
+            result.stdin.flush()
+
+            result.stdin.close()
+            result.wait()
+
+            actual_out_lines = [line[:-1] for line in result.stdout]
+
+            out_lines = [line.decode('utf-8') for line in out_lines]
+            actual_out_lines = [
+                line.decode('utf-8') for line in actual_out_lines
+            ]
+
+            actual_err_lines = [
+                line.decode('utf-8')[:-1] for line in result.stderr
+            ]
+            actual_err_lines = [
+                line.split(' - ')[1] for line in actual_err_lines
+            ]
+
+            for i, line in enumerate(actual_err_lines):
+                actual_err_lines[i] = ' '.join(line.split()[:4])  # Error type
+
+            assert_result(path, actual_out_lines, out_lines, actual_err_lines,
+                          err_lines, result.returncode, err_code)
+
+
+if __name__ == '__main__':
+    test('data')

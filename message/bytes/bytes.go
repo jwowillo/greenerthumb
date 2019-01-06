@@ -19,7 +19,7 @@ const (
 )
 
 func logError(err error) {
-	greenerthumb.Error("bytes", err)
+	greenerthumb.Error("message-bytes", err)
 }
 
 func main() {
@@ -62,8 +62,8 @@ func init() {
 		p("")
 		p("    ./bytes")
 		p("")
-		p("    < {\"Name\": \"Soil\", \"Timestamp\": 0, \"Moisture\": 0.37}")
-		p("    0100000000000000003ebd70a410")
+		p(`    < {"Header": {"Name": "Soil", "Timestamp": 1, "Sender": "A"}, "Moisture": 0.5}`)
+		p("    01000000000000000101413f00000083")
 		p("")
 		p("The example shows the bytes written as a hex-string for")
 		p("documentation purposes.")

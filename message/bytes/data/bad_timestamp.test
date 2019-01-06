@@ -1,0 +1,7 @@
+# bad_timestamp.test tests that json prints the correct error-message when a
+# non-integral timestamp is given.
+1
+{"Header": {"Name": "Air", "Sender": "A", "Timestamp": 1.1}, "Temperature": 0.5}
+
+key "Header/Timestamp" is bad
+0

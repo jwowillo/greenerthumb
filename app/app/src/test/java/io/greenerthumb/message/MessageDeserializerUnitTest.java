@@ -21,7 +21,8 @@ public class MessageDeserializerUnitTest {
         ArrayView<Byte> data = new ArrayView<>(new Byte[]{
                 0x02,
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x02});
+                0x01, 0x41,
+                0x44});
         Optional<Message> message = deserializer.convert(data);
         assertTrue(message.isPresent());
         assertEquals(MessageType.DISCLOSURE, message.get().type());
@@ -29,6 +30,7 @@ public class MessageDeserializerUnitTest {
         assertEquals(
                 OffsetDateTime.ofInstant(Instant.ofEpochSecond(0), ZoneOffset.UTC),
                 message.get().timestamp());
+        assertEquals("A", message.get().sender());
     }
 
     @Test
@@ -37,7 +39,8 @@ public class MessageDeserializerUnitTest {
         ArrayView<Byte> data = new ArrayView<>(new Byte[]{
                 0x02,
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // Bad length
-                0x02});
+                0x01, 0x41,
+                0x44});
         Optional<Message> message = deserializer.convert(data);
         assertFalse(message.isPresent());
     }
@@ -48,7 +51,8 @@ public class MessageDeserializerUnitTest {
         ArrayView<Byte> data = new ArrayView<>(new Byte[]{
                 0x02,
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x03 // Bad checksum.
+                0x01, 0x41,
+                0x03 // Bad checksum
         });
         Optional<Message> message = deserializer.convert(data);
         assertFalse(message.isPresent());
@@ -60,7 +64,20 @@ public class MessageDeserializerUnitTest {
         ArrayView<Byte> data = new ArrayView<>(new Byte[]{
                 (byte)0xFF, // Bad MessageType
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x02});
+                0x01, 0x41,
+                0x44});
+        Optional<Message> message = deserializer.convert(data);
+        assertFalse(message.isPresent());
+    }
+
+    @Test
+    public void deserializeBadSender() {
+        Converter<ArrayView<Byte>, Message> deserializer = new MessageDeserializer();
+        ArrayView<Byte> data = new ArrayView<>(new Byte[]{
+                (byte)0x02,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x01, 0x41, 0x41, // Bad sender length
+                0x44});
         Optional<Message> message = deserializer.convert(data);
         assertFalse(message.isPresent());
     }

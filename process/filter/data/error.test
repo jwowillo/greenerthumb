@@ -3,11 +3,9 @@
 A
 1
 
-2
-{"Timestamp": 0}
-{"Name": "A"}
+1
+{}
 0
-2
-key "Name" is missing from object map[Timestamp:0]
-key "Timestamp" is missing from object map[Name:A]
+1
+key "Header" is missing from object map[]
 0

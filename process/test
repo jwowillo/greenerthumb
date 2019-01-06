@@ -15,3 +15,4 @@ test_subcomponent flatten
 test_subcomponent summarize
 test_subcomponent filter
 test_subcomponent clean
+test_subcomponent select

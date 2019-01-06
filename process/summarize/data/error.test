@@ -1,10 +1,10 @@
 # error.test tests that summarize reports the right errors when missing
 # mandatory values.
 2
-{"Timestamp": 0}
-{"Name": "A"}
+{}
+{"Header": {}, "1": 0}
 {}
 2
-key "Name" is missing from object map[Timestamp:0]
-key "Timestamp" is missing from object map[Name:A]
+key "Header" is missing from object map[]
+key "Header/Name" is missing from object map[]
 0

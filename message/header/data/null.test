@@ -1,0 +1,7 @@
+# null.test tests that header outputs an error for blank lines.
+name sender
+1
+
+
+unexpected end of JSON input
+0

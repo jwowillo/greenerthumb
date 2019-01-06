@@ -5,16 +5,31 @@ import (
 	"fmt"
 	"os"
 	"time"
+
+	"github.com/jwowillo/greenerthumb"
 )
 
+const (
+	_ = iota
+	_
+	// HostLength is the error-code for having a host that is too long.
+	HostLength = 1 << iota
+)
+
+func logError(err error) {
+	greenerthumb.Error("disclosure", err)
+}
+
 func serialize(host string) string {
-	return fmt.Sprintf(
-		`{"Name":"%s","Timestamp":%d,"Host":"%s"}`,
-		"Disclosure", time.Now().Unix(),
-		host)
+	return fmt.Sprintf(`{"Host":"%s"}`, host)
 }
 
 func main() {
+	if len(host) > 255 {
+		logError(greenerthumb.StringError{String: host, Limit: 255})
+		os.Exit(HostLength)
+	}
+
 	duration := time.Duration(float64(time.Second) / rate)
 	for {
 		fmt.Println(serialize(host))
@@ -23,7 +38,6 @@ func main() {
 }
 
 var host string
-
 var rate float64
 
 func init() {
@@ -31,8 +45,10 @@ func init() {
 	flag.Usage = func() {
 		p(`./disclosure <host> ?--rate <rate>`)
 		p("")
-		p("disclosure prints the disclosure message with the passed")
-		p("values periodically at the given rate in hertz.")
+		p("disclosure prints the disclosure message body with the")
+		p("passed values periodically at the given rate in hertz.")
+		p("")
+		p("The host can't be longer than 255 characters")
 		p("")
 		p("The default rate is 5 hertz.")
 		p("")
@@ -40,7 +56,13 @@ func init() {
 		p("")
 		p("    ./disclosure :8080 --rate 1")
 		p("")
-		p(`    {"Name":"Disclosure","Timestamp":0,"Host":":8080"}`)
+		p(`    {"Host":":8080"}`)
+		p("")
+		p("Error-codes are used for the following:")
+		p("")
+		p(fmt.Sprintf(
+			"    %d = Host was too long.",
+			HostLength))
 		p("")
 
 		os.Exit(2)

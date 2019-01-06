@@ -1,0 +1,13 @@
+# basic.test tests that header outputs headers correctly for several objects.
+name sender
+3
+{"A": 1}
+{"B": 2}
+{"C": 3, "D": 4}
+{"A":1,"Header":{"Name":"name","Sender":"sender","Timestamp":"?"}}
+{"B":2,"Header":{"Name":"name","Sender":"sender","Timestamp":"?"}}
+{"C":3,"D":4,"Header":{"Name":"name","Sender":"sender","Timestamp":"?"}}
+
+
+
+0

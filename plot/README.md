@@ -17,10 +17,10 @@
 ```
 ./plot
 
-< {"Name": "Soil", "Timestamp": 0, "Moisture": 0.37}
-< {"Name": "Air", "Timestamp": 3600, "Temperature": 84.5}
-< {"Name": "Soil", "Timestamp": 3600, "Moisture": 0.35}
-< {"Name": "Air", "Timestamp": 3600, "Temperature": 82.1}
+< {"Header": {"Name": "Soil", "Timestamp": 0}, "Moisture": 0.37}
+< {"Header": {"Name": "Air", "Timestamp": 3600}, "Temperature": 84.5}
+< {"Header": {"Name": "Soil", "Timestamp": 3600}, "Moisture": 0.35}
+< {"Header": {"Name": "Air", "Timestamp": 3600}, "Temperature": 82.1}
 ```
 
 This will plot 2 lines labelled 'Soil Moisture' and 'Air Temperature'. Each will

@@ -21,11 +21,11 @@ An example is:
 ```
 ./summarize
 
-< {"Name": "A", "Timestamp": 0, "1": 1}
-< {"Name": "A", "Timestamp": 1, "1": 2}
-< {"Name": "A", "Timestamp": 2, "1": 3}
-< {"Name": "A", "Timestamp": 3, "1": 4}
-< {"Name": "A", "Timestamp": 4, "1": 5}
+< {"Header": {"Name": "A"}, "1": 1}
+< {"Header": {"Name": "A"}, "1": 2}
+< {"Header": {"Name": "A"}, "1": 3}
+< {"Header": {"Name": "A"}, "1": 4}
+< {"Header": {"Name": "A"}, "1": 5}
 
 {"A": {"1": {"N": 5, "Minimum": 1, "Q1": 1.5, "Median": 3, "Q2": 4.5, "Maximum": 5}}}
 ```

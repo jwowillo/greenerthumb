@@ -20,11 +20,11 @@ const (
 )
 
 func logInfo(l string, args ...interface{}) {
-	greenerthumb.Info("write", l, args...)
+	greenerthumb.Info("store-write", l, args...)
 }
 
 func logError(err error) {
-	greenerthumb.Error("write", err)
+	greenerthumb.Error("store-write", err)
 }
 
 func main() {
@@ -66,9 +66,9 @@ func init() {
 		p("")
 		p("    ./write store.db")
 		p("")
-		p("    < {\"Name\": \"A\", \"Timestamp\": 0, \"Value\": 0}")
-		p("    < {\"Name\": \"A\", \"Timestamp\": 1, \"Value\": 1}")
-		p("    < {\"Name\": \"A\", \"Timestamp\": 2, \"Value\": 2}")
+		p(`    < {"Header": {"Name": "A"}, "Value": 0}`)
+		p(`    < {"Header": {"Name": "A"}, "Value": 1}`)
+		p(`    < {"Header": {"Name": "A"}, "Value": 2}`)
 		p("")
 		p("Error-codes are used for the following:")
 		p("")

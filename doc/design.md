@@ -20,6 +20,11 @@ Subprograms are described in later sections. Some of the subprograms also
 fulfill requirements themselves. An example of this is the `process`
 subprograms. Several major composite programs are provided:
 
+disclosures are broadcasted on port 35053 by default. This is something all
+devices agree on by convention.
+
+Packages are groups of devices that cooperate.
+
 ## `run-air`
 
 ![run-air](run-air.png)
@@ -27,13 +32,6 @@ subprograms. Several major composite programs are provided:
 ## `run-soil`
 
 ![run-soil](run-soil.png)
-
-## `run-disclosure`
-
-![run-disclosure](run-disclosure.png)
-
-The disclosures are broadcasted on port 35053 by default. This is something all
-devices need to agree on by convention.
 
 ## `run-logger`
 

@@ -1,8 +1,0 @@
-# bad_timestamp.test tests that json prints the correct error-message when a
-# non-integral timestamp is given.
-./bytes
-1
-{"Name": "Air", "Timestamp": 1.1, "Temperature": 0.5}
-
-key "Timestamp" is bad in object map[Name:Air Temperature:0.5 Timestamp:1.1] because it is not an integer
-0

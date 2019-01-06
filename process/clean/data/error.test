@@ -1,11 +1,11 @@
 # error.test tests that clean reports the right errors when missing mandatory
-# values.
+# values or with values formatted incorrectly.
 1
 2
-{"Timestamp": 0}
-{"Name": "A"}
+{"Header": {}, "key": 1.0}
+{"Header": {"Name": "A"}, "key": "x"}
 0
 2
-key "Name" is missing from object map[Timestamp:0]
-key "Timestamp" is missing from object map[Name:A]
+key "Header/Name" is missing from object map[]
+value x has type string instead of float64
 0

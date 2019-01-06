@@ -1,8 +1,7 @@
 # bad_bytes.test tests that bytes prints the correct error-message when bad
 # bytes are given.
-./json
 1
 00000000000000013f0000003f800000ff
 
-message doesn't have the correct buffer length
+message doesn't have the
 0

@@ -25,7 +25,7 @@ public class DisclosureDeserializer implements Converter<Message, Disclosure> {
         if (!host.isPresent()) {
             return Optional.empty();
         }
-        data = ArrayView.advance(data,1 + host.get().length());
+        data = ArrayView.advance(data, 1 + host.get().length());
 
         if (data.size() != 0) {
             return Optional.empty();

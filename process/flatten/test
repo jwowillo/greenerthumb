@@ -21,9 +21,9 @@ test exits with a non-zero exit-code and the failed assertion if any file fails.
 An example passing test is:
 
     1
-    {"Name": "A", "Timestamp": 0, "1": 0}
+    {"Header": {"Name": "A"}, "1": 0}
     1
-    {"Name": "A", "Timestamp": 0, "1": 0}
+    {"Header": {"Name": "A"}, "1": 0}
     0
     0
 """
@@ -40,14 +40,14 @@ def are_equal(xs, ys):
     for i, x in enumerate(xs):
         obj = json.loads(x)
         for k, v in obj.items():
-            if k == 'Name' or k == 'Timestamp':
+            if k == 'Header':
                 continue
             obj[k] = round(float(v), 4)
         xs[i] = obj
     for i, y in enumerate(ys):
         obj = json.loads(y)
         for k, v in obj.items():
-            if k == 'Name' or k == 'Timestamp':
+            if k == 'Header':
                 continue
             obj[k] = round(float(v), 4)
         ys[i] = obj

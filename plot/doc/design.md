@@ -9,8 +9,11 @@ message format is:
 
 ```
 {
-  "Name": <message_name>,
-  "Timestamp": <timestamp>,
+  "Header": {
+    "Name": <message_name>,
+    "Timestamp": <timestamp>,
+    <name>: <value>,...
+  },
   <name>: <value>,...
 }
 ```

@@ -1,11 +1,15 @@
 package main
 
-import "math"
+import (
+	"math"
 
-// Pair associates a timestamp and a value.
+	"github.com/jwowillo/greenerthumb/process"
+)
+
+// Pair associates a message.Header and a value.
 type Pair struct {
-	Timestamp int64
-	Value     float64
+	Header process.Header
+	Value  float64
 }
 
 func clean(

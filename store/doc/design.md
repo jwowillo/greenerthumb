@@ -8,3 +8,17 @@ a store updating repeats.
 `read` will write all messages in the store to STDOUT. `write` will accept all
 messages from STDIN and put them in the store. Duplicated messages are detected
 based on the name.
+
+The expected message format is:
+
+```
+{
+  "Header": {
+    "Name": <message_name>,
+    <name>: <value>,...
+  }
+  <name>: <value>,...
+}
+```
+
+Extra keys are allowed in the header.

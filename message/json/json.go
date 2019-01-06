@@ -19,7 +19,7 @@ const (
 )
 
 func logError(err error) {
-	greenerthumb.Error("bytes", err)
+	greenerthumb.Error("message-json", err)
 }
 
 func main() {
@@ -62,8 +62,8 @@ func init() {
 		p("")
 		p("    ./json")
 		p("")
-		p("    < 0100000000000000003ebd70a410")
-		p("    {\"Name\": \"Soil\", \"Timestamp\": 0, \"Moisture\": 0.37}")
+		p("    < 01000000000000000101413f00000083")
+		p(`    {"Header": {"Name": "Soil", "Timestamp": 1, "Sender": "A"}, "Moisture": 0.5}`)
 		p("")
 		p("The example shows the bytes received as a hex-string for")
 		p("documentation purposes")

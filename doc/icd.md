@@ -1,41 +1,47 @@
 # `greenerthumb` ICD
 
 * Timestamps are 8-byte unix timestamps.
+* Sender is the name of the package who sent the message. Multiple hosts can
+  share a sender. This means the hosts are in the same package.
 * Checksums are cyclic sums of all of a message's bytes excluding the checksum.
 * Multi-byte fields are big-endian.
+* All messages start the header.
 * All messages are newline-terminated across the network for simplicity.
 
-## Air Status Message (pub/sub)
+## Header
+
+| Byte       | Name              | Type           |
+| ---------- | ----------------- | -------------- |
+| 1          | ID                | Byte           |
+| 2          | Timestamp         | Long           |
+| 10         | Sender Length (n) | Byte           |
+| 11         | Sender            | Byte Sequence  |
+
+## Air Status Message (pub/sub, ID = 0x00)
 
 | Byte | Name        | Type  |
 | ---- | ----------- | ----- |
-| 1    | ID (0x00)   | Byte  |
-| 2    | Timestamp   | Long  |
-| 10   | Temperature | Float |
-| 14   | Checksum    | Byte  |
+| 1    | Temperature | Float |
+| 5    | Checksum    | Byte  |
 
 * Temperature is in degrees fahrenheit.
 
-## Soil Status Message (pub/sub)
+## Soil Status Message (pub/sub, ID = 0x01)
 
 | Byte | Name      | Type  |
 | ---- | --------- | ----- |
-| 1    | ID (0x01) | Byte  |
-| 2    | Timestamp | Long  |
-| 10   | Moisture  | Float |
-| 14   | Checksum  | Byte  |
+| 1    | Moisture  | Float |
+| 5    | Checksum  | Byte  |
 
 * Moisture is the ratio of water to soil.
 
-## Disclosure Message (Broadcast on port 35053 by default)
+## Disclosure Message (Broadcast on port 35053 by default, ID = 0x02)
 
 | Byte   | Name            | Type          |
 | ------ | --------------- | ------------- |
-| 1      | ID (0x02)       | Byte          |
-| 2      | Timestamp       | Long          |
-| 10     | Host Length (n) | Byte          |
-| 11     | Host            | Byte Sequence |
-| 11 + n | Checksum        | Byte          |
+| 1      | Host Length (n) | Byte          |
+| 2      | Host            | Byte Sequence |
+| 2 + n  | Checksum        | Byte          |
 
 * Host is the host the device publishes to.
 
@@ -46,8 +52,11 @@ format with the structure:
 
 ```
 {
-  "name": <message_name>,
-  "timestamp": <timestamp>,
+  "Header": {
+    "Name": <message_name>,
+    "Timestamp": <timestamp>,
+    "Sender": <sender>
+  },
   <name>: <value>,...
 }
 ```

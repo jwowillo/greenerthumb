@@ -1,6 +1,6 @@
 # basic.test tests that store can write and read one message.
 1
-{"Name": "A"}
+{"Header": {"Name": "A"}}
 1
-{"Name": "A"}
+{"Header": {"Name": "A"}}
 0

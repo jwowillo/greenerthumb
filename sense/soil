@@ -22,11 +22,7 @@ def sense(sensor, channel, rate):
     """
     while True:
         moisture = to_ratio(sensor.read_adc(channel))
-        print(json.dumps({
-            'Name': 'Soil',
-            'Timestamp': int(time.time()),
-            'Moisture': moisture
-        }))
+        print(json.dumps({'Moisture': moisture}))
         sys.stdout.flush()
         time.sleep(1 / rate)
 
