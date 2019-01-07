@@ -6,11 +6,11 @@ set -o pipefail
 
 function usage {
   echo "" >&2
-  echo "./run-soil <port>" >&2
+  echo "./run-soil <host>" >&2
   echo "" >&2
   echo "run-soil device." >&2
   echo "" >&2
-  echo "Accepts the port to publish on." >&2
+  echo "Accepts the host to publish on." >&2
   echo "" >&2
   exit 2
 }
@@ -29,7 +29,7 @@ greenerthumb-disclosure "${1}" |
 	greenerthumb-message-bytes |
 	greenerthumb-bullhorn-yell ${BROADCAST_PORT} &
 
-greenerthumb-sense-emulate-soil |
+greenerthumb-sense-soil |
 	greenerthumb-message-header 'Soil' "${NAME}" |
 	greenerthumb-message-bytes |
-	greenerthumb-bullhorn-publish "${1}"
+	greenerthumb-bullhorn-publish --host "${1}"

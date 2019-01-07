@@ -2,20 +2,19 @@
 
 Publisher -> Publisher: Listen for TCP connections
 
-Subscriber -> Subscriber: Listen for UDP packets at a port
+Subscriber -> Subscriber: Listen for UDP connections
 
 Subscriber -> Publisher: Open a TCP connection
 
-Subscriber -> Publisher: Send the UDP port terminated by a newline on the TCP \
+Subscriber -> Publisher: Send the UDP host terminated by a newline on the TCP \
 connection
 
-Publisher -> Publisher: Make a UDP address with the TCP connection's host and \
-the received port
+Publisher -> Publisher: Dial the received UDP host
 
 Publisher -> Publisher: Ignore the TCP connection
 
-Publisher -> Subscriber: Forward input messages to every client with their UDP \
-addresses
+Publisher -> Subscriber: Forward input messages to every subscriber with their \
+UDP connections
 
 Subscriber -> Publisher: Close the TCP connection
 

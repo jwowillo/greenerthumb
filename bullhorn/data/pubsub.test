@@ -1,9 +1,9 @@
 # pubsub.test tests the normal case of one publisher, two subscribers, and some
 # data published to both of them.
-./publish 5050
+./publish --host :5050
 2
-./subscribe 127.0.0.1 5050 --reconnect-delay 1
-./subscribe 127.0.0.1 5050 --reconnect-delay 1
+./subscribe 127.0.0.1:5050 --reconnect-delay 1
+./subscribe 127.0.0.1:5050 --reconnect-delay 1
 2
 a
 b

@@ -30,11 +30,11 @@ An optional reconnect delay will cause subscribers to attempt to reconnect to
 the publisher.
 
 ```
-./publish <port>
+./publish ?--host <host>
 ```
 
 ```
-./subscribe <publish_host> <publish_port> ?--reconnect-delay <delay>
+./subscribe <publish_host> ?--reconnect-delay <delay>
 ```
 
 An example is:
@@ -42,19 +42,19 @@ An example is:
 Machine 1 (192.168.1.50):
 
 ```
-./publish 5050
+./publish --host :5050
 ```
 
 Machine 2 (192.168.1.80):
 
 ```
-./subscribe 192.168.1.50 5050
+./subscribe 192.168.1.50:5050
 ```
 
 Machine 3 (192.168.1.81):
 
 ```
-./subscribe 192.168.1.50 5050
+./subscribe 192.168.1.50:5050
 ```
 
 Machine 1 (192.168.1.50):
@@ -148,13 +148,13 @@ An example is:
 Machine 1 (192.168.1.50):
 
 ```
-./listen
+./listen --host :5050
 ```
 
 Machine 2 (192.168.1.80):
 
 ```
-./talk
+./talk :5050
 
 < a
 < b

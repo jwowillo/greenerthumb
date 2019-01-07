@@ -7,8 +7,6 @@ import (
 	"io/ioutil"
 	"net"
 	"os"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/jwowillo/greenerthumb"
@@ -23,9 +21,6 @@ const (
 	Listen = 1 << iota
 	// Connect is the error-code for failing to connect to a TCP-address.
 	Connect = 1 << iota
-	// ParsePort is the error-code for failing to parse a port from a
-	// connection.
-	ParsePort = 1 << iota
 )
 
 func logInfo(l string, args ...interface{}) {
@@ -36,21 +31,16 @@ func logError(err error) {
 	greenerthumb.Error("bullhorn-subscribe", err)
 }
 
-func makeConn(writePort int, host string, port int) net.Conn {
-	conn, err := net.Dial(
-		"tcp",
-		fmt.Sprintf("%s:%d", host, port))
+func makeConn(writeHost string, host string) net.Conn {
+	conn, err := net.Dial("tcp", host)
 	if err != nil {
 		return nil
 	}
 
-	realHost, realPort, err := parseHostAndPort(conn.RemoteAddr())
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err)
-	}
+	realHost := conn.RemoteAddr().String()
 
-	logInfo("connection to %s:%d started", realHost, realPort)
-	fmt.Fprintf(conn, fmt.Sprintf("%d\n", writePort))
+	logInfo("connection to %s started", realHost)
+	fmt.Fprintf(conn, fmt.Sprintf("%s\n", writeHost))
 
 	return conn
 }
@@ -58,26 +48,21 @@ func makeConn(writePort int, host string, port int) net.Conn {
 func keepOpen(
 	monitorConn, conn net.Conn,
 	shouldReconnect bool, delay int,
-	port int, publishHost string, publishPort int) error {
+	writeHost, publishHost string) error {
 	for {
 		for monitorConn == nil {
-			logInfo(
-				"connection to %s:%d unsuccessful",
-				publishHost, publishPort)
+			logInfo("connection to %s unsuccessful", publishHost)
 			if shouldReconnect {
 				time.Sleep(time.Duration(delay) * time.Second)
 
-				logInfo(
-					"attemping reconnect to %s:%d",
-					publishHost, publishPort)
+				logInfo("attemping reconnect to %s",
+					publishHost)
 
-				monitorConn = makeConn(
-					port,
-					publishHost, publishPort)
+				monitorConn = makeConn(writeHost, publishHost)
 			} else {
 				return fmt.Errorf(
-					"connection to %s:%d failed",
-					publishHost, publishPort)
+					"connection to %s failed",
+					publishHost)
 			}
 		}
 
@@ -89,19 +74,9 @@ func keepOpen(
 	return nil
 }
 
-func parseHostAndPort(addr net.Addr) (string, int, error) {
-	parts := strings.Split(addr.String(), ":")
-	port, err := strconv.Atoi(parts[len(parts)-1])
-	if err != nil {
-		return "", -1, err
-	}
-	return parts[0], port, nil
-}
-
 func main() {
 	shouldReconnect := reconnectDelay >= 0
 	publishHost := host
-	publishPort := port
 
 	addr, err := net.ResolveUDPAddr("udp", fmt.Sprintf(":0"))
 	if err != nil {
@@ -115,21 +90,15 @@ func main() {
 	}
 	defer conn.Close()
 
-	_, port, err := parseHostAndPort(conn.LocalAddr())
-	if err != nil {
-		logError(err)
-		os.Exit(ParsePort)
-	}
-
-	tcpConn := makeConn(port, publishHost, publishPort)
+	writeHost := conn.LocalAddr().String()
+	tcpConn := makeConn(writeHost, publishHost)
 	if tcpConn != nil {
 		defer tcpConn.Close()
 	}
 	go func() {
 		if err := keepOpen(
-			tcpConn, conn,
-			shouldReconnect, reconnectDelay,
-			port, publishHost, publishPort); err != nil {
+			tcpConn, conn, shouldReconnect, reconnectDelay,
+			writeHost, publishHost); err != nil {
 
 			logError(err)
 			os.Exit(Connect)
@@ -142,9 +111,6 @@ func main() {
 // host of the publisher.
 var host string
 
-// port of the publisher.
-var port int
-
 // reconnectDelay is the delay before attemping a reconnect when the connection
 // is lost.
 var reconnectDelay int
@@ -153,20 +119,19 @@ func init() {
 	p := func(l string) { fmt.Fprintln(os.Stderr, l) }
 	flag.Usage = func() {
 		p("")
-		p("./subscribe <publish_host> <publish_port> \\")
-		p("    ?--reconnect-delay <delay>")
+		p("./subscribe <publish_host> ?--reconnect-delay <delay>")
 		p("")
 		p("subscribe to a publisher on a network and write its")
 		p("messages to STDOUT.")
 		p("")
-		p("The publisher's host and port must be passed. A reconnect")
-		p("delay that will cause the subscriber to attempt to")
-		p("reconnect to the publisher can also be passed.")
+		p("The publisher's host must be passed. A reconnect delay that")
+		p("will cause the subscriber to attempt to reconnect to the")
+		p("publisher can also be passed.")
 		p("")
 		p("An example that connects to a publisher and attempts to")
 		p("reconnect every 5 seconds when a connection is lost is:")
 		p("")
-		p("    ./subscribe 127.0.0.1 5050 --reconnect-delay 5")
+		p("    ./subscribe 127.0.0.1:5050 --reconnect-delay 5")
 		p("")
 		p("Error-codes are used for the following:")
 		p("")
@@ -177,9 +142,6 @@ func init() {
 		p(fmt.Sprintf(
 			"    %d = Failed to connect to a TCP-address.",
 			Connect))
-		p(fmt.Sprintf(
-			"    %d = Failed to parse a port from a connection.",
-			ParsePort))
 		p("")
 
 		os.Exit(2)
@@ -188,21 +150,15 @@ func init() {
 	flag.IntVar(&reconnectDelay, "reconnect-delay", -1,
 		"delay in seconds before attempting a reconnect")
 
-	if len(os.Args) < 3 {
+	if len(os.Args) < 2 {
 		flag.Usage()
 	}
 
-	flag.CommandLine.Parse(os.Args[3:])
+	flag.CommandLine.Parse(os.Args[2:])
 
 	if len(flag.Args()) != 0 {
 		flag.Usage()
 	}
 
 	host = os.Args[1]
-
-	portArg, err := strconv.Atoi(os.Args[2])
-	if err != nil {
-		flag.Usage()
-	}
-	port = portArg
 }
