@@ -8,8 +8,6 @@ import (
 	"io/ioutil"
 	"net"
 	"os"
-	"strconv"
-	"strings"
 	"sync"
 
 	"github.com/jwowillo/greenerthumb"
@@ -20,8 +18,6 @@ const (
 	_
 	// Listen is the error-code for failing to listen for TCP-connections.
 	Listen = 1 << iota
-	// Accept is the error-code for failing to accept a TCP-connection.
-	Accept = 1 << iota
 	// ReadInput is the error-code for failing to read input.
 	ReadInput = 1 << iota
 )
@@ -38,46 +34,40 @@ func logError(err error) {
 var mux sync.RWMutex
 var conns map[string]net.Conn = make(map[string]net.Conn)
 
-func parseHost(addr net.Addr) string {
-	parts := strings.Split(addr.String(), ":")
-	return strings.Join(parts[:len(parts)-1], "")
-}
-
-func readPort(conn net.Conn) (int, error) {
-	portString, err := bufio.NewReader(conn).ReadString('\n')
+func readHost(conn net.Conn) (string, error) {
+	host, err := bufio.NewReader(conn).ReadString('\n')
 	if err != nil {
-		return -1, err
+		return "", err
 	}
-	return strconv.Atoi(portString[:len(portString)-1])
+	return host[:len(host)-1], nil
 }
 
 // storeUntilClosed stores the UDP connection indicated from the net.Conn until
 // the net.Conn is closed.
 func storeUntilClosed(conn net.Conn) error {
 	defer conn.Close()
-	host := parseHost(conn.RemoteAddr())
-	port, err := readPort(conn)
+	host, err := readHost(conn)
 	if err != nil {
 		return err
 	}
-	addr := fmt.Sprintf("%s:%d", host, port)
-	udpConn, err := net.Dial("udp", addr)
+
+	udpConn, err := net.Dial("udp", host)
 	if err != nil {
 		return err
 	}
 	func() {
-		logInfo("connection to %s:%d started", host, port)
+		logInfo("connection to %s started", host)
 		mux.Lock()
 		defer mux.Unlock()
-		conns[addr] = udpConn
+		conns[host] = udpConn
 	}()
 	ioutil.ReadAll(conn)
 	func() {
-		defer conns[addr].Close()
-		logInfo("connection to %s:%d ended", host, port)
+		defer conns[host].Close()
+		logInfo("connection to %s ended", host)
 		mux.Lock()
 		defer mux.Unlock()
-		delete(conns, addr)
+		delete(conns, host)
 	}()
 	return nil
 }
@@ -119,13 +109,13 @@ func acceptConnections(ln net.Listener, handler func(err error)) {
 }
 
 func main() {
-	ln, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+	ln, err := net.Listen("tcp", host)
 	if err != nil {
 		logError(err)
 		os.Exit(Listen)
 	}
 	defer ln.Close()
-	logInfo("listening at :%d", port)
+	logInfo("listening at %s", ln.Addr())
 
 	go acceptConnections(ln, logError)
 	if err := readIntoConns(os.Stdin, logError); err != nil {
@@ -134,22 +124,22 @@ func main() {
 	}
 }
 
-// port to listen for TCP-connections on.
-var port int
+var host string
 
 func init() {
 	p := func(l string) { fmt.Fprintln(os.Stderr, l) }
 	flag.Usage = func() {
 		p("")
-		p("./publish <port>")
+		p("./publish ?--host <host>")
 		p("")
 		p("publish messages from STDIN on a network to subscribers.")
 		p("")
-		p("A port to listen on for subscribers must be passed.")
+		p("The host to listen for connections on can be optionally")
+		p("passed. The default is ':0' which chooses a random port.")
 		p("")
 		p("An example that publishes 'a' and 'b' to subscribers is:")
 		p("")
-		p("    ./publish 5050")
+		p("    ./publish")
 		p("")
 		p("    < a")
 		p("    < b")
@@ -160,25 +150,17 @@ func init() {
 			"    %d = Failed to listen for TCP-connections.",
 			Listen))
 		p(fmt.Sprintf(
-			"    %d = Failed to accept a TCP-connection.",
-			Accept))
-		p(fmt.Sprintf(
 			"    %d = Failed to read input.",
 			ReadInput))
 		p("")
 
 		os.Exit(2)
 	}
+
+	flag.StringVar(&host, "host", ":0", "host to publish at")
 	flag.Parse()
 
-	args := flag.Args()
-	if len(args) != 1 {
+	if len(flag.Args()) != 0 {
 		flag.Usage()
 	}
-
-	portArg, err := strconv.Atoi(args[0])
-	if err != nil {
-		flag.Usage()
-	}
-	port = portArg
 }

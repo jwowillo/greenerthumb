@@ -6,18 +6,18 @@ set -o pipefail
 
 function usage {
   echo "" >&2
-  echo "./run-logger <host> <port>" >&2
+  echo "./run-logger <host>" >&2
   echo "" >&2
   echo "run-logger from bullhorn/subscribe." >&2
   echo "" >&2
-  echo "Accepts the publisher host and port." >&2
+  echo "Accepts the publisher host." >&2
   echo "" >&2
   exit 2
 }
 
-if (($# != 2)); then
+if (($# != 1)); then
   usage
 fi
 
-greenerthumb-bullhorn-subscribe "${1}" "${2}" --reconnect-delay 5 |
+greenerthumb-bullhorn-subscribe "${1}" --reconnect-delay 5 |
 	greenerthumb-message-json | greenerthumb-log

@@ -26,9 +26,9 @@ checked.
 
 An example passing test is:
 
-    ./server 5050
+    ./server :5050
     1
-    ./client 8080 127.0.0.1 5050 CHECK
+    ./client :8080 127.0.0.1:5050
     1
     message
     0

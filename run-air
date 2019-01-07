@@ -6,11 +6,11 @@ set -o pipefail
 
 function usage {
   echo "" >&2
-  echo "./run-air <port>" >&2
+  echo "./run-air <host>" >&2
   echo "" >&2
   echo "run-air device." >&2
   echo "" >&2
-  echo "Accepts the port to publish on." >&2
+  echo "Accepts the host to publish on." >&2
   echo "" >&2
   exit 2
 }
@@ -32,4 +32,4 @@ greenerthumb-disclosure "${1}" |
 greenerthumb-sense-air |
 	greenerthumb-message-header 'Air' "${NAME}" |
 	greenerthumb-message-bytes |
-	greenerthumb-bullhorn-publish "${1}"
+	greenerthumb-bullhorn-publish --host "${1}"
