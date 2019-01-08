@@ -8,7 +8,7 @@ function usage {
   echo "" >&2
   echo "./run-plotter <host>" >&2
   echo "" >&2
-  echo "run-plotter and logger from bullhorn/subscribe." >&2
+  echo "run-plotter and logger from greenerthumb-bullhorn-pubsub-client." >&2
   echo "" >&2
   echo "Accepts the publisher host." >&2
   echo "" >&2
@@ -19,7 +19,7 @@ if (($# != 1)); then
   usage
 fi
 
-greenerthumb-bullhorn-subscribe "${1}" --reconnect-delay 5 |
+greenerthumb-bullhorn-pubsub-client "${1}" --reconnect-delay 5 |
 	greenerthumb-fan --out 'bash -c greenerthumb-message-json' \
 		         --in 'bash -c greenerthumb-plot' \
 		         --in 'bash -c greenerthumb-log'

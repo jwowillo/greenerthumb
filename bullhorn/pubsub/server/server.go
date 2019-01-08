@@ -23,11 +23,11 @@ const (
 )
 
 func logInfo(l string, args ...interface{}) {
-	greenerthumb.Info("bullhorn-publish", l, args...)
+	greenerthumb.Info("bullhorn-pubsub-server", l, args...)
 }
 
 func logError(err error) {
-	greenerthumb.Error("bullhorn-publish", err)
+	greenerthumb.Error("bullhorn-pubsub-server", err)
 }
 
 // conns are active net.Conns.
@@ -130,16 +130,17 @@ func init() {
 	p := func(l string) { fmt.Fprintln(os.Stderr, l) }
 	flag.Usage = func() {
 		p("")
-		p("./publish ?--host <host>")
+		p("./server ?--host <host>")
 		p("")
-		p("publish messages from STDIN on a network to subscribers.")
+		p("server publishes messages from STDIN on a network to")
+		p("subscribers.")
 		p("")
 		p("The host to listen for connections on can be optionally")
 		p("passed. The default is ':0' which chooses a random port.")
 		p("")
 		p("An example that publishes 'a' and 'b' to subscribers is:")
 		p("")
-		p("    ./publish")
+		p("    ./server")
 		p("")
 		p("    < a")
 		p("    < b")

@@ -21,11 +21,11 @@ const (
 )
 
 func logInfo(l string, args ...interface{}) {
-	greenerthumb.Info("bullhorn-snoop", l, args...)
+	greenerthumb.Info("bullhorn-broadcast-client", l, args...)
 }
 
 func logError(err error) {
-	greenerthumb.Error("bullhorn-snoop", err)
+	greenerthumb.Error("bullhorn-broadcast-client", err)
 }
 
 func main() {
@@ -52,13 +52,13 @@ func init() {
 	p := func(l string) { fmt.Fprintln(os.Stderr, l) }
 	flag.Usage = func() {
 		p("")
-		p("./snoop <port>")
+		p("./client <port>")
 		p("")
-		p("snoop messages from yellers.")
+		p("client receives messages from broadcasters.")
 		p("")
 		p("An example that receives 'a' and 'b' from a broadcaster is:")
 		p("")
-		p("    ./snoop 5050")
+		p("    ./client 5050")
 		p("")
 		p("    a")
 		p("    b")

@@ -1,7 +1,7 @@
 # `bullhorn`
 
 `bullhorn` contains program pairs for networked communication. Included methods
-are pub/sub, broadcast, and listening.
+are `broadcast`, `listen`, and `pubsub`.
 
 ## Documentation
 
@@ -10,31 +10,22 @@ are pub/sub, broadcast, and listening.
 ## Building
 
 * `make` builds all targets.
-* `make bullhorn` builds all `bullhorn programs.
-* `make pubsub` builds `publish` and `subscribe`.
-* `make publish` builds `publish`.
-* `make subscribe` builds `subscribe`.
-* `make broadcast` builds `yell` and `snoop`.
-* `make yell` builds `yell`.
-* `make snoop` builds `snoop`.
-* `make listening` builds `talk` and `listen`.
-* `make talk` builds `talk`.
-* `make listen` builds `listen`.
+* `make bullhorn` builds all `bullhorn` programs.
+* `make broadcast` builds `broadcast` programs.
+* `make listen` builds `listen` programs.
+* `make pubsub` builds `pubsub` programs.
 * `make test` builds `bullhorn`'s tests.
 
-## pub/sub
+## `broadcast`
 
-pub/sub allows messages to be sent from publishers to subscribers.
-
-An optional reconnect delay will cause subscribers to attempt to reconnect to
-the publisher.
+`broadcast` messages to all clients.
 
 ```
-./publish ?--host <host>
+./broadcast/server <port>
 ```
 
 ```
-./subscribe <publish_host> ?--reconnect-delay <delay>
+./broadcast/client <port>
 ```
 
 An example is:
@@ -42,19 +33,19 @@ An example is:
 Machine 1 (192.168.1.50):
 
 ```
-./publish --host :5050
+./broadcast/server 5050
 ```
 
 Machine 2 (192.168.1.80):
 
 ```
-./subscribe 192.168.1.50:5050
+./broadcast/client 5050
 ```
 
 Machine 3 (192.168.1.81):
 
 ```
-./subscribe 192.168.1.50:5050
+./broadcast/client 5050
 ```
 
 Machine 1 (192.168.1.50):
@@ -78,69 +69,16 @@ message1
 message2
 ```
 
-## Broadcast
+## `listen`
 
-broadcast messages to all clients.
-
-```
-./yell <port>
-```
+`listen` allows messages to be reliably sent from talkers to a listener.
 
 ```
-./snoop <port>
-```
-
-An example is:
-
-Machine 1 (192.168.1.50):
-
-```
-./yell 5050
-```
-
-Machine 2 (192.168.1.80):
-
-```
-./snoop 5050
-```
-
-Machine 3 (192.168.1.81):
-
-```
-./snoop 5050
-```
-
-Machine 1 (192.168.1.50):
-
-```
-< message1
-< message2
-```
-
-Machine 2 (192.168.1.80):
-
-```
-message1
-message2
-```
-
-Machine 3 (192.168.1.81):
-
-```
-message1
-message2
-```
-
-## Listening
-
-Listening allows messages to be reliably sent from talkers to a listener.
-
-```
-./listen ?--host <host>
+./listen/server ?--host <host>
 ```
 
 ```
-./talk <host>
+./listen/client <host>
 ```
 
 An example is:
@@ -148,13 +86,13 @@ An example is:
 Machine 1 (192.168.1.50):
 
 ```
-./listen --host :5050
+./listen/server --host :5050
 ```
 
 Machine 2 (192.168.1.80):
 
 ```
-./talk :5050
+./listen/client :5050
 
 < a
 < b
@@ -165,6 +103,62 @@ Machine 1 (192.168.1.50):
 ```
 a
 b
+```
+
+## `pubsub`
+
+`pubsub` allows messages to be sent from publishers to subscribers.
+
+An optional reconnect delay will cause subscribers to attempt to reconnect to
+the publisher.
+
+```
+./pubsub/server ?--host <host>
+```
+
+```
+./pubsub/client <publish_host> ?--reconnect-delay <delay>
+```
+
+An example is:
+
+Machine 1 (192.168.1.50):
+
+```
+./pubsub/server --host :5050
+```
+
+Machine 2 (192.168.1.80):
+
+```
+./pubsub/client 192.168.1.50:5050
+```
+
+Machine 3 (192.168.1.81):
+
+```
+./pubsub/client 192.168.1.50:5050
+```
+
+Machine 1 (192.168.1.50):
+
+```
+< message1
+< message2
+```
+
+Machine 2 (192.168.1.80):
+
+```
+message1
+message2
+```
+
+Machine 3 (192.168.1.81):
+
+```
+message1
+message2
 ```
 
 ## Testing

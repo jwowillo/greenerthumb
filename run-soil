@@ -27,9 +27,9 @@ trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
 greenerthumb-disclosure "${1}" |
 	greenerthumb-message-header 'Disclosure' "${NAME}" |
 	greenerthumb-message-bytes |
-	greenerthumb-bullhorn-yell ${BROADCAST_PORT} &
+	greenerthumb-bullhorn-broadcast-server ${BROADCAST_PORT} &
 
 greenerthumb-sense-soil |
 	greenerthumb-message-header 'Soil' "${NAME}" |
 	greenerthumb-message-bytes |
-	greenerthumb-bullhorn-publish --host "${1}"
+	greenerthumb-bullhorn-pubsub-server --host "${1}"
