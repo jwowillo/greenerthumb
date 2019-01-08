@@ -1,32 +1,20 @@
-.PHONY: publish subscribe yell snoop talk listen test
+.PHONY: broadcast listen pubsub test
 
 all: bullhorn test
 
-bullhorn: pubsub broadcast listening
+bullhorn: broadcast listen pubsub
 
-pubsub: publish subscribe
-
-broadcast: yell snoop
-
-listening: listen talk
-
-publish: | build
-	cd publish && go build -o ../build/publish
-
-subscribe: | build
-	cd subscribe && go build -o ../build/subscribe
-
-yell: | build
-	cd yell && go build -o ../build/yell
-
-snoop: | build
-	cd snoop && go build -o ../build/snoop
+broadcast: | build
+	$(MAKE) -C broadcast
+	cp -rf broadcast/build/. build/broadcast
 
 listen: | build
-	cd listen && go build -o ../build/listen
+	$(MAKE) -C listen
+	cp -rf listen/build/. build/listen
 
-talk: | build
-	cd talk && go build -o ../build/talk
+pubsub: | build
+	$(MAKE) -C pubsub
+	cp -rf pubsub/build/. build/pubsub
 
 test: bullhorn | build
 	rm -rf build/data

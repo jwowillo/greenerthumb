@@ -1,9 +1,9 @@
-# listening.test tests the normal case of one listener, two talkers, and some
-# data published to both of them.
-./listen --host :5050
+# listening.test tests the normal case of one listen-server, two listen-clients,
+# and some data published to both of them.
+./listen/server --host :5050
 2
-./talk :5050
-./talk :5050
+./listen/client :5050
+./listen/client :5050
 0
 4
 a

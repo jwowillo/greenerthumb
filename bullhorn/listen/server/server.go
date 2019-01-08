@@ -20,11 +20,11 @@ const (
 )
 
 func logInfo(l string, args ...interface{}) {
-	greenerthumb.Info("bullhorn-listen", l, args...)
+	greenerthumb.Info("bullhorn-listen-server", l, args...)
 }
 
 func logError(err error) {
-	greenerthumb.Error("bullhorn-listen", err)
+	greenerthumb.Error("bullhorn-listen-server", err)
 }
 
 func acceptConnections(ln net.Listener) error {
@@ -69,17 +69,17 @@ func init() {
 	p := func(l string) { fmt.Fprintln(os.Stderr, l) }
 	flag.Usage = func() {
 		p("")
-		p("./listen ?--host <host>")
+		p("./server ?--host <host>")
 		p("")
-		p("listen to talkers by receiving their TCP messages and")
-		p("writing them to STDOUT.")
+		p("server listens to talkers by receiving their TCP messages")
+		p("and writing them to STDOUT.")
 		p("")
 		p("The host to listen for connections on can be optionally")
 		p("passed. The default is ':0' which chooses a random port.")
 		p("")
-		p("An example that receives 'a' and 'b' from talkers is:")
+		p("An example that receives 'a' and 'b' from clients is:")
 		p("")
-		p("    ./listen")
+		p("    ./server")
 		p("")
 		p("    a")
 		p("    b")

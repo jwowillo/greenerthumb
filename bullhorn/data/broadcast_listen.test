@@ -1,8 +1,8 @@
-# snoop_listen.test tests that snoop exits with error-code 4 if passed a
-# port outside the max range.
-./yell 5050
+# snoop_listen.test tests that broadcast-client exits with error-code 4 if
+# passed a port outside the max range.
+./broadcast/server 5050
 1
-./snoop 65536
+./broadcast/client 65536
 0
 0
 0

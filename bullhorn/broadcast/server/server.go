@@ -4,9 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net"
 	"os"
+	"strconv"
 
 	"github.com/jwowillo/greenerthumb"
 )
@@ -14,52 +14,44 @@ import (
 const (
 	_ = iota
 	_
-	// Dial is the error-code for failing to dial a TCP address.
+	// Dial is the error-code for failing to dial a UDP-connections.
 	Dial = 1 << iota
 )
 
 func logInfo(l string, args ...interface{}) {
-	greenerthumb.Info("bullhorn-talk", l, args...)
+	greenerthumb.Info("bullhorn-broadcast-server", l, args...)
 }
 
 func logError(err error) {
-	greenerthumb.Error("bullhorn-talk", err)
+	greenerthumb.Error("bullhorn-broadcast-server", err)
 }
 
 func main() {
-	conn, err := net.Dial("tcp", host)
+	conn, err := net.Dial("udp", fmt.Sprintf("255.255.255.255:%d", port))
 	if err != nil {
 		logError(err)
 		os.Exit(Dial)
 	}
 	defer conn.Close()
-	logInfo("connection to %s started", conn.RemoteAddr())
 
-	done := make(chan interface{})
-	go func() {
-		io.Copy(conn, os.Stdin)
-		done <- struct{}{}
-	}()
-	go func() {
-		ioutil.ReadAll(conn)
-		done <- struct{}{}
-	}()
-	<-done
+	logInfo("broadcasting on port %d", port)
+
+	io.Copy(conn, os.Stdin)
 }
 
-var host string
+var port int
 
 func init() {
 	p := func(l string) { fmt.Fprintln(os.Stderr, l) }
 	flag.Usage = func() {
 		p("")
-		p("./talk <host>")
+		p("./server <port>")
 		p("")
-		p("talk messages to listeners via TCP.")
+		p("server broadcasts messages to all clients.")
 		p("")
-		p("An example that sends 'A' and 'B' is:")
+		p("An example that broadcasts 'a' and 'b ' is:")
 		p("")
-		p("    ./talk :5050")
+		p("    ./server 5050")
 		p("")
 		p("    < a")
 		p("    < b")
@@ -67,7 +59,7 @@ func init() {
 		p("Error-codes are used for the following:")
 		p("")
 		p(fmt.Sprintf(
-			"    %d = Failed to dial a TCP address.",
+			"    %d = Failed to dial a UDP-connection.",
 			Dial))
 		p("")
 
@@ -80,5 +72,9 @@ func init() {
 		flag.Usage()
 	}
 
-	host = args[0]
+	portArg, err := strconv.Atoi(args[0])
+	if err != nil {
+		flag.Usage()
+	}
+	port = portArg
 }

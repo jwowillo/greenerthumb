@@ -24,11 +24,11 @@ const (
 )
 
 func logInfo(l string, args ...interface{}) {
-	greenerthumb.Info("bullhorn-subscribe", l, args...)
+	greenerthumb.Info("bullhorn-pubsub-client", l, args...)
 }
 
 func logError(err error) {
-	greenerthumb.Error("bullhorn-subscribe", err)
+	greenerthumb.Error("bullhorn-pubsub-client", err)
 }
 
 func makeConn(writeHost string, host string) net.Conn {
@@ -119,10 +119,10 @@ func init() {
 	p := func(l string) { fmt.Fprintln(os.Stderr, l) }
 	flag.Usage = func() {
 		p("")
-		p("./subscribe <publish_host> ?--reconnect-delay <delay>")
+		p("./client <publish_host> ?--reconnect-delay <delay>")
 		p("")
-		p("subscribe to a publisher on a network and write its")
-		p("messages to STDOUT.")
+		p("client subscribes to a publisher on a network and writes")
+		p("its messages to STDOUT.")
 		p("")
 		p("The publisher's host must be passed. A reconnect delay that")
 		p("will cause the subscriber to attempt to reconnect to the")
@@ -131,7 +131,7 @@ func init() {
 		p("An example that connects to a publisher and attempts to")
 		p("reconnect every 5 seconds when a connection is lost is:")
 		p("")
-		p("    ./subscribe 127.0.0.1:5050 --reconnect-delay 5")
+		p("    ./client 127.0.0.1:5050 --reconnect-delay 5")
 		p("")
 		p("Error-codes are used for the following:")
 		p("")
