@@ -41,5 +41,7 @@ Deployment is facilitated by 3 scripts.
 * `copy-keys`: Copies SSH keys to a passed remote user and host.
 * `deploy`: Builds a passed target, copies all files for the target to a passed
   remote user and host, and restarts the target.
-* `cat-error-log`: Cats the error-log for a deployed `greenerthumb` program on a
+* `cat-error-log`: cats the error-log for a deployed `greenerthumb` program on a
+  passed remote user and host.
+* `rm-error-log`: rms the error-log for a deployed `greenerthumb` program on a
   passed remote user and host.
