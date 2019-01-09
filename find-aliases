@@ -15,16 +15,12 @@ def find_programs():
 
     if pathlib.Path('run-air').exists():
         programs.append('run-air')
+    if pathlib.Path('run-soil').exists():
+        programs.append('run-soil')
     if pathlib.Path('run-logger').exists():
         programs.append('run-logger')
     if pathlib.Path('run-plotter').exists():
         programs.append('run-plotter')
-    if pathlib.Path('run-sensors').exists():
-        programs.append('run-sensors')
-    if pathlib.Path('run-soil').exists():
-        programs.append('run-soil')
-    if pathlib.Path('run-disclosure').exists():
-        programs.append('run-disclosure')
 
     return programs
 
