@@ -6,10 +6,11 @@ Subscriber -> Subscriber: Listen for UDP connections
 
 Subscriber -> Publisher: Open a TCP connection
 
-Subscriber -> Publisher: Send the UDP host terminated by a newline on the TCP \
+Subscriber -> Publisher: Send the UDP port terminated by a newline on the TCP \
 connection
 
-Publisher -> Publisher: Dial the received UDP host
+Publisher -> Publisher: Dial the UDP host made by concatenating the TCP IP and \
+the received port
 
 Publisher -> Publisher: Ignore the TCP connection
 

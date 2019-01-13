@@ -11,14 +11,18 @@ cooperate and effectively manage garden operations as packages.
 
 ## Building
 
-* `make` and `make greenerthumb` build all targets.
-* `make air` builds programs for the air sensor that run on PIs.
-* `make soil` builds programs for the soil sensor that run on PIs.
-* `make test` builds the subcomponents' tests.
+* `make` build all targets.
+* `make <component>` builds everything for the component, where component is one
+  of air, soil, logger, or plotter.
+* `make test` builds the programs' tests.
+
+`make clean` should always be run between building a component and other builds.
+This is because building a component might cause dependencies to be built for a
+different target architecture.
 
 ## Testing
 
-All the sub-components' tests can be run with:
+All the programs' tests can be run with:
 
 ```
 ./test
@@ -26,22 +30,23 @@ All the sub-components' tests can be run with:
 
 ## Utilities
 
-`activate.sh` must be run in the project root before running any of the
-utilities to set up aliases. `deactivate.sh` removes the aliases.
+Utilities are provided in the 'util' directory and are expected to be run from
+the project root.
 
-* `greenerthumb-run-air`: run-air device.
-* `greenerthumb-run-soil`: run-soil device.
-* `greenerthumb-run-logger`: Runs `bullhorn/subscribe` into `log`.
-* `greenerthumb-run-plotter`: Runs `bullhorn/subscribe` into `log` and `plot`.
+## Running
+
+`util/activate.sh` must be sourced in the project root before running any of the
+components to set up aliases. Running instructions are described in the
+'README.md' in the build directory after building the component.
 
 ## Deployment
 
 Deployment is facilitated by 3 scripts.
 
-* `copy-keys`: Copies SSH keys to a passed remote user and host.
-* `deploy`: Builds a passed target, copies all files for the target to a passed
-  remote user and host, and restarts the target.
-* `cat-error-log`: cats the error-log for a deployed `greenerthumb` program on a
-  passed remote user and host.
-* `rm-error-log`: rms the error-log for a deployed `greenerthumb` program on a
-  passed remote user and host.
+* `util/copy-keys`: Copies SSH keys to a passed remote user and host.
+* `util/deploy`: Builds a passed target, copies all files for the target to a
+  passed remote user and host, and restarts the target.
+* `util/cat-error-log`: cats the error-log for a deployed `greenerthumb` program
+  on a passed remote user and host.
+* `util/rm-error-log`: rms the error-log for a deployed `greenerthumb` program
+  on a passed remote user and host.

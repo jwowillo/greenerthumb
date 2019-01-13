@@ -4,7 +4,7 @@
 
 ## Documentation
 
-* `make` in the `doc` directory generates PDF documentation.
+* `make` in the 'doc' directory generates PDF documentation.
 
 ## Building
 

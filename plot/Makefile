@@ -36,5 +36,11 @@ libraries: | build
 	$(MAKE) -C render
 	cp render/build/render.a build
 
+clean:
+	rm -rf build
+	$(MAKE) -C message clean
+	$(MAKE) -C plot clean
+	$(MAKE) -C render clean
+
 build:
 	mkdir -p build

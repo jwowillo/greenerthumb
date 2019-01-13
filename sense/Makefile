@@ -12,5 +12,8 @@ air: build
 soil: build
 	cp soil build/soil
 
+clean:
+	rm -rf build
+
 build:
 	mkdir -p build

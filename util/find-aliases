@@ -13,15 +13,6 @@ def find_programs():
         'find build -type f -executable'.split(' '))
     programs = result.decode('utf-8').split()
 
-    if pathlib.Path('run-air').exists():
-        programs.append('run-air')
-    if pathlib.Path('run-soil').exists():
-        programs.append('run-soil')
-    if pathlib.Path('run-logger').exists():
-        programs.append('run-logger')
-    if pathlib.Path('run-plotter').exists():
-        programs.append('run-plotter')
-
     return programs
 
 

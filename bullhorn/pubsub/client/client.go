@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/jwowillo/greenerthumb"
@@ -31,7 +32,7 @@ func logError(err error) {
 	greenerthumb.Error("bullhorn-pubsub-client", err)
 }
 
-func makeConn(writeHost string, host string) net.Conn {
+func makeConn(localPort string, host string) net.Conn {
 	conn, err := net.Dial("tcp", host)
 	if err != nil {
 		return nil
@@ -40,7 +41,7 @@ func makeConn(writeHost string, host string) net.Conn {
 	realHost := conn.RemoteAddr().String()
 
 	logInfo("connection to %s started", realHost)
-	fmt.Fprintf(conn, fmt.Sprintf("%s\n", writeHost))
+	fmt.Fprintf(conn, fmt.Sprintf("%s\n", localPort))
 
 	return conn
 }
@@ -48,7 +49,7 @@ func makeConn(writeHost string, host string) net.Conn {
 func keepOpen(
 	monitorConn, conn net.Conn,
 	shouldReconnect bool, delay int,
-	writeHost, publishHost string) error {
+	writePort, publishHost string) error {
 	for {
 		for monitorConn == nil {
 			logInfo("connection to %s unsuccessful", publishHost)
@@ -58,7 +59,7 @@ func keepOpen(
 				logInfo("attemping reconnect to %s",
 					publishHost)
 
-				monitorConn = makeConn(writeHost, publishHost)
+				monitorConn = makeConn(writePort, publishHost)
 			} else {
 				return fmt.Errorf(
 					"connection to %s failed",
@@ -76,7 +77,6 @@ func keepOpen(
 
 func main() {
 	shouldReconnect := reconnectDelay >= 0
-	publishHost := host
 
 	addr, err := net.ResolveUDPAddr("udp", fmt.Sprintf(":0"))
 	if err != nil {
@@ -90,15 +90,16 @@ func main() {
 	}
 	defer conn.Close()
 
-	writeHost := conn.LocalAddr().String()
-	tcpConn := makeConn(writeHost, publishHost)
+	localParts := strings.Split(conn.LocalAddr().String(), ":")
+	localPort := localParts[len(localParts)-1]
+	tcpConn := makeConn(localPort, publishHost)
 	if tcpConn != nil {
 		defer tcpConn.Close()
 	}
 	go func() {
 		if err := keepOpen(
 			tcpConn, conn, shouldReconnect, reconnectDelay,
-			writeHost, publishHost); err != nil {
+			localPort, publishHost); err != nil {
 
 			logError(err)
 			os.Exit(Connect)
@@ -108,8 +109,8 @@ func main() {
 	io.Copy(os.Stdout, conn)
 }
 
-// host of the publisher.
-var host string
+// publishHost of the publisher.
+var publishHost string
 
 // reconnectDelay is the delay before attemping a reconnect when the connection
 // is lost.
@@ -160,5 +161,5 @@ func init() {
 		flag.Usage()
 	}
 
-	host = os.Args[1]
+	publishHost = os.Args[1]
 }

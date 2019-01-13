@@ -1,15 +1,16 @@
-.PHONY: select clean flatten summarize filter test
+.PHONY: select flatten summarize filter clean test
 
 all: process test
 
-process: select clean summarize filter flatten
+process: select clean_program summarize filter flatten
 
 select: | build
 	$(MAKE) -C select select
 	cp -rf select/build/. build/select
 
-clean: | build
-	$(MAKE) -C clean clean
+# Called clean_program because clean is already a target.
+clean_program: | build
+	$(MAKE) -C clean clean_program
 	cp -rf clean/build/. build/clean
 
 flatten: | build
@@ -26,10 +27,25 @@ filter: | build
 
 test: test_select test_clean test_filter test_summarize test_flatten
 
+clean:
+	rm -rf build
+	$(MAKE) -C select clean
+	$(MAKE) -C clean clean
+	$(MAKE) -C flatten clean
+	$(MAKE) -C summarize clean
+	$(MAKE) -C filter clean
+
 build:
 	mkdir -p build
 
+test_clean: clean_program | build
+	$(MAKE) -C clean test
+	mkdir -p build/clean
+	cp -rf clean/build/. build/clean
+	cp test build/test
+
 test_%: % | build
 	$(MAKE) -C $* test
+	mkdir -p build/$*
 	cp -rf $*/build/. build/$*
 	cp test build/test

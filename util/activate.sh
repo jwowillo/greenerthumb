@@ -1,6 +1,6 @@
 # activate.sh makes function aliases to greenerthumb programs.
 
-ALIASES=$(./find-aliases)
+ALIASES=$(./util/find-aliases)
 
 while read -r line
 do

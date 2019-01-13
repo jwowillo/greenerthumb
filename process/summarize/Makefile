@@ -12,5 +12,8 @@ test: summarize | build
 	cp -rf data build
 	cp test build/test
 
+clean:
+	rm -rf build
+
 build:
 	mkdir -p build

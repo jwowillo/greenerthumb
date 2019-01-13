@@ -1,5 +1,6 @@
 all: requirements.pdf design.pdf icd.pdf
 	pdfunite design.pdf \
+		../run/doc/design.pdf \
 		../bullhorn/doc/design.pdf \
 		../fan/doc/design.pdf \
 		../log/doc/design.pdf \
@@ -17,9 +18,8 @@ requirements.pdf: requirements.md
 	pandoc requirements.md --latex-engine xelatex -o requirements.pdf
 
 design.pdf: design.md bullhorn fan log message plot process sense store \
-	disclosure app
-	pandoc -f markdown-implicit_figures design.md --latex-engine xelatex \
-		-o design.pdf
+	disclosure app run
+	pandoc design.md --latex-engine xelatex -o design.pdf
 
 icd.pdf: icd.md
 	pandoc icd.md --latex-engine xelatex -o icd.pdf

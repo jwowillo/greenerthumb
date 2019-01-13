@@ -6,9 +6,10 @@ set -o pipefail
 
 function usage {
   echo "" >&2
-  echo "./run-plotter <host>" >&2
+  echo "greenerthumb-run-plotter <host>" >&2
   echo "" >&2
-  echo "run-plotter and logger from greenerthumb-bullhorn-pubsub-client." >&2
+  echo "greenerthumb-run-plotter runs a plotter which receives messages" >&2
+  echo "from a single publisher." >&2
   echo "" >&2
   echo "Accepts the publisher host." >&2
   echo "" >&2

@@ -1,6 +1,6 @@
 .PHONY: test
 
-greenerthumb: | build
+all: | build
 	$(call subcomponent,fan,fan)
 	$(call subcomponent,bullhorn,bullhorn)
 	$(call subcomponent,plot,plot)
@@ -11,20 +11,6 @@ greenerthumb: | build
 	$(call subcomponent,store,store)
 	$(call subcomponent,disclosure,disclosure)
 
-device: | build
-	env GOOS=linux GOARCH=arm $(call subcomponent,message,bytes)
-	env GOOS=linux GOARCH=arm $(call subcomponent,bullhorn,publish)
-	env GOOS=linux GOARCH=arm $(call subcomponent,store,store)
-	env GOOS=linux GOARCH=arm $(call subcomponent,disclosure,disclosure)
-
-disclosure: device
-
-air: device | build
-	env GOOS=linux GOARCH=arm $(call subcomponent,sense,air)
-
-soil: device | build
-	env GOOS=linux GOARCH=arm $(call subcomponent,sense,soil)
-
 test: | build
 	$(call subcomponent_test,fan)
 	$(call subcomponent_test,bullhorn)
@@ -34,18 +20,65 @@ test: | build
 	$(call subcomponent_test,store)
 	$(call subcomponent_test,disclosure)
 
-build:
-	mkdir -p build
+host: clean | build
+	$(call subcomponent,bullhorn/pubsub,client)
+	$(call subcomponent,message,json)
+	$(call subcomponent,log,log)
+
+logger: host | build
+	mkdir -p build/run
+	cp run/logger/logger build/run/.
+	cp run/logger/README.md build/run/.
+
+plotter: host | build
+	$(call subcomponent,plot,plot)
+	mkdir -p build/run
+	cp run/plotter/plotter build/run/.
+	cp run/plotter/README.md build/run/.
+
+device: clean | build
+	env GOOS=linux GOARCH=arm $(call subcomponent,message,bytes)
+	env GOOS=linux GOARCH=arm $(call subcomponent,message,header)
+	env GOOS=linux GOARCH=arm $(call subcomponent,bullhorn/pubsub,server)
+	env GOOS=linux GOARCH=arm $(call subcomponent,bullhorn/broadcast,server)
+	env GOOS=linux GOARCH=arm $(call subcomponent,disclosure,disclosure)
+	env GOOS=linux GOARCH=arm $(call subcomponent,store,store)
+
+air: device | build
+	env GOOS=linux GOARCH=arm $(call subcomponent,sense,air)
+	mkdir -p build/run
+	cp run/air/air build/run/.
+	cp run/air/README.md build/run/.
+
+soil: device | build
+	env GOOS=linux GOARCH=arm $(call subcomponent,sense,soil)
+	mkdir -p build/run
+	cp run/soil/soil build/run/.
+	cp run/soil/README.md build/run/.
 
 clean:
 	rm -rf build
+	$(MAKE) -C bullhorn clean
+	$(MAKE) -C disclosure clean
+	$(MAKE) -C fan clean
+	$(MAKE) -C log clean
+	$(MAKE) -C message clean
+	$(MAKE) -C plot clean
+	$(MAKE) -C process clean
+	$(MAKE) -C sense clean
+	$(MAKE) -C store clean
+
+build:
+	mkdir -p build
 
 define subcomponent
 	$(MAKE) -C $(1) $(2)
+	mkdir -p build/$(1)
 	cp -rf $(1)/build/. build/$(1)
 endef
 
 define subcomponent_test
 	$(MAKE) -C $(1) test
+	mkdir -p build/$(1)
 	cp -rf $(1)/build/. build/$(1)
 endef
