@@ -1,11 +1,79 @@
 package greenerthumb
 
 import (
+	"bytes"
+	"errors"
 	"fmt"
 	"os"
 	"sort"
 	"time"
 )
+
+// ErrBytes is returned when a byte-string has odd-length.
+var ErrBytes = errors.New("byte-string has odd-length")
+
+// HexToBytes converts base-16 to actual bytes.
+//
+// Returns ErrBytes if the input string has odd-length.
+func HexToBytes(bs []byte) ([]byte, error) {
+	if len(bs)%2 != 0 {
+		return nil, ErrBytes
+	}
+	converted := make([]byte, len(bs)/2)
+	for i := 0; i < len(converted); i++ {
+		converted[i] = (toByte(bs[i*2]) << 4) | toByte(bs[i*2+1])
+	}
+
+	return converted, nil
+}
+
+// BytesToHex converts raw bytes to base-16.
+func BytesToHex(bs []byte) []byte {
+	buff := &bytes.Buffer{}
+	for _, b := range bs {
+		fmt.Fprintf(buff, "%02x", b)
+	}
+	return buff.Bytes()
+}
+
+// toByte converts a hex-character to its byte value.
+func toByte(x byte) byte {
+	switch x {
+	case '0':
+		fallthrough
+	case '1':
+		fallthrough
+	case '2':
+		fallthrough
+	case '3':
+		fallthrough
+	case '4':
+		fallthrough
+	case '5':
+		fallthrough
+	case '6':
+		fallthrough
+	case '7':
+		fallthrough
+	case '8':
+		fallthrough
+	case '9':
+		return x - 0x30
+	case 'a':
+		fallthrough
+	case 'b':
+		fallthrough
+	case 'c':
+		fallthrough
+	case 'd':
+		fallthrough
+	case 'e':
+		fallthrough
+	case 'f':
+		return x - (0x66 - 0xf)
+	}
+	return 0
+}
 
 func log(mode, program, l string, args ...interface{}) {
 	f := fmt.Sprintf(

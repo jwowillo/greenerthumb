@@ -165,8 +165,10 @@ def test(base):
             ]
             actual_clients_output = []
             for client in client_results:
-                actual_clients_output.append(
-                    [line.decode('utf-8')[:-1] for line in client.stdout])
+                output = [line.decode('utf-8')[:-1] for line in client.stdout]
+                if output == []:
+                    continue
+                actual_clients_output.append(output)
 
             actual_error_codes = [server_result.returncode]
             for client in client_results:

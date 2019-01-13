@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net"
 	"os"
@@ -11,6 +10,7 @@ import (
 	"time"
 
 	"github.com/jwowillo/greenerthumb"
+	"github.com/jwowillo/greenerthumb/bullhorn"
 )
 
 const (
@@ -25,11 +25,11 @@ const (
 )
 
 func logInfo(l string, args ...interface{}) {
-	greenerthumb.Info("bullhorn-pubsub-client", l, args...)
+	greenerthumb.Info("greenerthumb-bullhorn-pubsub-client", l, args...)
 }
 
 func logError(err error) {
-	greenerthumb.Error("bullhorn-pubsub-client", err)
+	greenerthumb.Error("greenerthumb-bullhorn-pubsub-client", err)
 }
 
 func makeConn(localPort string, host string) net.Conn {
@@ -106,7 +106,21 @@ func main() {
 		}
 	}()
 
-	io.Copy(os.Stdout, conn)
+	buff := make([]byte, 1024)
+	for {
+		n, err := conn.Read(buff)
+		if err != nil {
+			break
+		}
+
+		bs, err := bullhorn.CompareSum(buff[:n])
+		if err != nil {
+			logError(err)
+			continue
+		}
+
+		fmt.Printf("%s\n", greenerthumb.BytesToHex(bs))
+	}
 }
 
 // publishHost of the publisher.

@@ -1,14 +1,15 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
-	"io"
 	"net"
 	"os"
 	"strconv"
 
 	"github.com/jwowillo/greenerthumb"
+	"github.com/jwowillo/greenerthumb/bullhorn"
 )
 
 const (
@@ -16,14 +17,16 @@ const (
 	_
 	// Dial is the error-code for failing to dial a UDP-connections.
 	Dial = 1 << iota
+	// ReadInput is the error-code for failing to read input.
+	ReadInput = 1 << iota
 )
 
 func logInfo(l string, args ...interface{}) {
-	greenerthumb.Info("bullhorn-broadcast-server", l, args...)
+	greenerthumb.Info("greenerthumb-bullhorn-broadcast-server", l, args...)
 }
 
 func logError(err error) {
-	greenerthumb.Error("bullhorn-broadcast-server", err)
+	greenerthumb.Error("greenerthumb-bullhorn-broadcast-server", err)
 }
 
 func main() {
@@ -36,7 +39,23 @@ func main() {
 
 	logInfo("broadcasting on port %d", port)
 
-	io.Copy(conn, os.Stdin)
+	scanner := bufio.NewScanner(os.Stdin)
+	for scanner.Scan() {
+		bs, err := greenerthumb.HexToBytes(scanner.Bytes())
+		if err != nil {
+			logError(err)
+			continue
+		}
+
+		bs = append(bullhorn.Uint32ToBytes(bullhorn.Sum(bs)), bs...)
+
+		conn.Write(bs)
+	}
+
+	if err := scanner.Err(); err != nil {
+		logError(err)
+		os.Exit(ReadInput)
+	}
 }
 
 var port int
@@ -61,6 +80,9 @@ func init() {
 		p(fmt.Sprintf(
 			"    %d = Failed to dial a UDP-connection.",
 			Dial))
+		p(fmt.Sprintf(
+			"    %d = Failed to read input.",
+			ReadInput))
 		p("")
 
 		os.Exit(2)

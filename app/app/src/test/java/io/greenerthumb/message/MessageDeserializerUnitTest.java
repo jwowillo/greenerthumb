@@ -21,8 +21,7 @@ public class MessageDeserializerUnitTest {
         ArrayView<Byte> data = new ArrayView<>(new Byte[]{
                 0x02,
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x01, 0x41,
-                0x44});
+                0x01, 0x41});
         Optional<Message> message = deserializer.convert(data);
         assertTrue(message.isPresent());
         assertEquals(MessageType.DISCLOSURE, message.get().type());
@@ -39,21 +38,7 @@ public class MessageDeserializerUnitTest {
         ArrayView<Byte> data = new ArrayView<>(new Byte[]{
                 0x02,
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // Bad length
-                0x01, 0x41,
-                0x44});
-        Optional<Message> message = deserializer.convert(data);
-        assertFalse(message.isPresent());
-    }
-
-    @Test
-    public void deserializeBadChecksum() {
-        Converter<ArrayView<Byte>, Message> deserializer = new MessageDeserializer();
-        ArrayView<Byte> data = new ArrayView<>(new Byte[]{
-                0x02,
-                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x01, 0x41,
-                0x03 // Bad checksum
-        });
+                0x01, 0x41});
         Optional<Message> message = deserializer.convert(data);
         assertFalse(message.isPresent());
     }
@@ -64,8 +49,7 @@ public class MessageDeserializerUnitTest {
         ArrayView<Byte> data = new ArrayView<>(new Byte[]{
                 (byte)0xFF, // Bad MessageType
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x01, 0x41,
-                0x44});
+                0x01, 0x41});
         Optional<Message> message = deserializer.convert(data);
         assertFalse(message.isPresent());
     }
@@ -77,7 +61,7 @@ public class MessageDeserializerUnitTest {
                 (byte)0x02,
                 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x01, 0x41, 0x41, // Bad sender length
-                0x44});
+                });
         Optional<Message> message = deserializer.convert(data);
         assertFalse(message.isPresent());
     }

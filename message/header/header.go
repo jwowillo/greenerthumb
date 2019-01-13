@@ -21,7 +21,7 @@ const (
 )
 
 func logError(err error) {
-	greenerthumb.Error("message-header", err)
+	greenerthumb.Error("greenerthumb-message-header", err)
 }
 
 func main() {

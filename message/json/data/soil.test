@@ -1,6 +1,6 @@
 # soil.test tests that json serializes bytes to JSON properly for soil messages.
 1
-01000000000000000101413f00000083
+01000000000000000101413f000000
 {"Header":{"Name":"Soil","Sender":"A","Timestamp":1},"Moisture":0.5}
 
 0

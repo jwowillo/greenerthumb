@@ -44,7 +44,7 @@ public class BroadcastReceiver implements Receiver<ArrayView<Byte>>, Manager {
             return;
         }
         isStarted = true;
-        byte[] buffer = new byte[256];
+        byte[] buffer = new byte[1024];
         while (!socket.isClosed()) {
             DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
             try {
@@ -53,11 +53,8 @@ public class BroadcastReceiver implements Receiver<ArrayView<Byte>>, Manager {
                 socket.disconnect();
                 break;
             }
-            // Newlines are removed here for simplicity. If this BroadcastReceiver needs to be
-            // used for other types of messages in the future, a better design would be to
-            // have a NewlineRemovingConverter that checks if the last byte is a newline.
             ArrayView<Byte> view = new ArrayView<>(box(packet.getData()))
-                    .viewOf(0, packet.getLength() - 1); // Messages end in newlines.
+                    .viewOf(0, packet.getLength());
             for (ReceiveHandler<ArrayView<Byte>> handler : handlers) {
                 handler.receive(view);
             }

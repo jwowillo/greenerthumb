@@ -3,12 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io"
 	"net"
 	"os"
 	"strconv"
 
 	"github.com/jwowillo/greenerthumb"
+	"github.com/jwowillo/greenerthumb/bullhorn"
 )
 
 const (
@@ -21,11 +21,11 @@ const (
 )
 
 func logInfo(l string, args ...interface{}) {
-	greenerthumb.Info("bullhorn-broadcast-client", l, args...)
+	greenerthumb.Info("greenerthumb-bullhorn-broadcast-client", l, args...)
 }
 
 func logError(err error) {
-	greenerthumb.Error("bullhorn-broadcast-client", err)
+	greenerthumb.Error("greenerthumb-bullhorn-broadcast-client", err)
 }
 
 func main() {
@@ -43,7 +43,21 @@ func main() {
 
 	logInfo("receiving broadcasts from %d", port)
 
-	io.Copy(os.Stdout, conn)
+	buff := make([]byte, 1024)
+	for {
+		n, err := conn.Read(buff)
+		if err != nil {
+			break
+		}
+
+		bs, err := bullhorn.CompareSum(buff[:n])
+		if err != nil {
+			logError(err)
+			continue
+		}
+
+		fmt.Printf("%s\n", greenerthumb.BytesToHex(bs))
+	}
 }
 
 var port int

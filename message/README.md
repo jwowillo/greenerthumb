@@ -3,6 +3,8 @@
 `message` is where `greenerthumb` messages from the ICD are defined, the
 bytes-JSON conversion is implemented, and header wrapping is provided.
 
+Bytes are expected to be in base-16.
+
 ## Documentation
 
 * `make` in the 'doc' directory generates PDF documentation.
@@ -54,9 +56,6 @@ Examples are:
 < 0100000000000000003ebd70a410
 {"Name": "Soil", "Timestamp": 0, "Moisture": 0.37}
 ```
-
-The examples show the bytes written and received as hex-strings for
-documentation purposes.
 
 ## Testing
 

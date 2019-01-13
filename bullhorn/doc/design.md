@@ -1,7 +1,13 @@
 # `bullhorn` Design
 
-`bullhorn` contains program pairs for networked communication. Included methods
-are `broadcast`, `listen`, and `pubsub`.
+`bullhorn` contains program pairs, or links, for networked communication.
+Included methods are `broadcast`, `listen`, and `pubsub`.
+
+All input is expected to be base-16 bytes and all output is base-16 bytes. This
+is converted to actual bytes before being sent over the network. Output is
+converted back to base-16 bytes.
+
+Different links have different metadata.
 
 ## `broadcast`
 
@@ -13,6 +19,9 @@ The server will send all newline-separated lines it receives over STDIN to every
 client until STDIN is closed. The clients print all newline-separated lines they
 receive until they are terminated.
 
+A 4 byte checksum is included before the message bytes as part of the metadata.
+Messages with invalid checksums are ignored.
+
 ## `listen`
 
 `listen` allows messages to be reliably sent from talkers to a listener.
@@ -23,6 +32,9 @@ The clients will connect to the servers, write all their input from STDIN to the
 connections, and the server will echo the messages to STDOUT. Clients run until
 STDIN is closed or the connection is closed. The servers run until they're
 terminated.
+
+A 4 byte checksum is included before the message bytes as part of the metadata.
+Messages with invalid checksums are ignored.
 
 ## `pubsub`
 
@@ -45,3 +57,6 @@ never close if reconnect is enabled and will just periodically attempt
 reconnects. Subscribers will always exit with a failure to connect
 unless terminated because they will either try to reconnect forever or fail to
 connect to a terminated publisher.
+
+A 4 byte checksum is included before the message bytes as part of the metadata.
+Messages with invalid checksums are ignored.

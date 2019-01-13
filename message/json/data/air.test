@@ -1,7 +1,7 @@
 # air.test tests that json serializes bytes to JSON properly for air
 # messages.
 1
-00000000000000000101413f00000082
+00000000000000000101413f000000
 {"Header":{"Name":"Air","Sender":"A","Timestamp":1},"Temperature":0.5}
 
 0
