@@ -43,7 +43,7 @@ void LogError(const std::exception& exception) {
   auto time = std::time(nullptr);
   auto utc = std::gmtime(&time);
   std::strftime(buffer, 32, "%Y-%m-%d %H:%M:%S", utc);
-  std::cerr << "ERROR plot " << buffer << " - " << exception.what()
+  std::cerr << "ERROR greenerthumb-plot " << buffer << " - " << exception.what()
             << std::endl;
 }
 

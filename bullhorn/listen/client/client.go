@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
 	"io"
@@ -9,6 +10,7 @@ import (
 	"os"
 
 	"github.com/jwowillo/greenerthumb"
+	"github.com/jwowillo/greenerthumb/bullhorn"
 )
 
 const (
@@ -16,14 +18,16 @@ const (
 	_
 	// Dial is the error-code for failing to dial a TCP address.
 	Dial = 1 << iota
+	// ReadInput is the error-code for failing to read input.
+	ReadInput = 1 << iota
 )
 
 func logInfo(l string, args ...interface{}) {
-	greenerthumb.Info("bullhorn-listen-client", l, args...)
+	greenerthumb.Info("greenerthumb-bullhorn-listen-client", l, args...)
 }
 
 func logError(err error) {
-	greenerthumb.Error("bullhorn-listen-client", err)
+	greenerthumb.Error("greenerthumb-bullhorn-listen-client", err)
 }
 
 func main() {
@@ -37,6 +41,28 @@ func main() {
 
 	done := make(chan interface{})
 	go func() {
+		scanner := bufio.NewScanner(os.Stdin)
+		for scanner.Scan() {
+			bs, err := greenerthumb.HexToBytes(scanner.Bytes())
+			if err != nil {
+				logError(err)
+				continue
+			}
+
+			bs, err = bullhorn.AddLength(bs)
+			if err != nil {
+				logError(err)
+				continue
+			}
+
+			conn.Write(bs)
+		}
+
+		if err := scanner.Err(); err != nil {
+			logError(err)
+			os.Exit(ReadInput)
+		}
+
 		io.Copy(conn, os.Stdin)
 		done <- struct{}{}
 	}()
@@ -69,6 +95,9 @@ func init() {
 		p(fmt.Sprintf(
 			"    %d = Failed to dial a TCP address.",
 			Dial))
+		p(fmt.Sprintf(
+			"    %d = Failed to read input.",
+			ReadInput))
 		p("")
 
 		os.Exit(2)

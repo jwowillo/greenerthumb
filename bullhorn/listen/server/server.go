@@ -1,13 +1,14 @@
 package main
 
 import (
-	"bufio"
 	"flag"
 	"fmt"
+	"io"
 	"net"
 	"os"
 
 	"github.com/jwowillo/greenerthumb"
+	"github.com/jwowillo/greenerthumb/bullhorn"
 )
 
 const (
@@ -20,11 +21,11 @@ const (
 )
 
 func logInfo(l string, args ...interface{}) {
-	greenerthumb.Info("bullhorn-listen-server", l, args...)
+	greenerthumb.Info("greenerthumb-bullhorn-listen-server", l, args...)
 }
 
 func logError(err error) {
-	greenerthumb.Error("bullhorn-listen-server", err)
+	greenerthumb.Error("greenerthumb-bullhorn-listen-server", err)
 }
 
 func acceptConnections(ln net.Listener) error {
@@ -36,12 +37,18 @@ func acceptConnections(ln net.Listener) error {
 		logInfo("connection to %s started", conn.RemoteAddr())
 		go func() {
 			defer conn.Close()
-			scanner := bufio.NewScanner(conn)
-			for scanner.Scan() {
-				fmt.Println(scanner.Text())
-			}
-			if err := scanner.Err(); err != nil {
-				logError(err)
+
+			for {
+				bs, err := bullhorn.ReadLength(conn)
+				if err != nil {
+					if err == io.EOF {
+						break
+					} else {
+						logError(err)
+					}
+				}
+
+				fmt.Printf("%s\n", greenerthumb.BytesToHex(bs))
 			}
 			logInfo("connection to %s ended", conn.RemoteAddr())
 		}()

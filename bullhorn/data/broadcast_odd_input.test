@@ -1,0 +1,11 @@
+# broadcast_odd_input.test tests that malformed input isn't sent.
+./broadcast/server 5050
+1
+./broadcast/client 5050
+1
+a
+0
+0
+0
+0
+0

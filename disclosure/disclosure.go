@@ -17,7 +17,7 @@ const (
 )
 
 func logError(err error) {
-	greenerthumb.Error("disclosure", err)
+	greenerthumb.Error("greenerthumb-disclosure", err)
 }
 
 func serialize(host string) string {

@@ -20,7 +20,7 @@ const (
 )
 
 func logError(err error) {
-	greenerthumb.Error("process-summarize", err)
+	greenerthumb.Error("greenerthumb-process-summarize", err)
 }
 
 func main() {

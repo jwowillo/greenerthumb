@@ -1,7 +1,7 @@
 # bad_bytes.test tests that bytes prints the correct error-message when bad
 # bytes are given.
 1
-00000000000000013f0000003f800000ff
+00000000000000013f0000003f800000
 
 message doesn't have the
 0

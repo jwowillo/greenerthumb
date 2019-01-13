@@ -28,7 +28,7 @@ const (
 )
 
 func logError(err error) {
-	greenerthumb.Error("fan", err)
+	greenerthumb.Error("greenerthumb-fan", err)
 }
 
 func main() {

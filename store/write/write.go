@@ -20,11 +20,11 @@ const (
 )
 
 func logInfo(l string, args ...interface{}) {
-	greenerthumb.Info("store-write", l, args...)
+	greenerthumb.Info("greenerthumb-store-write", l, args...)
 }
 
 func logError(err error) {
-	greenerthumb.Error("store-write", err)
+	greenerthumb.Error("greenerthumb-store-write", err)
 }
 
 func main() {

@@ -12,6 +12,7 @@ import (
 	"sync"
 
 	"github.com/jwowillo/greenerthumb"
+	"github.com/jwowillo/greenerthumb/bullhorn"
 )
 
 const (
@@ -24,11 +25,11 @@ const (
 )
 
 func logInfo(l string, args ...interface{}) {
-	greenerthumb.Info("bullhorn-pubsub-server", l, args...)
+	greenerthumb.Info("greenerthumb-bullhorn-pubsub-server", l, args...)
 }
 
 func logError(err error) {
-	greenerthumb.Error("bullhorn-pubsub-server", err)
+	greenerthumb.Error("greenerthumb-bullhorn-pubsub-server", err)
 }
 
 // conns are active net.Conns.
@@ -84,13 +85,19 @@ func storeUntilClosed(conn net.Conn) error {
 func readIntoConns(r io.Reader, handler func(error)) error {
 	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
-		line := append(scanner.Bytes(), '\n')
+		bs, err := greenerthumb.HexToBytes(scanner.Bytes())
+		if err != nil {
+			logError(err)
+			continue
+		}
+
+		bs = append(bullhorn.Uint32ToBytes(bullhorn.Sum(bs)), bs...)
 
 		func() {
 			mux.RLock()
 			defer mux.RUnlock()
 			for _, conn := range conns {
-				if _, err := conn.Write(line); err != nil {
+				if _, err := conn.Write(bs); err != nil {
 					handler(err)
 				}
 			}

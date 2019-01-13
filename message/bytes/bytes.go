@@ -19,7 +19,7 @@ const (
 )
 
 func logError(err error) {
-	greenerthumb.Error("message-bytes", err)
+	greenerthumb.Error("greenerthumb-message-bytes", err)
 }
 
 func main() {
@@ -38,7 +38,7 @@ func main() {
 			continue
 		}
 
-		fmt.Printf("%s\n", m.SerializeBytes())
+		fmt.Printf("%s\n", greenerthumb.BytesToHex(m.SerializeBytes()))
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -56,6 +56,8 @@ func init() {
 		p("bytes converts JSON messages from STDIN to bytes written to")
 		p("STDOUT.")
 		p("")
+		p("Each byte is written in base-16.")
+		p("")
 		p("CRC and message errors will be written to STDERR.")
 		p("")
 		p("An example is:")
@@ -64,9 +66,6 @@ func init() {
 		p("")
 		p(`    < {"Header": {"Name": "Soil", "Timestamp": 1, "Sender": "A"}, "Moisture": 0.5}`)
 		p("    01000000000000000101413f00000083")
-		p("")
-		p("The example shows the bytes written as a hex-string for")
-		p("documentation purposes.")
 		p("")
 		p("Error-codes are used for the following:")
 		p("")

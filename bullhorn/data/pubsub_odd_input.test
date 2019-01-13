@@ -1,0 +1,11 @@
+# pubsub_odd_input.test tests that malformed input isn't sent.
+./pubsub/server --host :5050
+1
+./pubsub/client 127.0.0.1:5050 --reconnect-delay 1
+1
+a
+0
+0
+0
+0
+0

@@ -1,0 +1,7 @@
+# bad_bytes.test tests that bytes prints the correct error-message an odd
+# number of bytes are given.
+1
+0000000000000013f0000003f800000
+
+byte-string has odd-length
+0

@@ -51,22 +51,22 @@ Machine 3 (192.168.1.81):
 Machine 1 (192.168.1.50):
 
 ```
-< message1
-< message2
+< deadbeef
+< abcd
 ```
 
 Machine 2 (192.168.1.80):
 
 ```
-message1
-message2
+deadbeef
+abcd
 ```
 
 Machine 3 (192.168.1.81):
 
 ```
-message1
-message2
+deadbeef
+abcd
 ```
 
 ## `listen`
@@ -94,15 +94,15 @@ Machine 2 (192.168.1.80):
 ```
 ./listen/client :5050
 
-< a
-< b
+< deadbeef
+< abcd
 ```
 
 Machine 1 (192.168.1.50):
 
 ```
-a
-b
+deadbeef
+abcd
 ```
 
 ## `pubsub`
@@ -143,22 +143,22 @@ Machine 3 (192.168.1.81):
 Machine 1 (192.168.1.50):
 
 ```
-< message1
-< message2
+< deadbeef
+< abcd
 ```
 
 Machine 2 (192.168.1.80):
 
 ```
-message1
-message2
+deadbeef
+abcd
 ```
 
 Machine 3 (192.168.1.81):
 
 ```
-message1
-message2
+deadbeef
+abcd
 ```
 
 ## Testing

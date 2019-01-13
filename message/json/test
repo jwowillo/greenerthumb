@@ -16,9 +16,6 @@ error-codes match.
 
 test exits with a non-zero exit-code and the failed assertion if any file fails.
 
-Bytes are written as a string of hex characters for ease of use. They are
-converted to actual bytes objects in the tests.
-
 An example passing test is:
 
     1
@@ -52,9 +49,6 @@ def parse(handle):
     err_lines = lines[err_start:err_start + count]
     err_lines = [line for line in err_lines if line != '']
     err_code = int(lines[err_start + count])
-
-    out_lines = [line.encode() for line in out_lines]
-    in_lines = [bytes(bytearray.fromhex(line)) for line in in_lines]
 
     return in_lines, out_lines, err_lines, err_code
 
@@ -95,18 +89,15 @@ def test(base):
             in_lines, out_lines, err_lines, err_code = parse(handle)
             result = run('./json')
             for line in in_lines:
-                result.stdin.write(line)
+                result.stdin.write(line.encode())
                 result.stdin.write('\n'.encode())
             result.stdin.flush()
 
             result.stdin.close()
             result.wait()
 
-            actual_out_lines = [line[:-1] for line in result.stdout]
-
-            out_lines = [line.decode('utf-8') for line in out_lines]
             actual_out_lines = [
-                line.decode('utf-8') for line in actual_out_lines
+                line.decode('utf-8')[:-1] for line in result.stdout
             ]
 
             actual_err_lines = [

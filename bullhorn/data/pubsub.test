@@ -5,13 +5,13 @@
 ./pubsub/client 127.0.0.1:5050 --reconnect-delay 1
 ./pubsub/client 127.0.0.1:5050 --reconnect-delay 1
 2
-a
-b
+0a
+0b
 0
 0
 2
-a
-b
+0a
+0b
 0
 0
 0

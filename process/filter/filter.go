@@ -18,7 +18,7 @@ const (
 )
 
 func logError(err error) {
-	greenerthumb.Error("process-filter", err)
+	greenerthumb.Error("greenerthumb-process-filter", err)
 }
 
 func main() {

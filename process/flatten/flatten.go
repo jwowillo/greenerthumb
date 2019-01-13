@@ -17,7 +17,7 @@ const (
 )
 
 func logError(err error) {
-	greenerthumb.Error("process-flatten", err)
+	greenerthumb.Error("greenerthumb-process-flatten", err)
 }
 
 func main() {

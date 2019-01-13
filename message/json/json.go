@@ -19,16 +19,20 @@ const (
 )
 
 func logError(err error) {
-	greenerthumb.Error("message-json", err)
+	greenerthumb.Error("greenerthumb-message-json", err)
 }
 
 func main() {
 	m := &message.Wrapper{}
 	scanner := bufio.NewScanner(os.Stdin)
 	for scanner.Scan() {
-		in := scanner.Bytes()
+		bs, err := greenerthumb.HexToBytes(scanner.Bytes())
+		if err != nil {
+			logError(err)
+			continue
+		}
 
-		if err := m.DeserializeBytes(in); err != nil {
+		if err := m.DeserializeBytes(bs); err != nil {
 			logError(err)
 			continue
 		}
@@ -56,6 +60,8 @@ func init() {
 		p("json converts bytes messages from STDIN to JSON written to")
 		p("STDOUT.")
 		p("")
+		p("Each byte is read in base-16.")
+		p("")
 		p("Message errors will be written to STDERR.")
 		p("")
 		p("An example is:")
@@ -64,9 +70,6 @@ func init() {
 		p("")
 		p("    < 01000000000000000101413f00000083")
 		p(`    {"Header": {"Name": "Soil", "Timestamp": 1, "Sender": "A"}, "Moisture": 0.5}`)
-		p("")
-		p("The example shows the bytes received as a hex-string for")
-		p("documentation purposes")
 		p("")
 		p("Error-codes are used for the following:")
 		p("")

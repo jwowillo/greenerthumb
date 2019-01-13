@@ -1,7 +1,7 @@
 # disclosure.test tests that json serializes bytes to JSON properly for
 # disclosure messages.
 1
-0200000000000000010141053a3830383054
+0200000000000000010141053a38303830
 {"Header":{"Name":"Disclosure","Sender":"A","Timestamp":1},"Host":":8080"}
 
 0

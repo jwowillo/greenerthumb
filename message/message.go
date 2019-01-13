@@ -64,35 +64,16 @@ func (w *Wrapper) Name() string {
 // SerializeBytes from the Message.
 func (w *Wrapper) SerializeBytes() []byte {
 	bs := w.Message.SerializeBytes()
-	wrapper := make([]byte, 0, 1+8+1+len(w.Header.Sender)+len(bs)+1)
+	wrapper := make([]byte, 0, 1+8+1+len(w.Header.Sender)+len(bs))
 	wrapper = append(wrapper, w.Header.ID)
 	wrapper = append(wrapper, intToBytes(w.Header.Timestamp.Unix())...)
 	wrapper = append(wrapper, byte(len(w.Header.Sender)))
 	wrapper = append(wrapper, []byte(w.Header.Sender)...)
-	wrapper = append(wrapper, bs...)
-	var sum byte
-	for _, b := range wrapper {
-		sum += b
-	}
-	return append(wrapper, sum)
+	return append(wrapper, bs...)
 }
 
 // DeserializeBytes into the Message.
 func (w *Wrapper) DeserializeBytes(bs []byte) error {
-	// Checksum
-	if len(bs) < 1 {
-		return ErrBytes
-	}
-	actualSum := bs[len(bs)-1]
-	var expectedSum byte
-	for i := 0; i < len(bs)-1; i++ {
-		expectedSum += bs[i]
-	}
-	if actualSum != expectedSum {
-		return ErrBytes
-	}
-	bs = bs[:len(bs)-1]
-
 	// ID
 	if len(bs) < 1 {
 		return ErrBytes
