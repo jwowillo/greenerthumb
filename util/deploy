@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-deploy builds the passed target, copies and installs it onto the passed remote
-user and host, and restarts the target.
+deploy builds the passed component, copies and installs it onto the passed
+remote user and host, and restarts the component.
 
 This needs to be run from the project root.
 """
@@ -19,37 +19,31 @@ def log_err(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
 
-def deploy(user, host, target, args):
+def deploy(user, host, component, args):
     try:
         user_and_host = '{}@{}'.format(user, host)
 
-        print('Cleaning')
-        run('rm -rf build')
-
-        print('Making {}.'.format(target))
-        run('make {}'.format(target))
+        print('Making {}.'.format(component))
+        run('make {}'.format(component))
         print()
 
-        files = {
-            'activate.sh', 'deactivate.sh', 'run-{}'.format(target),
-            'find-aliases', 'build'
-        }
+        files = {'util', 'build'}
         print('Copying files to remote.')
         run('rsync -az {} {}:~/greenerthumb'.format(' '.join(files),
                                                     user_and_host, host))
         print()
 
-        print('Restarting the target on the remote.')
+        print('Restarting the component on the remote.')
         command = '''ssh {} << EOF
 sudo rsync -a greenerthumb /opt
 rm -rf greenerthumb
 cd /opt/greenerthumb
 rm -f error.log
-source activate.sh
+source util/activate.sh
 pkill -f greenerthumb || true
 nohup bash -c 'greenerthumb-run-{} {}' > /dev/null 2>> error.log &
 EOF
-        '''.format(user_and_host, target, args)
+        '''.format(user_and_host, component, args)
         run(command)
         print()
 
@@ -58,7 +52,7 @@ EOF
         result = run(
             'ssh {} cat /opt/greenerthumb/error.log'.format(user_and_host))
         if result == '':
-            log_err("Couldn't start the target:")
+            log_err("Couldn't start the component:")
             log_err()
             log_err(result)
             log_err()
@@ -72,16 +66,14 @@ EOF
 
 def usage():
     log_err('')
-    log_err('./deploy <user> <host> <target> <args>')
+    log_err('util/deploy <user> <host> <component> <args>')
     log_err('')
-    log_err('deploy builds the passed target, copies and installs it onto the')
-    log_err('passed remote user and host, and restarts the target.')
-    log_err('')
-    log_err('This needs to be run from the project root.')
+    log_err('deploy builds the passed component, copies and installs it onto')
+    log_err('the passed remote user and host, and restarts the component.')
     log_err('')
     log_err('An example is:')
     log_err('')
-    log_err('    ./deploy pi 192.168.1.100 air 5050')
+    log_err('    util/deploy pi 192.168.1.100 air :5050')
     log_err('')
     sys.exit(2)
 
@@ -91,7 +83,7 @@ if __name__ == '__main__':
         usage()
     user = sys.argv[1]
     host = sys.argv[2]
-    target = sys.argv[3]
+    component = sys.argv[3]
     args = sys.argv[4]
 
-    deploy(user, host, target, args)
+    deploy(user, host, component, args)

@@ -10,5 +10,8 @@ build/disclosure: *.go
 test: disclosure | build
 	cp test build/test
 
+clean:
+	rm -rf build
+
 build:
 	mkdir -p build

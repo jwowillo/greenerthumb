@@ -21,5 +21,11 @@ test: bullhorn | build
 	cp -rf data build
 	cp test build/test
 
+clean:
+	rm -rf build
+	$(MAKE) -C broadcast clean
+	$(MAKE) -C listen clean
+	$(MAKE) -C pubsub clean
+
 build:
 	mkdir -p build

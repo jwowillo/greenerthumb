@@ -9,12 +9,12 @@ c++ for GUIs where OpenGL bindings are mature.
 
 Some downsides of this architecture are working with the paths to the
 subprograms, remembering all the necessary subprograms for a task, and
-messaging. An activate.sh/deactivate.sh pair is provided to mitigate the first
-problem. The scripts create aliases to all programs such that they can be run
-from anywhere.  The second problem is addressed by giving composite scripts for
-some useful combinations of subprograms. Finally, internal messaging is handled
-by passing JSON lines from STDIN to STDOUT. This allows subprograms to not have
-to understand the messages, just how to handle JSON
+messaging. An activate.sh/deactivate.sh pair is provided in 'util' to mitigate
+the first problem. The scripts create aliases to all programs such that they can
+be run from anywhere.  The second problem is addressed by giving composite
+scripts for some useful combinations of subprograms. Finally, internal messaging
+is handled by passing JSON lines from STDIN to STDOUT. This allows subprograms
+to not have to understand the messages, just how to handle JSON
 
 Subprograms are described in later sections. Some of the subprograms also
 fulfill requirements themselves. An example of this is the `process`
@@ -23,20 +23,5 @@ subprograms. Several major composite programs are provided:
 disclosures are broadcasted on port 35053 by default. This is something all
 devices agree on by convention.
 
-Packages are groups of devices that cooperate.
-
-## `run-air`
-
-![run-air](run-air.png)
-
-## `run-soil`
-
-![run-soil](run-soil.png)
-
-## `run-logger`
-
-![run-logger](run-logger.png)
-
-## `run-plotter`
-
-![run-plotter](run-plotter.png)
+Packages are groups of components that cooperate. Components are either devices
+or clients that interact with the devices.

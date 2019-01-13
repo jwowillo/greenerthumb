@@ -6,9 +6,9 @@ set -o pipefail
 
 function usage {
   echo "" >&2
-  echo "./run-air <host>" >&2
+  echo "greenerthumb-run-air <host>" >&2
   echo "" >&2
-  echo "run-air device." >&2
+  echo "greenerthumb-run-air runs the air temperature sensing device." >&2
   echo "" >&2
   echo "Accepts the host to publish on." >&2
   echo "" >&2

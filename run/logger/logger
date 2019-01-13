@@ -6,9 +6,10 @@ set -o pipefail
 
 function usage {
   echo "" >&2
-  echo "./run-logger <host>" >&2
+  echo "greenerthumb-run-logger <host>" >&2
   echo "" >&2
-  echo "run-logger from greenerthumb-bullhorn-pubsub-client." >&2
+  echo "greenerthumb-run-logger runs a logger which receives messages from." >&2
+  echo "a single publisher." >&2
   echo "" >&2
   echo "Accepts the publisher host." >&2
   echo "" >&2

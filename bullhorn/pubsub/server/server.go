@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net"
 	"os"
+	"strings"
 	"sync"
 
 	"github.com/jwowillo/greenerthumb"
@@ -35,11 +36,18 @@ var mux sync.RWMutex
 var conns map[string]net.Conn = make(map[string]net.Conn)
 
 func readHost(conn net.Conn) (string, error) {
-	host, err := bufio.NewReader(conn).ReadString('\n')
+	port, err := bufio.NewReader(conn).ReadString('\n')
 	if err != nil {
 		return "", err
 	}
-	return host[:len(host)-1], nil
+	remoteParts := strings.Split(conn.RemoteAddr().String(), ":")
+	if len(remoteParts) < 2 {
+		return "", fmt.Errorf(
+			"connection %s has no port", conn.RemoteAddr())
+	}
+	remoteIP := strings.Join(remoteParts[:len(remoteParts)-1], ":")
+
+	return remoteIP + ":" + port[:len(port)-1], nil
 }
 
 // storeUntilClosed stores the UDP connection indicated from the net.Conn until

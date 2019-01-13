@@ -18,6 +18,12 @@ json: | build
 
 test: test_header test_bytes test_json
 
+clean:
+	rm -rf build
+	$(MAKE) -C header clean
+	$(MAKE) -C bytes clean
+	$(MAKE) -C json clean
+
 build:
 	mkdir -p build
 

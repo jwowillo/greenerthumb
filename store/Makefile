@@ -17,5 +17,10 @@ test: store | build
 	cp -rf data build
 	cp test build/test
 
+clean:
+	rm -rf build
+	$(MAKE) -C read clean
+	$(MAKE) -C write clean
+
 build:
 	mkdir -p build
