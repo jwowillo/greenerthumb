@@ -5,17 +5,17 @@ implemented by composition of subprograms which allows the to be flexibally
 modified without recompilation. Before running, `util/activate.sh` needs to be
 sourced from the project root after building the right component.
 
-## `greenerthumb-run-air`
+## `greenerthumb-run-air-sensor`
 
-![greenerthumb-run-air](air.png)
+![greenerthumb-run-air-sensor](air-sensor.png)
 
-`greenerthumb-run-air` runs the air temperature sensing device.
+`greenerthumb-run-air-sensor` runs the air temperature sensing device.
 
-## `greenerthumb-run-soil`
+## `greenerthumb-run-soil-sensor`
 
-`greenerthumb-run-soil` runs the soil moisture sensing device.
+`greenerthumb-run-soil-sensor` runs the soil moisture sensing device.
 
-![greenerthumb-run-soil](soil.png)
+![greenerthumb-run-soil-sensor](soil-sensor.png)
 
 ## `greenerthumb-run-logger`
 

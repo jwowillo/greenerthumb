@@ -1,6 +1,7 @@
-# `sense`
+# `device`
 
-`sense` programs write `greenerthumb` JSON message bodys from sensors to STDOUT.
+`device` programs write `greenerthumb` JSON message bodys from sensors to
+STDOUT.
 
 # Documentation
 
@@ -9,28 +10,28 @@
 ## Building
 
 * `make` builds all targets.
-* `make sense` builds all sense programs.
+* `make device` builds all device programs.
 
 ## Running
 
-### Air
+### `air-sensor`
 
 ```
-./air ?--rate <rate> ?--pin <pin>
+./air-sensor ?--rate <rate> ?--pin <pin>
 ```
 
 An example is:
 
 ```
-./air
+./air-sensor
 
 {"Temperature": 67.4}
 ```
 
-### Soil
+### `soil-sensor`
 
 ```
-./soil ?--rate <rate> \
+./soil-sensor ?--rate <rate> \
     ?--channel <channel> \
     ?--clk <clk> \
     ?--miso <miso> \
@@ -41,7 +42,7 @@ An example is:
 An example is:
 
 ```
-./soil
+./soil-sensor
 
 {"Moisture": 0.37}
 ```
@@ -54,5 +55,5 @@ flags with defaults chosen from the schematics.
 Emulators are provided for all programs and each accepts an optional rate flag.
 
 ```
-./<sensor> ?--rate <rate>
+./<device> ?--rate <rate>
 ```

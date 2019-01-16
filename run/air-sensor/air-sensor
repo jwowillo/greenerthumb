@@ -6,9 +6,10 @@ set -o pipefail
 
 function usage {
   echo "" >&2
-  echo "greenerthumb-run-soil <host>" >&2
+  echo "greenerthumb-run-ai-sensorr <host>" >&2
   echo "" >&2
-  echo "greenerthumb-run-soil runs the soil moisture sensing device." >&2
+  echo "greenerthumb-run-ai-sensorr runs the air temperature sensing" >&2
+  echo "device." >&2
   echo "" >&2
   echo "Accepts the host to publish on." >&2
   echo "" >&2
@@ -19,17 +20,17 @@ if (($# != 1)); then
   usage
 fi
 
-BROADCAST_PORT=35053
-NAME='Soil Moisture Sensor'
+BROADCAT_PORT=35053
+NAME='Air Temperature Sensor'
 
 trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
 
 greenerthumb-disclosure "${1}" |
 	greenerthumb-message-header 'Disclosure' "${NAME}" |
 	greenerthumb-message-bytes |
-	greenerthumb-bullhorn-broadcast-server ${BROADCAST_PORT} &
+	greenerthumb-bullhorn-broadcast-server ${BROADCAT_PORT} &
 
-greenerthumb-sense-soil |
-	greenerthumb-message-header 'Soil' "${NAME}" |
+greenerthumb-device-air-sensor |
+	greenerthumb-message-header 'Air' "${NAME}" |
 	greenerthumb-message-bytes |
 	greenerthumb-bullhorn-pubsub-server --host "${1}"

@@ -6,7 +6,7 @@ all: | build
 	$(call subcomponent,plot,plot)
 	$(call subcomponent,message,message)
 	$(call subcomponent,log,log)
-	$(call subcomponent,sense,sense)
+	$(call subcomponent,device,device)
 	$(call subcomponent,process,process)
 	$(call subcomponent,store,store)
 	$(call subcomponent,disclosure,disclosure)
@@ -44,17 +44,17 @@ device: clean | build
 	env GOOS=linux GOARCH=arm $(call subcomponent,disclosure,disclosure)
 	env GOOS=linux GOARCH=arm $(call subcomponent,store,store)
 
-air: device | build
-	env GOOS=linux GOARCH=arm $(call subcomponent,sense,air)
+air-sensor: device | build
+	env GOOS=linux GOARCH=arm $(call subcomponent,device,air-sensor)
 	mkdir -p build/run
-	cp run/air/air build/run/.
-	cp run/air/README.md build/run/.
+	cp run/air-sensor/air-sensor build/run/.
+	cp run/air-sensor/README.md build/run/.
 
-soil: device | build
-	env GOOS=linux GOARCH=arm $(call subcomponent,sense,soil)
+soil-sensor: device | build
+	env GOOS=linux GOARCH=arm $(call subcomponent,device,soil-sensor)
 	mkdir -p build/run
-	cp run/soil/soil build/run/.
-	cp run/soil/README.md build/run/.
+	cp run/soil-sensor/soil-sensor build/run/.
+	cp run/soil-sensor/README.md build/run/.
 
 clean:
 	rm -rf build
@@ -65,7 +65,7 @@ clean:
 	$(MAKE) -C message clean
 	$(MAKE) -C plot clean
 	$(MAKE) -C process clean
-	$(MAKE) -C sense clean
+	$(MAKE) -C device clean
 	$(MAKE) -C store clean
 
 build:

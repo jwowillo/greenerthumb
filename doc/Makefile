@@ -7,7 +7,7 @@ all: requirements.pdf design.pdf icd.pdf
 		../message/doc/design.pdf \
 		../plot/doc/design.pdf \
 		../process/doc/design.pdf \
-		../sense/doc/design.pdf \
+		../device/doc/design.pdf \
 		../store/doc/design.pdf \
 		../disclosure/doc/design.pdf \
 		../app/doc/design.pdf \
@@ -17,7 +17,7 @@ all: requirements.pdf design.pdf icd.pdf
 requirements.pdf: requirements.md
 	pandoc requirements.md --latex-engine xelatex -o requirements.pdf
 
-design.pdf: design.md bullhorn fan log message plot process sense store \
+design.pdf: design.md bullhorn fan log message plot process device store \
 	disclosure app run
 	pandoc design.md --latex-engine xelatex -o design.pdf
 
