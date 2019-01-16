@@ -73,7 +73,7 @@ def usage():
     log_err('')
     log_err('An example is:')
     log_err('')
-    log_err('    util/deploy pi 192.168.1.100 air :5050')
+    log_err('    util/deploy pi 192.168.1.100 air-sensor :5050')
     log_err('')
     sys.exit(2)
 
